@@ -62,7 +62,7 @@ async def update_data():
 
     move_data = new_move_data
 
-    async with aiofiles.open(filepath + "gamedata/moves_enhanced.json", "w") as file:
+    async with aiofiles.open(filepath + "/gamedata/moves_enhanced.json", "w") as file:
         await file.write(json.dumps(move_data, indent=4))
 
     new_pokemon_data = []
@@ -81,7 +81,7 @@ async def update_data():
     end_time = time.time()
     print(f"Processed all Pokémon in {end_time - start_time:.2f} seconds")
 
-    async with aiofiles.open(filepath + "gamedata/pokemon_enhanced.json", "w") as file:
+    async with aiofiles.open(filepath + "/gamedata/pokemon_enhanced.json", "w") as file:
         await file.write(json.dumps(pokemon_data, indent=4))
 
 
@@ -113,19 +113,19 @@ async def get_type_emoji(type):
 async def load_data():
     global cp_multipliers, move_data, pokemon_data, type_chart
 
-    async with aiofiles.open(filepath + "gamedata/cp_multipliers.json", "r") as file:
+    async with aiofiles.open(filepath + "/gamedata/cp_multipliers.json", "r") as file:
         file_string = await file.read()
         cp_multipliers = json.loads(file_string)
 
-    async with aiofiles.open(filepath + "gamedata/moves_enhanced.json", "r") as file:
+    async with aiofiles.open(filepath + "/gamedata/moves_enhanced.json", "r") as file:
         file_string = await file.read()
         move_data = json.loads(file_string)
 
-    async with aiofiles.open(filepath + "gamedata/pokemon_enhanced.json", "r") as file:
+    async with aiofiles.open(filepath + "/gamedata/pokemon_enhanced.json", "r") as file:
         file_string = await file.read()
         pokemon_data = json.loads(file_string)
 
-    async with aiofiles.open(filepath + "gamedata/type_chart.json", "r") as file:
+    async with aiofiles.open(filepath + "/gamedata/type_chart.json", "r") as file:
         file_string = await file.read()
         type_chart = json.loads(file_string)
 

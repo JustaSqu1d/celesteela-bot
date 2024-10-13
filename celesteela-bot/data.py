@@ -26,11 +26,11 @@ async def fetch_moves_data() -> dict:
 
 async def main():
     pvpoke_data = await fetch_pvpoke_data()
-    async with aiofiles.open(filepath + "gamedata/pokemon.json", "w") as file:
+    async with aiofiles.open(filepath + "/gamedata/pokemon.json", "w") as file:
         await file.write(dumps(pvpoke_data, indent=4))
 
     moves_data = await fetch_moves_data()
-    async with aiofiles.open(filepath + "gamedata/moves.json", "w") as file:
+    async with aiofiles.open(filepath + "/gamedata/moves.json", "w") as file:
         await file.write(dumps(moves_data, indent=4))
 
 
