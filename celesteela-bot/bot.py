@@ -75,8 +75,6 @@ async def update_data():
 
     new_pokemon_data = await asyncio.gather(*tasks)
 
-    print(f"Processing completed in {time.time() - start_time:.2f} seconds")
-
     pokemon_data = new_pokemon_data
     end_time = time.time()
     print(f"Processed all Pokémon in {end_time - start_time:.2f} seconds")
@@ -206,7 +204,7 @@ async def calculate_pokemon_data(base_attack, base_defense, base_hp, level, atta
 
     attack_stat = await calculate_base_stat(base_attack, attack_iv, level)
     defense_stat = await calculate_base_stat(base_defense, defense_iv, level)
-    hp_stat = max(await calculate_base_stat(base_hp, hp_iv, level), 10)
+    hp_stat = int(max(await calculate_base_stat(base_hp, hp_iv, level), 10))
     stat_product = attack_stat * defense_stat * hp_stat
 
     return {
@@ -241,8 +239,6 @@ async def add_detailed_info(pokemon_json):
 
     pokemon_ranks = []
 
-    can_break = False
-
     for attack_iv in ivs:
         for defense_iv in ivs:
             for hp_iv in ivs:
@@ -269,14 +265,7 @@ async def add_detailed_info(pokemon_json):
                         pokemon_ranks.append(data)
 
                     if is_great_league_done and is_ultra_league_done:
-                        can_break = True
                         break
-                if can_break:
-                    break
-            if can_break:
-                break
-        if can_break:
-            break
 
     # check if it is under or equal to 1500 combat power
     GREAT_LEAGUE_CP_LIMIT = 1500
