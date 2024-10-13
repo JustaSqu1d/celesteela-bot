@@ -583,7 +583,7 @@ async def query(ctx, pokemon: str):
         name="Great League Stats",
         value=f"**Attack: {great_default_attack_stat:.2f}** ({great_lowest_attack_stat:.2f} - {great_highest_attack_stat:.2f})"
               f"\n**Defense: {great_default_defense_stat:.2f}** ({great_lowest_defense_stat:.2f} - {great_highest_defense_stat:.2f})"
-              f"\n**HP: {great_default_hp_stat:.2f}** ({great_lowest_hp_stat:.2f} - {great_highest_hp_stat:.2f})",
+              f"\n**HP: {great_default_hp_stat}** ({great_lowest_hp_stat} - {great_highest_hp_stat})",
         inline=False
     )
 
@@ -591,7 +591,7 @@ async def query(ctx, pokemon: str):
         name="Ultra League Stats",
         value=f"**Attack: {ultra_default_attack_stat:.2f}** ({ultra_lowest_attack_stat:.2f} - {ultra_highest_attack_stat:.2f})"
               f"\n**Defense: {ultra_default_defense_stat:.2f}** ({ultra_lowest_defense_stat:.2f} - {ultra_highest_defense_stat:.2f})"
-              f"\n**HP: {ultra_default_hp_stat:.2f}** ({ultra_lowest_hp_stat:.2f} - {ultra_highest_hp_stat:.2f})",
+              f"\n**HP: {ultra_default_hp_stat}** ({ultra_lowest_hp_stat} - {ultra_highest_hp_stat})",
     )
 
     table = await create_pacing_table(final_data["pacing_data"])
