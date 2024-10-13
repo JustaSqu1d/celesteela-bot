@@ -10,8 +10,8 @@ intents.typing = False
 bot = discord.Bot(activity=activity, intents=intents)
 move_data = None
 pokemon_data = None
-pokemon_list = []
-move_list = []
+pokemon_list = set()
+move_list = set()
 cp_multipliers = {}
 
 import json
@@ -59,10 +59,10 @@ async def on_ready():
         await file.write(json.dumps(pokemon_data, indent=4))
 
     for pokemon in pokemon_data:
-        pokemon_list.append(pokemon["speciesName"])
+        pokemon_list.add(pokemon["speciesName"])
 
     for move in move_data:
-        move_list.append(move_data[move]["displayName"])
+        move_list.add(move_data[move]["displayName"])
 
     print("Data loaded")
 
@@ -97,7 +97,7 @@ def calculate_pokemon_data(base_attack, base_defense, base_hp, level, attack_iv,
     stat_product = attack_stat * defense_stat * hp_stat
 
     return {
-        "level": level,
+        "level": float(level),
         "attack_iv": attack_iv,
         "defense_iv": defense_iv,
         "hp_iv": hp_iv,
@@ -132,18 +132,34 @@ def add_detailed_info(pokemon_json):
 
     can_break = False
 
-    for level in levels:
-        for attack_iv in ivs:
-            for defense_iv in ivs:
-                for hp_iv in ivs:
-                    data = calculate_pokemon_data(base_attack, base_defense, base_hp, level, attack_iv, defense_iv,
-                                                  hp_iv)
-                    if data["combat_power"] > 2500 and attack_iv == 0 and defense_iv == 0 and hp_iv == 0:
+    for attack_iv in ivs:
+        for defense_iv in ivs:
+            for hp_iv in ivs:
+                is_great_league_done = False
+                is_ultra_league_done = False
+
+                for level in levels:
+                    combat_power = calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv, defense_iv,
+                                                          hp_iv)
+                    if combat_power > 1500 and not is_great_league_done:
+                        is_great_league_done = True
+
+                        data = calculate_pokemon_data(base_attack, base_defense, base_hp, str(float(level) - 0.5),
+                                                      attack_iv, defense_iv,
+                                                      hp_iv)
+                        pokemon_ranks.append(data)
+
+                    if combat_power > 2500 and not is_ultra_league_done:
+                        is_ultra_league_done = True
+
+                        data = calculate_pokemon_data(base_attack, base_defense, base_hp, str(float(level) - 0.5),
+                                                      attack_iv, defense_iv,
+                                                      hp_iv)
+                        pokemon_ranks.append(data)
+
+                    if is_great_league_done and is_ultra_league_done:
                         can_break = True
                         break
-
-                    pokemon_ranks.append(data)
-
                 if can_break:
                     break
             if can_break:
