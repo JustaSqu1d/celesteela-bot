@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
-from json import loads, dump
+import aiofiles
+from json import loads, dumps
 
 PVPOKE_DATA_URL = "https://raw.githubusercontent.com/pvpoke/pvpoke/refs/heads/master/src/data/gamemaster/pokemon.json"
 
@@ -18,12 +19,12 @@ async def fetch_moves_data() -> dict:
 
 async def main():
     pvpoke_data = await fetch_pvpoke_data()
-    with open("gamedata/pokemon.json", "w") as file:
-        dump(pvpoke_data, file, indent=4)
+    async with aiofiles.open("gamedata/pokemon.json", "w") as file:
+        await file.write(dumps(pvpoke_data, indent=4))
 
     moves_data = await fetch_moves_data()
-    with open("gamedata/moves.json", "w") as file:
-        dump(moves_data, file, indent=4)
+    async with aiofiles.open("gamedata/moves.json", "w") as file:
+        await file.write(dumps(moves_data, indent=4))
 
 
 if __name__ == "__main__":

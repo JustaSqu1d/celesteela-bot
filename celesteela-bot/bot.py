@@ -1,4 +1,15 @@
+import asyncio
+import io
+import json
+import os
+import time
+from math import sqrt
+
+import aiofiles
 import discord
+import dotenv
+from PIL import Image, ImageDraw, ImageFont
+from fuzzywuzzy import process
 
 activity = discord.Activity(
     name="Trainers throw on alignment",
@@ -8,66 +19,166 @@ activity = discord.Activity(
 intents = discord.Intents.default()
 intents.typing = False
 bot = discord.Bot(activity=activity, intents=intents)
-move_data = None
-pokemon_data = None
+move_data = {}
+pokemon_data = []
 pokemon_list = set()
 move_list = set()
 cp_multipliers = {}
+type_chart = {}
 
-import json
-import os
-import time
-from math import sqrt
-import aiofiles
-import discord
-import dotenv
-from fuzzywuzzy import process
+dotenv.load_dotenv()
+DEV_GUILD_ID = int(os.getenv("DEV_GUILD_ID"))
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-
-# Existing setup code remains unchanged...
 
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
 
-    global move_data, pokemon_data, pokemon_list, move_list, cp_multipliers
+    await load_data()
+    print("Data loaded")
+
+
+async def update_data():
+    global move_data, pokemon_data
+
+    new_move_data = []
+    for move in move_data:
+        try:
+            move["type"] = move["type"].lower().split("_")[2]
+        except IndexError:
+            pass
+
+        switcher = {"FUTURESIGHT": "FUTURE_SIGHT", "TECHNO_BLAST_WATER": "TECHNO_BLAST_DOUSE"}
+
+        switcher2 = {"Techno Blast Water": "Techno Blast (Douse)"}
+
+        move["uniqueId"] = switcher.get(move["uniqueId"], move["uniqueId"]).replace("_FAST", "")
+        move["displayName"] = switcher2.get(move["displayName"], move["displayName"])
+
+        new_move_data.append(move)
+
+    move_data = new_move_data
+
+    async with aiofiles.open("gamedata/moves_enhanced.json", "w") as file:
+        await file.write(json.dumps(move_data, indent=4))
+
+    new_pokemon_data = []
+    start_time = time.time()
+
+    tasks = []
+    for pokemon in pokemon_data:
+        print(f"({pokemon['dex']}) Processing {pokemon['speciesName']}")
+        tasks.append(add_detailed_info(pokemon))
+
+    new_pokemon_data = await asyncio.gather(*tasks)
+
+    print(f"Processing completed in {time.time() - start_time:.2f} seconds")
+
+    pokemon_data = new_pokemon_data
+    end_time = time.time()
+    print(f"Processed all Pokémon in {end_time - start_time:.2f} seconds")
+
+    async with aiofiles.open("gamedata/pokemon_enhanced.json", "w") as file:
+        await file.write(json.dumps(pokemon_data, indent=4))
+
+
+async def get_type_emoji(type):
+    switcher = {
+        "bug": "<:bug:1295144501563756544>",
+        "water": "<:water:1295144230335025182>",
+        "steel": "<:steel:1295144256046108743>",
+        "rock": "<:rock:1295144274043867156>",
+        "psychic": "<:psychic:1295144291168944179>",
+        "poison": "<:poison:1295144321825378345>",
+        "normal": "<:normal:1295144347754299462>",
+        "ice": "<:ice:1295144359980961822>",
+        "ground": "<:ground:1295144370760060949>",
+        "grass": "<:grass:1295144382449586316>",
+        "ghost": "<:ghost:1295144395515101216>",
+        "flying": "<:flying:1295144408534093864>",
+        "fire": "<:fire:1295144424921104414>",
+        "fighting": "<:fighting:1295144437856600095>",
+        "fairy": "<:fairy:1295144452578480238>",
+        "electric": "<:electric:1295144464427520110>",
+        "dragon": "<:dragon:1295144476595060778>",
+        "dark": "<:dark:1295144488934703134>"
+    }
+
+    return switcher.get(type, "")
+
+
+async def load_data():
+    global cp_multipliers, move_data, pokemon_data, type_chart
 
     async with aiofiles.open("gamedata/cp_multipliers.json", "r") as file:
         file_string = await file.read()
         cp_multipliers = json.loads(file_string)
 
-    async with aiofiles.open("gamedata/moves.json", "r") as file:
+    async with aiofiles.open("gamedata/moves_enhanced.json", "r") as file:
         file_string = await file.read()
         move_data = json.loads(file_string)
 
-    async with aiofiles.open("gamedata/pokemon.json", "r") as file:
+    async with aiofiles.open("gamedata/pokemon_enhanced.json", "r") as file:
         file_string = await file.read()
         pokemon_data = json.loads(file_string)
 
-    new_pokemon_data = []
-    start_time = time.time()
-    for pokemon in pokemon_data:
-        new_pokemon_data.append(add_detailed_info(pokemon))
-
-    end_time = time.time()
-
-    print(f"Processed all Pokémon in {end_time - start_time:.2f} seconds")
-
-    pokemon_data = new_pokemon_data
-    # Write the new data to the file
-    async with aiofiles.open("gamedata/pokemon_enhanced.json", "w") as file:
-        await file.write(json.dumps(pokemon_data, indent=4))
+    async with aiofiles.open("gamedata/type_chart.json", "r") as file:
+        file_string = await file.read()
+        type_chart = json.loads(file_string)
 
     for pokemon in pokemon_data:
         pokemon_list.add(pokemon["speciesName"])
 
     for move in move_data:
-        move_list.add(move_data[move]["displayName"])
-
-    print("Data loaded")
+        move_list.add(move["displayName"])
 
 
-def calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv, defense_iv, hp_iv):
+async def format_move_name(move_name):
+    for move in move_data:
+        if move["uniqueId"].lower() == move_name.lower():
+
+            type_string = await get_type_emoji(move["type"])
+            return f"{type_string} {move['displayName']}"
+
+
+async def calculate_damage_ranges(attacker, defender, move):
+    half_circle_rule = 0.5
+
+    attack = attacker["attack_stat"]
+
+    defense = defender["defense_stat"]
+
+    trainer_constant = 1.3
+
+    stab_multiplier = 1.2 if move["type"] in attacker["types"] else 1.0
+
+    type_multiplier = get_type_multiplier(move["type"], defender["types"])
+
+    modifiers = trainer_constant * stab_multiplier * type_multiplier
+
+    damage = int(half_circle_rule * move["power"] * (attack / defense) * modifiers) + 1
+
+    return damage
+
+
+async def get_type_multiplier(move_type, defender_types):
+    multiplier = 1.0
+    multiplier_dict = {
+        "SUPER_EFFECTIVE": 1.6,
+        "NEUTRAL": 1.0,
+        "NOT_VERY_EFFECTIVE": 0.625,
+        "IMMUNE": 0.390625,
+    }
+
+    for defender_type in defender_types:
+        effectiveness_string = type_chart.get(move_type).get(defender_type, "NEUTRAL")
+        multiplier *= multiplier_dict.get(effectiveness_string, 1.0)
+
+    return multiplier
+
+
+async def calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv, defense_iv, hp_iv):
     level = str(float(level))
 
     attack = base_attack + attack_iv
@@ -82,18 +193,18 @@ def calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv,
     return combat_power
 
 
-def calculate_base_stat(base_stat, iv, level):
+async def calculate_base_stat(base_stat, iv, level):
     level = str(float(level))
     cp_multiplier = float(cp_multipliers[level])
     return (base_stat + iv) * cp_multiplier
 
 
-def calculate_pokemon_data(base_attack, base_defense, base_hp, level, attack_iv, defense_iv, hp_iv):
-    combat_power = calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv, defense_iv, hp_iv)
+async def calculate_pokemon_data(base_attack, base_defense, base_hp, level, attack_iv, defense_iv, hp_iv):
+    combat_power = await calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv, defense_iv, hp_iv)
 
-    attack_stat = calculate_base_stat(base_attack, attack_iv, level)
-    defense_stat = calculate_base_stat(base_defense, defense_iv, level)
-    hp_stat = max(calculate_base_stat(base_hp, hp_iv, level), 10)
+    attack_stat = await calculate_base_stat(base_attack, attack_iv, level)
+    defense_stat = await calculate_base_stat(base_defense, defense_iv, level)
+    hp_stat = max(await calculate_base_stat(base_hp, hp_iv, level), 10)
     stat_product = attack_stat * defense_stat * hp_stat
 
     return {
@@ -109,9 +220,7 @@ def calculate_pokemon_data(base_attack, base_defense, base_hp, level, attack_iv,
     }
 
 
-def add_detailed_info(pokemon_json):
-    start_time = time.time()
-
+async def add_detailed_info(pokemon_json):
     base_attack = pokemon_json["baseStats"]["atk"]
     base_defense = pokemon_json["baseStats"]["def"]
     base_hp = pokemon_json["baseStats"]["hp"]
@@ -137,24 +246,24 @@ def add_detailed_info(pokemon_json):
             for hp_iv in ivs:
                 is_great_league_done = False
                 is_ultra_league_done = False
-
                 for level in levels:
-                    combat_power = calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv, defense_iv,
-                                                          hp_iv)
+                    combat_power = await calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv,
+                                                                defense_iv,
+                                                                hp_iv)
                     if combat_power > 1500 and not is_great_league_done:
                         is_great_league_done = True
 
-                        data = calculate_pokemon_data(base_attack, base_defense, base_hp, str(float(level) - 0.5),
-                                                      attack_iv, defense_iv,
-                                                      hp_iv)
+                        data = await calculate_pokemon_data(base_attack, base_defense, base_hp, str(float(level) - 0.5),
+                                                            attack_iv, defense_iv,
+                                                            hp_iv)
                         pokemon_ranks.append(data)
 
                     if combat_power > 2500 and not is_ultra_league_done:
                         is_ultra_league_done = True
 
-                        data = calculate_pokemon_data(base_attack, base_defense, base_hp, str(float(level) - 0.5),
-                                                      attack_iv, defense_iv,
-                                                      hp_iv)
+                        data = await calculate_pokemon_data(base_attack, base_defense, base_hp, str(float(level) - 0.5),
+                                                            attack_iv, defense_iv,
+                                                            hp_iv)
                         pokemon_ranks.append(data)
 
                     if is_great_league_done and is_ultra_league_done:
@@ -182,9 +291,6 @@ def add_detailed_info(pokemon_json):
         "highest_stat_product": {
             "stat_product": 0,
         },
-        "lowest_combat_power": {
-            "combat_power": 9999,
-        },
         "lowest_attack_stat": {
             "attack_stat": 9999,
         },
@@ -209,9 +315,6 @@ def add_detailed_info(pokemon_json):
         "highest_stat_product": {
             "stat_product": 0,
         },
-        "lowest_combat_power": {
-            "combat_power": 9999,
-        },
         "lowest_attack_stat": {
             "attack_stat": 9999,
         },
@@ -225,15 +328,15 @@ def add_detailed_info(pokemon_json):
 
     for entry in pokemon_ranks:
         if entry["combat_power"] <= GREAT_LEAGUE_CP_LIMIT:
-            highest_great_league_data = update_highest_lowest_stats(entry, highest_great_league_data)
+            highest_great_league_data = await update_highest_lowest_stats(entry, highest_great_league_data)
 
         if entry["combat_power"] <= ULTRA_LEAGUE_CP_LIMIT:
-            highest_ultra_league_data = update_highest_lowest_stats(entry, highest_ultra_league_data)
+            highest_ultra_league_data = await update_highest_lowest_stats(entry, highest_ultra_league_data)
 
     default_great_league_level, default_great_league_attack_iv, default_great_league_defense_iv, default_great_league_hp_iv = \
         pokemon_json["defaultIVs"]["cp1500"]
 
-    default_great_league_data = calculate_pokemon_data(
+    default_great_league_data = await calculate_pokemon_data(
         base_attack, base_defense, base_hp, default_great_league_level, default_great_league_attack_iv,
         default_great_league_defense_iv, default_great_league_hp_iv
     )
@@ -241,7 +344,7 @@ def add_detailed_info(pokemon_json):
     default_ultra_league_level, default_ultra_league_attack_iv, default_ultra_league_defense_iv, default_ultra_league_hp_iv = \
         pokemon_json["defaultIVs"]["cp2500"]
 
-    default_ultra_league_data = calculate_pokemon_data(
+    default_ultra_league_data = await calculate_pokemon_data(
         base_attack, base_defense, base_hp, default_ultra_league_level, default_ultra_league_attack_iv,
         default_ultra_league_defense_iv, default_ultra_league_hp_iv
     )
@@ -252,14 +355,50 @@ def add_detailed_info(pokemon_json):
     pokemon_json["great_league_data"] = highest_great_league_data
     pokemon_json["ultra_league_data"] = highest_ultra_league_data
 
-    end_time = time.time()
+    pacing_data = {}
 
-    print(f"Processed {pokemon_json['speciesName']} in {end_time - start_time:.2f} seconds")
+    for fast_move in pokemon_json["fastMoves"]:
+        for move in move_data:
+            if move["uniqueId"] == fast_move:
+                fast_move_data = move
+                break
+        else:
+            raise ValueError(f"Fast move {fast_move} not found in move data")
+
+        pacing_data[fast_move_data["uniqueId"]] = {}
+
+        for charge_move in pokemon_json["chargedMoves"]:
+            for move in move_data:
+                if move["uniqueId"] == charge_move:
+                    charge_move_data = move
+                    break
+            else:
+                raise ValueError(f"Charge move {charge_move} not found in move data")
+
+            # how many fast moves are needed to charge the charge move
+            fast_move_energy = fast_move_data["energyDelta"]
+            charge_move_energy = charge_move_data["energyDelta"]
+
+            pacing = []
+
+            energy = 0
+            turns = 0
+            while len(pacing) < 5:
+                energy += fast_move_energy
+                turns += 1
+                if energy >= charge_move_energy or turns > 100:
+                    pacing.append(turns)
+                    energy -= charge_move_energy
+                    turns = 0
+
+            pacing_data[fast_move_data["uniqueId"]][charge_move_data["uniqueId"]] = pacing
+
+    pokemon_json["pacing_data"] = pacing_data
 
     return pokemon_json
 
 
-def update_highest_lowest_stats(entry, highest_data):
+async def update_highest_lowest_stats(entry, highest_data):
     # Update highest stats
     if entry["attack_stat"] > highest_data["highest_attack_stat"]["attack_stat"]:
         highest_data["highest_attack_stat"] = entry
@@ -271,8 +410,6 @@ def update_highest_lowest_stats(entry, highest_data):
         highest_data["highest_stat_product"] = entry
 
     # Update lowest stats
-    if entry["combat_power"] < highest_data["lowest_combat_power"]["combat_power"]:
-        highest_data["lowest_combat_power"] = entry
     if entry["attack_stat"] < highest_data["lowest_attack_stat"]["attack_stat"]:
         highest_data["lowest_attack_stat"] = entry
     if entry["defense_stat"] < highest_data["lowest_defense_stat"]["defense_stat"]:
@@ -281,6 +418,55 @@ def update_highest_lowest_stats(entry, highest_data):
         highest_data["lowest_hp_stat"] = entry
 
     return highest_data
+
+
+async def create_pacing_table(pacing_data):
+    column_count = len(next(iter(pacing_data.values()))) + 1
+    row_count = len(pacing_data) + 1
+
+    cell_width = 450
+    cell_height = 100
+
+    image_width = column_count * cell_width
+    image_height = row_count * cell_height
+    background_color = (34, 34, 34)
+    text_color = (255, 255, 255)
+
+    image = Image.new('RGB', (image_width, image_height), background_color)
+    draw = ImageDraw.Draw(image)
+    font_path = "../fonts/Lato-Regular.ttf"
+    font = ImageFont.truetype(font_path, 50)
+
+    x_offset = cell_width
+
+    for fast_move in next(iter(pacing_data.values())).keys():
+        fast_move = await format_move_name(fast_move)
+        fast_move = fast_move.split("> ")[1]
+        draw.text((x_offset, 20), fast_move, fill=text_color, font=font)
+        x_offset += cell_width
+
+    y_offset = cell_height
+    for charge_move in pacing_data.keys():
+        charge_move = await format_move_name(charge_move)
+        charge_move = charge_move.split("> ")[1]
+        draw.text((20, y_offset), charge_move, fill=text_color, font=font)
+        y_offset += cell_height
+
+    y_offset = cell_height
+
+    for move_type, attacks in pacing_data.items():
+        x_offset = cell_width
+        for attack, values in attacks.items():
+            values = ", ".join(map(str, values))
+            draw.text((x_offset, y_offset), values, fill=text_color, font=font)
+            x_offset += cell_width
+        y_offset += cell_height
+
+    image_bytes = io.BytesIO()
+    image.save(image_bytes, format='PNG')
+    image_bytes.seek(0)
+
+    return image_bytes
 
 
 def similarity_score(search, name):
@@ -307,11 +493,7 @@ async def pokemon_autocomplete_search(ctx: discord.AutocompleteContext):
 )
 @discord.option(name="pokemon", description="The Pokémon to search for.", autocomplete=pokemon_autocomplete_search)
 async def query(ctx, pokemon: str):
-    # find the pokemon in the data
-
     global pokemon_data
-
-    final_data = None
 
     for data in pokemon_data:
         if data["speciesName"].lower() == pokemon.lower():
@@ -326,10 +508,119 @@ async def query(ctx, pokemon: str):
         await ctx.respond(embed=embed)
         return
 
-    await ctx.respond(str(final_data))
+    type_string = ""
+
+    for type in final_data["types"]:
+        if type != "none":
+            type_emoji = await get_type_emoji(type)
+            type_string += f"{type_emoji} {type.capitalize()}, "
+
+    type_string = type_string[:-2]
+
+    embed = discord.Embed()
+
+    embed.title = f"#{final_data['dex']} {final_data['speciesName']}"
+
+    embed.description = f"**Type**: {type_string}"
+
+    fast_move_string = ""
+    for move in final_data["fastMoves"]:
+        fast_move_string += await format_move_name(move) + "\n"
+
+    fast_move_string = fast_move_string[:-1]
+
+    embed.add_field(
+        name="Fast Moves",
+        value=fast_move_string
+    )
+
+    charged_move_string = ""
+    for move in final_data["chargedMoves"]:
+        charged_move_string += await format_move_name(move) + "\n"
+
+    charged_move_string = charged_move_string[:-1]
+
+    embed.add_field(
+        name="Charged Moves",
+        value=charged_move_string
+    )
+
+    great_highest_attack_stat = final_data["great_league_data"]["highest_attack_stat"]["attack_stat"]
+    great_default_attack_stat = final_data["great_league_data"]["default"]["attack_stat"]
+    great_lowest_attack_stat = final_data["great_league_data"]["lowest_attack_stat"]["attack_stat"]
+
+    great_highest_defense_stat = final_data["great_league_data"]["highest_defense_stat"]["defense_stat"]
+    great_default_defense_stat = final_data["great_league_data"]["default"]["defense_stat"]
+    great_lowest_defense_stat = final_data["great_league_data"]["lowest_defense_stat"]["defense_stat"]
+
+    great_highest_hp_stat = final_data["great_league_data"]["highest_hp_stat"]["hp_stat"]
+    great_default_hp_stat = final_data["great_league_data"]["default"]["hp_stat"]
+    great_lowest_hp_stat = final_data["great_league_data"]["lowest_hp_stat"]["hp_stat"]
+
+    ultra_highest_attack_stat = final_data["ultra_league_data"]["highest_attack_stat"]["attack_stat"]
+    ultra_default_attack_stat = final_data["ultra_league_data"]["default"]["attack_stat"]
+    ultra_lowest_attack_stat = final_data["ultra_league_data"]["lowest_attack_stat"]["attack_stat"]
+
+    ultra_highest_defense_stat = final_data["ultra_league_data"]["highest_defense_stat"]["defense_stat"]
+    ultra_default_defense_stat = final_data["ultra_league_data"]["default"]["defense_stat"]
+    ultra_lowest_defense_stat = final_data["ultra_league_data"]["lowest_defense_stat"]["defense_stat"]
+
+    ultra_highest_hp_stat = final_data["ultra_league_data"]["highest_hp_stat"]["hp_stat"]
+    ultra_default_hp_stat = final_data["ultra_league_data"]["default"]["hp_stat"]
+    ultra_lowest_hp_stat = final_data["ultra_league_data"]["lowest_hp_stat"]["hp_stat"]
+
+    set_stat = lambda stat, default_stat, condition: default_stat if stat == condition else stat
+
+    great_highest_attack_stat = set_stat(great_highest_attack_stat, great_default_attack_stat, 0)
+    great_highest_defense_stat = set_stat(great_highest_defense_stat, great_default_defense_stat, 0)
+    great_highest_hp_stat = set_stat(great_highest_hp_stat, great_default_hp_stat, 0)
+
+    ultra_highest_attack_stat = set_stat(ultra_highest_attack_stat, ultra_default_attack_stat, 0)
+    ultra_highest_defense_stat = set_stat(ultra_highest_defense_stat, ultra_default_defense_stat, 0)
+    ultra_highest_hp_stat = set_stat(ultra_highest_hp_stat, ultra_default_hp_stat, 0)
+
+    great_lowest_attack_stat = set_stat(great_lowest_attack_stat, great_default_attack_stat, 9999)
+    great_lowest_defense_stat = set_stat(great_lowest_defense_stat, great_default_defense_stat, 9999)
+    great_lowest_hp_stat = set_stat(great_lowest_hp_stat, great_default_hp_stat, 9999)
+
+    ultra_lowest_attack_stat = set_stat(ultra_lowest_attack_stat, ultra_default_attack_stat, 9999)
+    ultra_lowest_defense_stat = set_stat(ultra_lowest_defense_stat, ultra_default_defense_stat, 9999)
+    ultra_lowest_hp_stat = set_stat(ultra_lowest_hp_stat, ultra_default_hp_stat, 9999)
+
+
+    embed.add_field(
+        name="Great League Stats",
+        value=f"**Attack: {great_default_attack_stat:.2f}** ({great_lowest_attack_stat:.2f} - {great_highest_attack_stat:.2f})"
+              f"\n**Defense: {great_default_defense_stat:.2f}** ({great_lowest_defense_stat:.2f} - {great_highest_defense_stat:.2f})"
+              f"\n**HP: {great_default_hp_stat:.2f}** ({great_lowest_hp_stat:.2f} - {great_highest_hp_stat:.2f})",
+        inline=False
+    )
+
+    embed.add_field(
+        name="Ultra League Stats",
+        value=f"**Attack: {ultra_default_attack_stat:.2f}** ({ultra_lowest_attack_stat:.2f} - {ultra_highest_attack_stat:.2f})"
+              f"\n**Defense: {ultra_default_defense_stat:.2f}** ({ultra_lowest_defense_stat:.2f} - {ultra_highest_defense_stat:.2f})"
+              f"\n**HP: {ultra_default_hp_stat:.2f}** ({ultra_lowest_hp_stat:.2f} - {ultra_highest_hp_stat:.2f})",
+    )
+
+    table = await create_pacing_table(final_data["pacing_data"])
+
+    file = discord.File(table, filename="pacing_table.png")
+
+    await ctx.respond(embed=embed, file=file)
+
+
+@bot.slash_command(guild_ids=[DEV_GUILD_ID])
+async def sync_data(ctx):
+    if ctx.author.id in bot.owner_ids:
+        return
+
+    await ctx.defer()
+    start_time = time.time()
+    await update_data()
+    end_time = time.time()
+    await ctx.respond(f"{ctx.author.mention} Data updated in {end_time - start_time:.2f} seconds")
 
 
 if __name__ == "__main__":
-    dotenv.load_dotenv()
-    BOT_TOKEN = os.getenv("BOT_TOKEN")
     bot.run(BOT_TOKEN)
