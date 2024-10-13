@@ -436,7 +436,7 @@ async def create_pacing_table(pacing_data):
 
     image = Image.new('RGB', (image_width, image_height), background_color)
     draw = ImageDraw.Draw(image)
-    font_path = "../fonts/Lato-Regular.ttf"
+    font_path = filepath + "/fonts/Lato-Regular.ttf"
     font = ImageFont.truetype(font_path, 50)
 
     x_offset = cell_width
