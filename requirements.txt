@@ -2,5 +2,5 @@ py-cord==2.6.1
 python-dotenv==1.0.1
 aiofiles==24.1.0
 python-Levenshtein==0.26.0
-fuzzywuzzy==0.18.0
+RapidFuzz==3.10.0
 pillow==10.4.0

@@ -9,7 +9,7 @@ import aiofiles
 import discord
 import dotenv
 from PIL import Image, ImageDraw, ImageFont
-from fuzzywuzzy import process
+from rapidfuzz import process
 
 activity = discord.Activity(
     name="Trainers throw on alignment",
