@@ -9,7 +9,7 @@ import aiofiles
 import discord
 import dotenv
 from PIL import Image, ImageDraw, ImageFont
-from rapidfuzz import process
+from rapidfuzz import process, fuzz, utils
 
 activity = discord.Activity(
     name="Trainers throw on alignment",
@@ -460,16 +460,9 @@ async def create_pacing_table(pacing_data):
     return image_bytes
 
 
-def similarity_score(search, name):
-    search_set = set(search)
-    name_set = set(name.lower())
-    common_chars = len(search_set.intersection(name_set))
-    return common_chars / max(len(search), len(name))
-
-
 async def pokemon_autocomplete_search(ctx: discord.AutocompleteContext):
     search = ctx.value.lower()
-    matches = process.extract(search, pokemon_list, limit=25)
+    matches = process.extract(search, pokemon_list, scorer=fuzz.WRatio, limit=25)  # type: ignore
     results = []
     for match in matches:
         results.append(match[0])
