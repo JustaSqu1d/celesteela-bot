@@ -238,6 +238,14 @@ async def add_detailed_info(pokemon_json):
 
     pokemon_ranks = []
 
+    master_league_data_level_50 = await calculate_pokemon_data(base_attack, base_defense, base_hp, "50.0", 15, 15, 15)
+    master_league_data_level_51 = await calculate_pokemon_data(base_attack, base_defense, base_hp, "51.0", 15, 15, 15)
+
+    pokemon_json["master_league_data"] = {
+        "level_50": master_league_data_level_50,
+        "level_51": master_league_data_level_51
+    }
+
     for attack_iv in ivs:
         for defense_iv in ivs:
             for hp_iv in ivs:
@@ -265,14 +273,6 @@ async def add_detailed_info(pokemon_json):
 
                     if is_great_league_done and is_ultra_league_done:
                         break
-
-    master_league_data_level_50 = await calculate_pokemon_data(base_attack, base_defense, base_hp, "50.0", 15, 15, 15)
-    master_league_data_level_51 = await calculate_pokemon_data(base_attack, base_defense, base_hp, "51.0", 15, 15, 15)
-
-    pokemon_json["master_league_data"] = {
-        "level_50": master_league_data_level_50,
-        "level_51": master_league_data_level_51
-    }
 
     # check if it is under or equal to 1500 combat power
     GREAT_LEAGUE_CP_LIMIT = 1500
@@ -566,6 +566,19 @@ async def query(ctx, pokemon: str):
     ultra_default_hp_stat = final_data["ultra_league_data"]["default"]["hp_stat"]
     ultra_lowest_hp_stat = final_data["ultra_league_data"]["lowest_hp_stat"]["hp_stat"]
 
+    master_league_data_level_50 = final_data["master_league_data"]["level_50"]
+    master_league_data_level_51 = final_data["master_league_data"]["level_51"]
+
+    master_league_level_50_combat_power = master_league_data_level_50["combat_power"]
+    master_league_level_50_attack_stat = master_league_data_level_50["attack_stat"]
+    master_league_level_50_defense_stat = master_league_data_level_50["defense_stat"]
+    master_league_level_50_hp_stat = master_league_data_level_50["hp_stat"]
+
+    master_league_level_51_combat_power = master_league_data_level_51["combat_power"]
+    master_league_level_51_attack_stat = master_league_data_level_51["attack_stat"]
+    master_league_level_51_defense_stat = master_league_data_level_51["defense_stat"]
+    master_league_level_51_hp_stat = master_league_data_level_51["hp_stat"]
+
     set_stat = lambda stat, default_stat, condition: default_stat if stat == condition else stat
 
     great_highest_attack_stat = set_stat(great_highest_attack_stat, great_default_attack_stat, 0)
@@ -584,18 +597,13 @@ async def query(ctx, pokemon: str):
     ultra_lowest_defense_stat = set_stat(ultra_lowest_defense_stat, ultra_default_defense_stat, 9999)
     ultra_lowest_hp_stat = set_stat(ultra_lowest_hp_stat, ultra_default_hp_stat, 9999)
 
-    master_league_data_level_50 = final_data["master_league_data"]["level_50"]
-    master_league_data_level_51 = final_data["master_league_data"]["level_51"]
+    ultra_highest_attack_stat = set_stat(ultra_highest_attack_stat, master_league_level_51_attack_stat, great_highest_attack_stat)
+    ultra_highest_defense_stat = set_stat(ultra_highest_defense_stat, master_league_level_51_defense_stat, great_highest_defense_stat)
+    ultra_highest_hp_stat = set_stat(ultra_highest_hp_stat, master_league_level_51_hp_stat, great_highest_hp_stat)
 
-    master_league_level_50_combat_power = master_league_data_level_50["combat_power"]
-    master_league_level_50_attack_stat = master_league_data_level_50["attack_stat"]
-    master_league_level_50_defense_stat = master_league_data_level_50["defense_stat"]
-    master_league_level_50_hp_stat = master_league_data_level_50["hp_stat"]
-
-    master_league_level_51_combat_power = master_league_data_level_51["combat_power"]
-    master_league_level_51_attack_stat = master_league_data_level_51["attack_stat"]
-    master_league_level_51_defense_stat = master_league_data_level_51["defense_stat"]
-    master_league_level_51_hp_stat = master_league_data_level_51["hp_stat"]
+    ultra_lowest_attack_stat = set_stat(ultra_lowest_attack_stat, master_league_level_50_attack_stat, great_lowest_attack_stat)
+    ultra_lowest_defense_stat = set_stat(ultra_lowest_defense_stat, master_league_level_50_defense_stat, great_lowest_defense_stat)
+    ultra_lowest_hp_stat = set_stat(ultra_lowest_hp_stat, master_league_level_50_hp_stat, great_lowest_hp_stat)
 
     embed.add_field(
         name="Great League Stats <:pogo_great_league:1295173042443391027>",
