@@ -266,6 +266,14 @@ async def add_detailed_info(pokemon_json):
                     if is_great_league_done and is_ultra_league_done:
                         break
 
+    master_league_data_level_50 = await calculate_pokemon_data(base_attack, base_defense, base_hp, "50.0", 15, 15, 15)
+    master_league_data_level_51 = await calculate_pokemon_data(base_attack, base_defense, base_hp, "51.0", 15, 15, 15)
+
+    pokemon_json["master_league_data"] = {
+        "level_50": master_league_data_level_50,
+        "level_51": master_league_data_level_51
+    }
+
     # check if it is under or equal to 1500 combat power
     GREAT_LEAGUE_CP_LIMIT = 1500
     highest_great_league_data = {
@@ -604,6 +612,16 @@ async def query(ctx, pokemon: str):
               f"\n**Attack: {ultra_default_attack_stat:.2f}** ({ultra_lowest_attack_stat:.2f} - {ultra_highest_attack_stat:.2f})"
               f"\n**Defense: {ultra_default_defense_stat:.2f}** ({ultra_lowest_defense_stat:.2f} - {ultra_highest_defense_stat:.2f})"
               f"\n**HP: {ultra_default_hp_stat}** ({ultra_lowest_hp_stat} - {ultra_highest_hp_stat})",
+        inline=False
+    )
+
+    embed.add_field(
+        name="Master League Stats <:pogo_master_league:1295173143522050080>",
+        value=f"**CP: {master_league_level_50_combat_power}** ({master_league_level_51_combat_power})"
+              f"\n**Attack: {master_league_level_50_attack_stat:.2f}** ({master_league_level_51_attack_stat:.2f})"
+              f"\n**Defense: {master_league_level_50_defense_stat:.2f}** ({master_league_level_51_defense_stat:.2f})"
+              f"\n**HP: {master_league_level_50_hp_stat}** ({master_league_level_51_hp_stat})",
+        inline=False
     )
 
     table = await create_pacing_table(final_data["pacing_data"])
