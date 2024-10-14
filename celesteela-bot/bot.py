@@ -554,6 +554,9 @@ class PokemonStats:
     async def master_league_level_50_combat_power(self):
         return self._pokemon_json["master_league_data"]["level_50"]["combat_power"]
 
+    async def master_league_level_51_combat_power(self):
+        return self._pokemon_json["master_league_data"]["level_51"]["combat_power"]
+
 
 async def get_pokemon_stat(pokemon_json):
     great_league_data = pokemon_json["great_league_data"]
@@ -687,7 +690,7 @@ async def query(ctx, pokemon: str):
     master_league_level_50_defense_stat = await pokemon_stat_data.master_league_level_50_defense()
     master_league_level_50_hp_stat = await pokemon_stat_data.master_league_level_50_hp()
 
-    master_league_level_51_combat_power = await pokemon_stat_data.master_league_level_50_combat_power()
+    master_league_level_51_combat_power = await pokemon_stat_data.master_league_level_51_combat_power()
     master_league_level_51_attack_stat = await pokemon_stat_data.master_league_level_51_attack()
     master_league_level_51_defense_stat = await pokemon_stat_data.master_league_level_51_defense()
     master_league_level_51_hp_stat = await pokemon_stat_data.master_league_level_51_hp()
