@@ -448,6 +448,8 @@ async def create_pacing_table(pacing_data):
         x_offset = cell_width
         for attack, values in attacks.items():
             values = ", ".join(map(str, values))
+            if values.startswith("101"):
+                values = "∞"
             draw.text((x_offset, y_offset), values, fill=text_color, font=font)
             x_offset += cell_width
         y_offset += cell_height
