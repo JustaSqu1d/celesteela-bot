@@ -597,13 +597,25 @@ async def query(ctx, pokemon: str):
     ultra_lowest_defense_stat = set_stat(ultra_lowest_defense_stat, ultra_default_defense_stat, 9999)
     ultra_lowest_hp_stat = set_stat(ultra_lowest_hp_stat, ultra_default_hp_stat, 9999)
 
-    ultra_highest_attack_stat = set_stat(ultra_highest_attack_stat, master_league_level_51_attack_stat, great_highest_attack_stat)
-    ultra_highest_defense_stat = set_stat(ultra_highest_defense_stat, master_league_level_51_defense_stat, great_highest_defense_stat)
+    ultra_highest_attack_stat = set_stat(ultra_highest_attack_stat, master_league_level_51_attack_stat,
+                                         great_highest_attack_stat)
+    ultra_highest_defense_stat = set_stat(ultra_highest_defense_stat, master_league_level_51_defense_stat,
+                                          great_highest_defense_stat)
     ultra_highest_hp_stat = set_stat(ultra_highest_hp_stat, master_league_level_51_hp_stat, great_highest_hp_stat)
 
-    ultra_lowest_attack_stat = set_stat(ultra_lowest_attack_stat, master_league_level_50_attack_stat, great_lowest_attack_stat)
-    ultra_lowest_defense_stat = set_stat(ultra_lowest_defense_stat, master_league_level_50_defense_stat, great_lowest_defense_stat)
+    ultra_lowest_attack_stat = set_stat(ultra_lowest_attack_stat, master_league_level_50_attack_stat,
+                                        great_lowest_attack_stat)
+    ultra_lowest_defense_stat = set_stat(ultra_lowest_defense_stat, master_league_level_50_defense_stat,
+                                         great_lowest_defense_stat)
     ultra_lowest_hp_stat = set_stat(ultra_lowest_hp_stat, master_league_level_50_hp_stat, great_lowest_hp_stat)
+
+    ultra_lowest_attack_stat = min(ultra_lowest_attack_stat, ultra_default_attack_stat, ultra_highest_attack_stat)
+    ultra_lowest_defense_stat = min(ultra_lowest_defense_stat, ultra_default_defense_stat, ultra_highest_defense_stat)
+    ultra_lowest_hp_stat = min(ultra_lowest_hp_stat, ultra_default_hp_stat, ultra_highest_hp_stat)
+
+    ultra_highest_attack_stat = max(ultra_highest_attack_stat, ultra_default_attack_stat, ultra_lowest_attack_stat)
+    ultra_highest_defense_stat = max(ultra_highest_defense_stat, ultra_default_defense_stat, ultra_lowest_defense_stat)
+    ultra_highest_hp_stat = max(ultra_highest_hp_stat, ultra_default_hp_stat, ultra_lowest_hp_stat)
 
     embed.add_field(
         name="Great League Stats <:pogo_great_league:1295173042443391027>",
