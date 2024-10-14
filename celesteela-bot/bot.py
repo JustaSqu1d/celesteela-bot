@@ -469,6 +469,126 @@ async def create_pacing_table(pacing_data):
     return image_bytes
 
 
+class PokemonStats:
+    def __init__(self, pokemon_json):
+        self._pokemon_json = pokemon_json
+
+    async def great_league_highest_attack_stat(self):
+        return self._pokemon_json["great_league_data"]["highest_attack_stat"]["attack_stat"]
+
+    async def great_league_default_attack_stat(self):
+        return self._pokemon_json["great_league_data"]["default"]["attack_stat"]
+
+    async def great_league_lowest_attack_stat(self):
+        return self._pokemon_json["great_league_data"]["lowest_attack_stat"]["attack_stat"]
+
+    async def great_league_highest_defense_stat(self):
+        return self._pokemon_json["great_league_data"]["highest_defense_stat"]["defense_stat"]
+
+    async def great_league_default_defense_stat(self):
+        return self._pokemon_json["great_league_data"]["default"]["defense_stat"]
+
+    async def great_league_lowest_defense_stat(self):
+        return self._pokemon_json["great_league_data"]["lowest_defense_stat"]["defense_stat"]
+
+    async def great_league_highest_hp_stat(self):
+        return self._pokemon_json["great_league_data"]["highest_hp_stat"]["hp_stat"]
+
+    async def great_league_default_hp_stat(self):
+        return self._pokemon_json["great_league_data"]["default"]["hp_stat"]
+
+    async def great_league_lowest_hp_stat(self):
+        return self._pokemon_json["great_league_data"]["lowest_hp_stat"]["hp_stat"]
+
+    async def ultra_league_highest_attack_stat(self):
+        return self._pokemon_json["ultra_league_data"]["highest_attack_stat"]["attack_stat"]
+
+    async def ultra_league_default_attack_stat(self):
+        return self._pokemon_json["ultra_league_data"]["default"]["attack_stat"]
+
+    async def ultra_league_lowest_attack_stat(self):
+        return self._pokemon_json["ultra_league_data"]["lowest_attack_stat"]["attack_stat"]
+
+    async def ultra_league_highest_defense_stat(self):
+        return self._pokemon_json["ultra_league_data"]["highest_defense_stat"]["defense_stat"]
+
+    async def ultra_league_default_defense_stat(self):
+        return self._pokemon_json["ultra_league_data"]["default"]["defense_stat"]
+
+    async def ultra_league_lowest_defense_stat(self):
+        return self._pokemon_json["ultra_league_data"]["lowest_defense_stat"]["defense_stat"]
+
+    async def ultra_league_highest_hp_stat(self):
+        return self._pokemon_json["ultra_league_data"]["highest_hp_stat"]["hp_stat"]
+
+    async def ultra_league_default_hp_stat(self):
+        return self._pokemon_json["ultra_league_data"]["default"]["hp_stat"]
+
+    async def ultra_league_lowest_hp_stat(self):
+        return self._pokemon_json["ultra_league_data"]["lowest_hp_stat"]["hp_stat"]
+
+    async def master_league_level_50_attack(self):
+        return self._pokemon_json["master_league_data"]["level_50"]["attack_stat"]
+
+    async def master_league_level_50_defense(self):
+        return self._pokemon_json["master_league_data"]["level_50"]["defense_stat"]
+
+    async def master_league_level_50_hp(self):
+        return self._pokemon_json["master_league_data"]["level_50"]["hp_stat"]
+
+    async def master_league_level_51_attack(self):
+        return self._pokemon_json["master_league_data"]["level_51"]["attack_stat"]
+
+    async def master_league_level_51_defense(self):
+        return self._pokemon_json["master_league_data"]["level_51"]["defense_stat"]
+
+    async def master_league_level_51_hp(self):
+        return self._pokemon_json["master_league_data"]["level_51"]["hp_stat"]
+
+    async def great_league_default_combat_power(self):
+        return self._pokemon_json["great_league_data"]["default"]["combat_power"]
+
+    async def ultra_league_default_combat_power(self):
+        return self._pokemon_json["ultra_league_data"]["default"]["combat_power"]
+
+    async def master_league_level_50_combat_power(self):
+        return self._pokemon_json["master_league_data"]["level_50"]["combat_power"]
+
+
+async def get_pokemon_stat(pokemon_json):
+    great_league_data = pokemon_json["great_league_data"]
+    ultra_league_data = pokemon_json["ultra_league_data"]
+    master_league_data = pokemon_json["master_league_data"]
+
+    if great_league_data["highest_attack_stat"]["attack_stat"] == 0:
+        great_league_data["highest_attack_stat"]["attack_stat"], great_league_data["highest_defense_stat"][
+            "defense_stat"], great_league_data["highest_hp_stat"]["hp_stat"] = \
+            master_league_data["level_51"]["attack_stat"], master_league_data["level_51"]["defense_stat"], \
+            master_league_data["level_51"]["hp_stat"]
+
+    if ultra_league_data["highest_attack_stat"]["attack_stat"] == 0:
+        ultra_league_data["highest_attack_stat"]["attack_stat"], ultra_league_data["highest_defense_stat"][
+            "defense_stat"], ultra_league_data["highest_hp_stat"]["hp_stat"] = \
+            master_league_data["level_51"]["attack_stat"], master_league_data["level_51"]["defense_stat"], \
+            master_league_data["level_51"]["hp_stat"]
+
+    if great_league_data["lowest_attack_stat"]["attack_stat"] == 9999:
+        great_league_data["lowest_attack_stat"]["attack_stat"], great_league_data["lowest_defense_stat"][
+            "defense_stat"], great_league_data["lowest_hp_stat"]["hp_stat"] = \
+            great_league_data["default"]["attack_stat"], great_league_data["default"]["defense_stat"], \
+            great_league_data["default"]["hp_stat"]
+
+    if ultra_league_data["lowest_attack_stat"]["attack_stat"] == 9999:
+        ultra_league_data["lowest_attack_stat"]["attack_stat"], ultra_league_data["lowest_defense_stat"][
+            "defense_stat"], ultra_league_data["lowest_hp_stat"]["hp_stat"] = \
+            ultra_league_data["default"]["attack_stat"], ultra_league_data["default"]["defense_stat"], \
+            ultra_league_data["default"]["hp_stat"]
+
+    pokemon_json["great_league_data"], pokemon_json["ultra_league_data"], pokemon_json["master_league_data"] = \
+        great_league_data, ultra_league_data, master_league_data
+
+    return PokemonStats(pokemon_json)
+
 async def pokemon_autocomplete_search(ctx: discord.AutocompleteContext):
     search = ctx.value.lower()
     matches = process.extract(search, pokemon_list, scorer=fuzz.WRatio, limit=25)  # type: ignore
@@ -538,84 +658,39 @@ async def query(ctx, pokemon: str):
         value=charged_move_string
     )
 
-    great_default_combat_power = final_data["great_league_data"]["default"]["combat_power"]
+    pokemon_stat_data = await get_pokemon_stat(final_data)
 
-    great_highest_attack_stat = final_data["great_league_data"]["highest_attack_stat"]["attack_stat"]
-    great_default_attack_stat = final_data["great_league_data"]["default"]["attack_stat"]
-    great_lowest_attack_stat = final_data["great_league_data"]["lowest_attack_stat"]["attack_stat"]
+    great_default_combat_power = await pokemon_stat_data.great_league_default_combat_power()
+    great_default_attack_stat = await pokemon_stat_data.great_league_default_attack_stat()
+    great_lowest_attack_stat = await pokemon_stat_data.great_league_lowest_attack_stat()
+    great_highest_attack_stat = await pokemon_stat_data.great_league_highest_attack_stat()
+    great_default_defense_stat = await pokemon_stat_data.great_league_default_defense_stat()
+    great_lowest_defense_stat = await pokemon_stat_data.great_league_lowest_defense_stat()
+    great_highest_defense_stat = await pokemon_stat_data.great_league_highest_defense_stat()
+    great_default_hp_stat = await pokemon_stat_data.great_league_default_hp_stat()
+    great_lowest_hp_stat = await pokemon_stat_data.great_league_lowest_hp_stat()
+    great_highest_hp_stat = await pokemon_stat_data.great_league_highest_hp_stat()
 
-    great_highest_defense_stat = final_data["great_league_data"]["highest_defense_stat"]["defense_stat"]
-    great_default_defense_stat = final_data["great_league_data"]["default"]["defense_stat"]
-    great_lowest_defense_stat = final_data["great_league_data"]["lowest_defense_stat"]["defense_stat"]
+    ultra_default_combat_power = await pokemon_stat_data.ultra_league_default_combat_power()
+    ultra_default_attack_stat = await pokemon_stat_data.ultra_league_default_attack_stat()
+    ultra_lowest_attack_stat = await pokemon_stat_data.ultra_league_lowest_attack_stat()
+    ultra_highest_attack_stat = await pokemon_stat_data.ultra_league_highest_attack_stat()
+    ultra_default_defense_stat = await pokemon_stat_data.ultra_league_default_defense_stat()
+    ultra_lowest_defense_stat = await pokemon_stat_data.ultra_league_lowest_defense_stat()
+    ultra_highest_defense_stat = await pokemon_stat_data.ultra_league_highest_defense_stat()
+    ultra_default_hp_stat = await pokemon_stat_data.ultra_league_default_hp_stat()
+    ultra_lowest_hp_stat = await pokemon_stat_data.ultra_league_lowest_hp_stat()
+    ultra_highest_hp_stat = await pokemon_stat_data.ultra_league_highest_hp_stat()
 
-    great_highest_hp_stat = final_data["great_league_data"]["highest_hp_stat"]["hp_stat"]
-    great_default_hp_stat = final_data["great_league_data"]["default"]["hp_stat"]
-    great_lowest_hp_stat = final_data["great_league_data"]["lowest_hp_stat"]["hp_stat"]
+    master_league_level_50_combat_power = await pokemon_stat_data.master_league_level_50_combat_power()
+    master_league_level_50_attack_stat = await pokemon_stat_data.master_league_level_50_attack()
+    master_league_level_50_defense_stat = await pokemon_stat_data.master_league_level_50_defense()
+    master_league_level_50_hp_stat = await pokemon_stat_data.master_league_level_50_hp()
 
-    ultra_default_combat_power = final_data["ultra_league_data"]["default"]["combat_power"]
-
-    ultra_highest_attack_stat = final_data["ultra_league_data"]["highest_attack_stat"]["attack_stat"]
-    ultra_default_attack_stat = final_data["ultra_league_data"]["default"]["attack_stat"]
-    ultra_lowest_attack_stat = final_data["ultra_league_data"]["lowest_attack_stat"]["attack_stat"]
-
-    ultra_highest_defense_stat = final_data["ultra_league_data"]["highest_defense_stat"]["defense_stat"]
-    ultra_default_defense_stat = final_data["ultra_league_data"]["default"]["defense_stat"]
-    ultra_lowest_defense_stat = final_data["ultra_league_data"]["lowest_defense_stat"]["defense_stat"]
-
-    ultra_highest_hp_stat = final_data["ultra_league_data"]["highest_hp_stat"]["hp_stat"]
-    ultra_default_hp_stat = final_data["ultra_league_data"]["default"]["hp_stat"]
-    ultra_lowest_hp_stat = final_data["ultra_league_data"]["lowest_hp_stat"]["hp_stat"]
-
-    master_league_data_level_50 = final_data["master_league_data"]["level_50"]
-    master_league_data_level_51 = final_data["master_league_data"]["level_51"]
-
-    master_league_level_50_combat_power = master_league_data_level_50["combat_power"]
-    master_league_level_50_attack_stat = master_league_data_level_50["attack_stat"]
-    master_league_level_50_defense_stat = master_league_data_level_50["defense_stat"]
-    master_league_level_50_hp_stat = master_league_data_level_50["hp_stat"]
-
-    master_league_level_51_combat_power = master_league_data_level_51["combat_power"]
-    master_league_level_51_attack_stat = master_league_data_level_51["attack_stat"]
-    master_league_level_51_defense_stat = master_league_data_level_51["defense_stat"]
-    master_league_level_51_hp_stat = master_league_data_level_51["hp_stat"]
-
-    set_stat = lambda stat, default_stat, condition: default_stat if stat == condition else stat
-
-    great_highest_attack_stat = set_stat(great_highest_attack_stat, great_default_attack_stat, 0)
-    great_highest_defense_stat = set_stat(great_highest_defense_stat, great_default_defense_stat, 0)
-    great_highest_hp_stat = set_stat(great_highest_hp_stat, great_default_hp_stat, 0)
-
-    ultra_highest_attack_stat = set_stat(ultra_highest_attack_stat, ultra_default_attack_stat, 0)
-    ultra_highest_defense_stat = set_stat(ultra_highest_defense_stat, ultra_default_defense_stat, 0)
-    ultra_highest_hp_stat = set_stat(ultra_highest_hp_stat, ultra_default_hp_stat, 0)
-
-    great_lowest_attack_stat = set_stat(great_lowest_attack_stat, great_default_attack_stat, 9999)
-    great_lowest_defense_stat = set_stat(great_lowest_defense_stat, great_default_defense_stat, 9999)
-    great_lowest_hp_stat = set_stat(great_lowest_hp_stat, great_default_hp_stat, 9999)
-
-    ultra_lowest_attack_stat = set_stat(ultra_lowest_attack_stat, ultra_default_attack_stat, 9999)
-    ultra_lowest_defense_stat = set_stat(ultra_lowest_defense_stat, ultra_default_defense_stat, 9999)
-    ultra_lowest_hp_stat = set_stat(ultra_lowest_hp_stat, ultra_default_hp_stat, 9999)
-
-    ultra_highest_attack_stat = set_stat(ultra_highest_attack_stat, master_league_level_51_attack_stat,
-                                         great_highest_attack_stat)
-    ultra_highest_defense_stat = set_stat(ultra_highest_defense_stat, master_league_level_51_defense_stat,
-                                          great_highest_defense_stat)
-    ultra_highest_hp_stat = set_stat(ultra_highest_hp_stat, master_league_level_51_hp_stat, great_highest_hp_stat)
-
-    ultra_lowest_attack_stat = set_stat(ultra_lowest_attack_stat, master_league_level_50_attack_stat,
-                                        great_lowest_attack_stat)
-    ultra_lowest_defense_stat = set_stat(ultra_lowest_defense_stat, master_league_level_50_defense_stat,
-                                         great_lowest_defense_stat)
-    ultra_lowest_hp_stat = set_stat(ultra_lowest_hp_stat, master_league_level_50_hp_stat, great_lowest_hp_stat)
-
-    ultra_lowest_attack_stat = min(ultra_lowest_attack_stat, ultra_default_attack_stat, ultra_highest_attack_stat)
-    ultra_lowest_defense_stat = min(ultra_lowest_defense_stat, ultra_default_defense_stat, ultra_highest_defense_stat)
-    ultra_lowest_hp_stat = min(ultra_lowest_hp_stat, ultra_default_hp_stat, ultra_highest_hp_stat)
-
-    ultra_highest_attack_stat = max(ultra_highest_attack_stat, ultra_default_attack_stat, ultra_lowest_attack_stat)
-    ultra_highest_defense_stat = max(ultra_highest_defense_stat, ultra_default_defense_stat, ultra_lowest_defense_stat)
-    ultra_highest_hp_stat = max(ultra_highest_hp_stat, ultra_default_hp_stat, ultra_lowest_hp_stat)
+    master_league_level_51_combat_power = await pokemon_stat_data.master_league_level_50_combat_power()
+    master_league_level_51_attack_stat = await pokemon_stat_data.master_league_level_51_attack()
+    master_league_level_51_defense_stat = await pokemon_stat_data.master_league_level_51_defense()
+    master_league_level_51_hp_stat = await pokemon_stat_data.master_league_level_51_hp()
 
     embed.add_field(
         name="Great League Stats <:pogo_great_league:1295173042443391027>",
