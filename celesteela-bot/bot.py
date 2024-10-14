@@ -328,7 +328,7 @@ async def add_detailed_info(pokemon_json):
         if entry["combat_power"] <= GREAT_LEAGUE_CP_LIMIT:
             highest_great_league_data = await update_highest_lowest_stats(entry, highest_great_league_data)
 
-        if entry["combat_power"] <= ULTRA_LEAGUE_CP_LIMIT:
+        if GREAT_LEAGUE_CP_LIMIT < entry["combat_power"] <= ULTRA_LEAGUE_CP_LIMIT:
             highest_ultra_league_data = await update_highest_lowest_stats(entry, highest_ultra_league_data)
 
     default_great_league_level, default_great_league_attack_iv, default_great_league_defense_iv, default_great_league_hp_iv = \
