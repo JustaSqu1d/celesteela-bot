@@ -9,7 +9,7 @@ import aiofiles
 import discord
 import dotenv
 from PIL import Image, ImageDraw, ImageFont
-from rapidfuzz import process, fuzz, utils
+from rapidfuzz import process, fuzz
 
 activity = discord.Activity(
     name="Trainers throw on alignment",
@@ -137,7 +137,6 @@ async def load_data():
 async def format_move_name(move_name):
     for move in move_data:
         if move["uniqueId"].lower() == move_name.lower():
-
             type_string = await get_type_emoji(move["type"])
             return f"{type_string} {move['displayName']}"
 
@@ -529,6 +528,8 @@ async def query(ctx, pokemon: str):
         value=charged_move_string
     )
 
+    great_default_combat_power = final_data["great_league_data"]["default"]["combat_power"]
+
     great_highest_attack_stat = final_data["great_league_data"]["highest_attack_stat"]["attack_stat"]
     great_default_attack_stat = final_data["great_league_data"]["default"]["attack_stat"]
     great_lowest_attack_stat = final_data["great_league_data"]["lowest_attack_stat"]["attack_stat"]
@@ -540,6 +541,8 @@ async def query(ctx, pokemon: str):
     great_highest_hp_stat = final_data["great_league_data"]["highest_hp_stat"]["hp_stat"]
     great_default_hp_stat = final_data["great_league_data"]["default"]["hp_stat"]
     great_lowest_hp_stat = final_data["great_league_data"]["lowest_hp_stat"]["hp_stat"]
+
+    ultra_default_combat_power = final_data["ultra_league_data"]["default"]["combat_power"]
 
     ultra_highest_attack_stat = final_data["ultra_league_data"]["highest_attack_stat"]["attack_stat"]
     ultra_default_attack_stat = final_data["ultra_league_data"]["default"]["attack_stat"]
@@ -571,18 +574,32 @@ async def query(ctx, pokemon: str):
     ultra_lowest_defense_stat = set_stat(ultra_lowest_defense_stat, ultra_default_defense_stat, 9999)
     ultra_lowest_hp_stat = set_stat(ultra_lowest_hp_stat, ultra_default_hp_stat, 9999)
 
+    master_league_data_level_50 = final_data["master_league_data"]["level_50"]
+    master_league_data_level_51 = final_data["master_league_data"]["level_51"]
+
+    master_league_level_50_combat_power = master_league_data_level_50["combat_power"]
+    master_league_level_50_attack_stat = master_league_data_level_50["attack_stat"]
+    master_league_level_50_defense_stat = master_league_data_level_50["defense_stat"]
+    master_league_level_50_hp_stat = master_league_data_level_50["hp_stat"]
+
+    master_league_level_51_combat_power = master_league_data_level_51["combat_power"]
+    master_league_level_51_attack_stat = master_league_data_level_51["attack_stat"]
+    master_league_level_51_defense_stat = master_league_data_level_51["defense_stat"]
+    master_league_level_51_hp_stat = master_league_data_level_51["hp_stat"]
 
     embed.add_field(
-        name="Great League Stats",
-        value=f"**Attack: {great_default_attack_stat:.2f}** ({great_lowest_attack_stat:.2f} - {great_highest_attack_stat:.2f})"
+        name="Great League Stats <:pogo_great_league:1295173042443391027>",
+        value=f"**CP: {great_default_combat_power}**"
+              f"\n**Attack: {great_default_attack_stat:.2f}** ({great_lowest_attack_stat:.2f} - {great_highest_attack_stat:.2f})"
               f"\n**Defense: {great_default_defense_stat:.2f}** ({great_lowest_defense_stat:.2f} - {great_highest_defense_stat:.2f})"
               f"\n**HP: {great_default_hp_stat}** ({great_lowest_hp_stat} - {great_highest_hp_stat})",
         inline=False
     )
 
     embed.add_field(
-        name="Ultra League Stats",
-        value=f"**Attack: {ultra_default_attack_stat:.2f}** ({ultra_lowest_attack_stat:.2f} - {ultra_highest_attack_stat:.2f})"
+        name="Ultra League Stats <:pogo_ultra_league:1295173106662379610>",
+        value=f"**CP: {ultra_default_combat_power}**"
+              f"\n**Attack: {ultra_default_attack_stat:.2f}** ({ultra_lowest_attack_stat:.2f} - {ultra_highest_attack_stat:.2f})"
               f"\n**Defense: {ultra_default_defense_stat:.2f}** ({ultra_lowest_defense_stat:.2f} - {ultra_highest_defense_stat:.2f})"
               f"\n**HP: {ultra_default_hp_stat}** ({ultra_lowest_hp_stat} - {ultra_highest_hp_stat})",
     )
