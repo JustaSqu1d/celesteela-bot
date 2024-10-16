@@ -802,7 +802,7 @@ async def stats(ctx, name, attack_iv, defense_iv, hp_iv):
 
     embed = discord.Embed()
 
-    embed.title = f"#{final_data['dex']} {final_data['speciesName']}"
+    embed.title = f"#{final_data['dex']} {final_data['speciesName']} ({attack_iv}/{defense_iv}/{hp_iv})"
 
     embed.description = f"**Type**: {type_string}"
 
