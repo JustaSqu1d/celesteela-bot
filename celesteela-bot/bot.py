@@ -30,6 +30,16 @@ dotenv.load_dotenv()
 DEV_GUILD_ID = int(os.getenv("DEV_GUILD_ID"))
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
+levels = ["1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5", "8.0",
+          "8.5", "9.0", "9.5", "10.0", "10.5", "11.0", "11.5", "12.0", "12.5", "13.0", "13.5", "14.0", "14.5",
+          "15.0", "15.5", "16.0", "16.5", "17.0", "17.5", "18.0", "18.5", "19.0", "19.5", "20.0", "20.5", "21.0",
+          "21.5", "22.0", "22.5", "23.0", "23.5", "24.0", "24.5", "25.0", "25.5", "26.0", "26.5", "27.0", "27.5",
+          "28.0", "28.5", "29.0", "29.5", "30.0", "30.5", "31.0", "31.5", "32.0", "32.5", "33.0", "33.5", "34.0",
+          "34.5", "35.0", "35.5", "36.0", "36.5", "37.0", "37.5", "38.0", "38.5", "39.0", "39.5", "40.0", "40.5",
+          "41.0", "41.5", "42.0", "42.5", "43.0", "43.5", "44.0", "44.5", "45.0", "45.5", "46.0", "46.5", "47.0",
+          "47.5", "48.0", "48.5", "49.0", "49.5", "50.0", "50.5", "51.0"
+          ]
+
 filepath = os.path.dirname(__file__)
 
 
@@ -223,16 +233,6 @@ async def add_detailed_info(pokemon_json):
     base_attack = pokemon_json["baseStats"]["atk"]
     base_defense = pokemon_json["baseStats"]["def"]
     base_hp = pokemon_json["baseStats"]["hp"]
-
-    levels = ["1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5", "8.0",
-              "8.5", "9.0", "9.5", "10.0", "10.5", "11.0", "11.5", "12.0", "12.5", "13.0", "13.5", "14.0", "14.5",
-              "15.0", "15.5", "16.0", "16.5", "17.0", "17.5", "18.0", "18.5", "19.0", "19.5", "20.0", "20.5", "21.0",
-              "21.5", "22.0", "22.5", "23.0", "23.5", "24.0", "24.5", "25.0", "25.5", "26.0", "26.5", "27.0", "27.5",
-              "28.0", "28.5", "29.0", "29.5", "30.0", "30.5", "31.0", "31.5", "32.0", "32.5", "33.0", "33.5", "34.0",
-              "34.5", "35.0", "35.5", "36.0", "36.5", "37.0", "37.5", "38.0", "38.5", "39.0", "39.5", "40.0", "40.5",
-              "41.0", "41.5", "42.0", "42.5", "43.0", "43.5", "44.0", "44.5", "45.0", "45.5", "46.0", "46.5", "47.0",
-              "47.5", "48.0", "48.5", "49.0", "49.5", "50.0", "50.5", "51.0"
-              ]
 
     ivs = range(0, 16)
 
@@ -567,30 +567,31 @@ async def get_pokemon_stat(pokemon_json):
         great_league_data["highest_attack_stat"]["attack_stat"], great_league_data["highest_defense_stat"][
             "defense_stat"], great_league_data["highest_hp_stat"]["hp_stat"] = \
             master_league_data["level_51"]["attack_stat"], master_league_data["level_51"]["defense_stat"], \
-            master_league_data["level_51"]["hp_stat"]
+                master_league_data["level_51"]["hp_stat"]
 
     if ultra_league_data["highest_attack_stat"]["attack_stat"] == 0:
         ultra_league_data["highest_attack_stat"]["attack_stat"], ultra_league_data["highest_defense_stat"][
             "defense_stat"], ultra_league_data["highest_hp_stat"]["hp_stat"] = \
             master_league_data["level_51"]["attack_stat"], master_league_data["level_51"]["defense_stat"], \
-            master_league_data["level_51"]["hp_stat"]
+                master_league_data["level_51"]["hp_stat"]
 
     if great_league_data["lowest_attack_stat"]["attack_stat"] == 9999:
         great_league_data["lowest_attack_stat"]["attack_stat"], great_league_data["lowest_defense_stat"][
             "defense_stat"], great_league_data["lowest_hp_stat"]["hp_stat"] = \
             great_league_data["default"]["attack_stat"], great_league_data["default"]["defense_stat"], \
-            great_league_data["default"]["hp_stat"]
+                great_league_data["default"]["hp_stat"]
 
     if ultra_league_data["lowest_attack_stat"]["attack_stat"] == 9999:
         ultra_league_data["lowest_attack_stat"]["attack_stat"], ultra_league_data["lowest_defense_stat"][
             "defense_stat"], ultra_league_data["lowest_hp_stat"]["hp_stat"] = \
             ultra_league_data["default"]["attack_stat"], ultra_league_data["default"]["defense_stat"], \
-            ultra_league_data["default"]["hp_stat"]
+                ultra_league_data["default"]["hp_stat"]
 
     pokemon_json["great_league_data"], pokemon_json["ultra_league_data"], pokemon_json["master_league_data"] = \
         great_league_data, ultra_league_data, master_league_data
 
     return PokemonStats(pokemon_json)
+
 
 async def pokemon_autocomplete_search(ctx: discord.AutocompleteContext):
     search = ctx.value.lower()
@@ -727,6 +728,112 @@ async def query(ctx, pokemon: str):
     file = discord.File(table, filename="pacing_table.png")
 
     await ctx.respond(embed=embed, file=file)
+
+
+@bot.slash_command(
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install
+    },
+    description="Find the stats of a Pokémon."
+)
+@discord.option(name="name", description="The Pokémon to search for.", autocomplete=pokemon_autocomplete_search)
+@discord.option(name="attack_iv", description="The attack IV of the Pokémon.",
+                type=discord.SlashCommandOptionType.integer, min_value=0, max_value=15)
+@discord.option(name="defense_iv", description="The defense IV of the Pokémon.",
+                type=discord.SlashCommandOptionType.integer, min_value=0, max_value=15)
+@discord.option(name="hp_iv", description="The HP IV of the Pokémon.", type=discord.SlashCommandOptionType.integer,
+                min_value=0, max_value=15)
+async def stats(ctx, name, attack_iv, defense_iv, hp_iv):
+    final_data = None
+    for data in pokemon_data:
+        if data["speciesName"].lower() == name.lower():
+            final_data = data
+            break
+    else:
+        await ctx.respond("Pokémon not found", ephemeral=True)
+
+    type_string = ""
+
+    for type in final_data["types"]:
+        if type != "none":
+            type_emoji = await get_type_emoji(type)
+            type_string += f"{type_emoji} {type.capitalize()}, "
+
+    type_string = type_string[:-2]
+
+    base_attack, base_defense, base_hp = final_data["baseStats"]["atk"], final_data["baseStats"]["def"], \
+        final_data["baseStats"]["hp"]
+
+    great_league_level = 1
+    ultra_league_level = 1
+    for level in levels:
+        level_combat_power = await calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv,
+                                                          defense_iv, hp_iv)
+
+        if level_combat_power <= 1500:
+            great_league_level = level
+        if level_combat_power <= 2500:
+            ultra_league_level = level
+
+    great_league_combat_power = await calculate_combat_power(base_attack, base_defense, base_hp, great_league_level,
+                                                             attack_iv, defense_iv, hp_iv)
+    great_league_attack_stat = await calculate_base_stat(base_attack, attack_iv, great_league_level)
+    great_league_defense_stat = await calculate_base_stat(base_defense, defense_iv, great_league_level)
+    great_league_hp_stat = max(int(await calculate_base_stat(base_hp, hp_iv, great_league_level)), 10)
+
+    ultra_league_combat_power = await calculate_combat_power(base_attack, base_defense, base_hp, ultra_league_level,
+                                                             attack_iv, defense_iv, hp_iv)
+    ultra_league_attack_stat = await calculate_base_stat(base_attack, attack_iv, ultra_league_level)
+    ultra_league_defense_stat = await calculate_base_stat(base_defense, defense_iv, ultra_league_level)
+    ultra_league_hp_stat = max(int(await calculate_base_stat(base_hp, hp_iv, ultra_league_level)), 10)
+
+    master_league_combat_power = await calculate_combat_power(base_attack, base_defense, base_hp, 50, attack_iv,
+                                                              defense_iv, hp_iv)
+    master_league_attack_stat = await calculate_base_stat(base_attack, attack_iv, 50)
+    master_league_defense_stat = await calculate_base_stat(base_defense, defense_iv, 50)
+    master_league_hp_stat = max(int(await calculate_base_stat(base_hp, hp_iv, 50)), 10)
+
+    master_league_high_combat_power = await calculate_combat_power(base_attack, base_defense, base_hp, 51, attack_iv,
+                                                                   defense_iv, hp_iv)
+    master_league_high_attack_stat = await calculate_base_stat(base_attack, attack_iv, 51)
+    master_league_high_defense_stat = await calculate_base_stat(base_defense, defense_iv, 51)
+    master_league_high_hp_stat = max(int(await calculate_base_stat(base_hp, hp_iv, 51)), 10)
+
+    embed = discord.Embed()
+
+    embed.title = f"#{final_data['dex']} {final_data['speciesName']}"
+
+    embed.description = f"**Type**: {type_string}"
+
+    embed.add_field(
+        name="Great League Stats <:pogo_great_league:1295173042443391027>",
+        value=f"**CP: {great_league_combat_power}**"
+              f"\n**Attack: {great_league_attack_stat:.2f}**"
+              f"\n**Defense: {great_league_defense_stat:.2f}**"
+              f"\n**HP: {great_league_hp_stat}**",
+        inline=False
+    )
+
+    embed.add_field(
+        name="Ultra League Stats <:pogo_ultra_league:1295173106662379610>",
+        value=f"**CP: {ultra_league_combat_power}**"
+              f"\n**Attack: {ultra_league_attack_stat:.2f}**"
+              f"\n**Defense: {ultra_league_defense_stat:.2f}**"
+              f"\n**HP: {ultra_league_hp_stat}**",
+        inline=False
+    )
+
+    embed.add_field(
+        name="Master League Stats <:pogo_master_league:1295173143522050080>",
+        value=f"**CP: {master_league_combat_power}** ({master_league_high_combat_power})"
+              f"\n**Attack: {master_league_attack_stat:.2f}** ({master_league_high_attack_stat:.2f})"
+              f"\n**Defense: {master_league_defense_stat:.2f}** ({master_league_high_defense_stat:.2f})"
+              f"\n**HP: {master_league_hp_stat}** ({master_league_high_hp_stat})",
+        inline=False
+    )
+
+    await ctx.respond(embed=embed)
 
 
 @bot.slash_command(guild_ids=[DEV_GUILD_ID])
