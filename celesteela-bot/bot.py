@@ -836,6 +836,69 @@ async def stats(ctx, name, attack_iv, defense_iv, hp_iv):
     await ctx.respond(embed=embed)
 
 
+@bot.slash_command(
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install
+    },
+    description="Get info about a move."
+)
+@discord.option(name="move", description="The move to search for.",
+                autocomplete=discord.utils.basic_autocomplete(move_list))
+async def move(ctx, move: str):
+    final_data = None
+    for data in move_data:
+        if data["displayName"].lower() == move.lower():
+            final_data = data
+            break
+    else:
+        await ctx.respond("Move not found", ephemeral=True)
+
+    final_data["power"] = int(final_data["power"])
+
+    type_string = await get_type_emoji(final_data["type"])
+
+    fast_or_charge = "Fast" if final_data["turns"] > 0 else "Charge"
+
+    move_string = ""
+
+    if fast_or_charge == "Fast":
+        turns = final_data["turns"]
+        energy_per_turn = final_data["energyDelta"] / final_data["turns"]
+        damage_per_turn = final_data["power"] / final_data["turns"]
+
+        move_string += f"**Turns**: {turns}\n"\
+                        f"**Energy per Turn**: {energy_per_turn:.2f}\n" \
+                       f"**Damage per Turn**: {damage_per_turn:.2f}\n"
+    else:
+        damage_per_energy = final_data["power"] / final_data["energyDelta"]
+        move_string += f"**Damage per Energy**: {damage_per_energy:.2f}\n"
+
+        if final_data.get("buffs"):
+            buff = final_data["buffs"]
+            move_string += "\nAdditional Effects:\n"
+            if buff.get("buffActivationChance"):
+                move_string += f"**Chance**: {(buff['buffActivationChance'] * 100):.2f}%\n"
+            if buff.get("attackerDefenseStatStageChange"):
+                move_string += f"**User's Defense**: {buff['attackerDefenseStatStageChange']}\n"
+            if buff.get("attackerAttackStatStageChange"):
+                move_string += f"**User's Attack**: {buff['attackerAttackStatStageChange']}\n"
+            if buff.get("targetAttackStatStageChange"):
+                move_string += f"**Target's Attack**: {buff['targetAttackStatStageChange']}\n"
+            if buff.get("targetDefenseStatStageChange"):
+                move_string += f"**Target's Defense**: {buff['targetDefenseStatStageChange']}\n"
+
+    embed = discord.Embed()
+
+    embed.title = f"{final_data['displayName']}"
+
+    embed.description = f"**Type**: {type_string} {final_data['type'].capitalize()}\n**Damage**: {final_data['power']}\n" \
+                        f"**Energy**: {final_data['energyDelta']}\n"
+    embed.description += move_string
+
+    await ctx.respond(embed=embed)
+
+
 @bot.slash_command(guild_ids=[DEV_GUILD_ID])
 async def sync_data(ctx):
     if ctx.author.id in bot.owner_ids:
