@@ -8,8 +8,11 @@ from math import sqrt
 import aiofiles
 import discord
 import dotenv
+import matplotlib.pyplot as plt
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from rapidfuzz import process, fuzz
+from scipy.stats import norm
 
 activity = discord.Activity(
     name="Trainers throw on alignment",
@@ -227,6 +230,38 @@ async def calculate_pokemon_data(base_attack, base_defense, base_hp, level, atta
         "hp_stat": hp_stat,
         "stat_product": stat_product
     }
+
+
+async def get_all_attack_spreads(base_attack: int, base_defense: int, base_hp: int, max_cp: object = 1500) -> list[
+    float]:
+    ivs = range(0, 16)
+
+    spreads = []
+
+    highest_possible_cp = await calculate_combat_power(base_attack, base_defense, base_hp, "51.0", 15, 15, 15)
+
+    if highest_possible_cp > max_cp:
+        for attack_iv in ivs:
+            for defense_iv in ivs:
+                for hp_iv in ivs:
+                    for level in levels:
+                        combat_power = await calculate_combat_power(base_attack, base_defense, base_hp, level,
+                                                                    attack_iv, defense_iv,
+                                                                    hp_iv)
+                        if combat_power > max_cp:
+                            new_level = float(level) - 0.5
+
+                            calculated_attack = await calculate_base_stat(base_attack, attack_iv, new_level)
+                            spreads.append(calculated_attack)
+                            break
+
+    else:
+        for attack_iv in ivs:
+            for level in ["50.0", "50.5", "51.0"]:
+                calculated_attack = await calculate_base_stat(base_attack, attack_iv, level)
+                spreads.append(calculated_attack)
+
+    return spreads
 
 
 async def add_detailed_info(pokemon_json):
@@ -735,16 +770,17 @@ async def query(ctx, pokemon: str):
         discord.IntegrationType.guild_install,
         discord.IntegrationType.user_install
     },
-    description="Find the stats of a Pokémon."
+    description="Find the stats of a Pokémon.",
+    name="stats"
 )
 @discord.option(name="name", description="The Pokémon to search for.", autocomplete=pokemon_autocomplete_search)
-@discord.option(name="attack_iv", description="The attack IV of the Pokémon.",
+@discord.option(name="attack_iv", description="The base_attack IV of the Pokémon.",
                 type=discord.SlashCommandOptionType.integer, min_value=0, max_value=15)
-@discord.option(name="defense_iv", description="The defense IV of the Pokémon.",
+@discord.option(name="defense_iv", description="The base_defense IV of the Pokémon.",
                 type=discord.SlashCommandOptionType.integer, min_value=0, max_value=15)
 @discord.option(name="hp_iv", description="The HP IV of the Pokémon.", type=discord.SlashCommandOptionType.integer,
                 min_value=0, max_value=15)
-async def stats(ctx, name, attack_iv, defense_iv, hp_iv):
+async def _stats(ctx, name, attack_iv, defense_iv, hp_iv):
     final_data = None
     for data in pokemon_data:
         if data["speciesName"].lower() == name.lower():
@@ -867,8 +903,8 @@ async def move(ctx, move: str):
         energy_per_turn = final_data["energyDelta"] / final_data["turns"]
         damage_per_turn = final_data["power"] / final_data["turns"]
 
-        move_string += f"**Turns**: {turns}\n"\
-                        f"**Energy per Turn**: {energy_per_turn:.2f}\n" \
+        move_string += f"**Turns**: {turns}\n" \
+                       f"**Energy per Turn**: {energy_per_turn:.2f}\n" \
                        f"**Damage per Turn**: {damage_per_turn:.2f}\n"
     else:
         damage_per_energy = final_data["power"] / final_data["energyDelta"]
@@ -897,6 +933,114 @@ async def move(ctx, move: str):
     embed.description += move_string
 
     await ctx.respond(embed=embed)
+
+
+@bot.slash_command(
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install
+    },
+    description="Attack histogram"
+)
+@discord.option(name="league", description="The league", choices=["great", "ultra"])
+@discord.option(name="name", description="The first Pokémon to graph.", autocomplete=pokemon_autocomplete_search)
+@discord.option(name="name2", description="The second Pokémon to graph.", autocomplete=pokemon_autocomplete_search,
+                required=False)
+@discord.option(name="name3", description="The third Pokémon to graph.", autocomplete=pokemon_autocomplete_search,
+                required=False)
+async def histogram(ctx, league, name, name2, name3):
+    # allow up to 3 separate pokemon to be graphed
+
+    await ctx.defer()
+
+    max_cp_leagues = {
+        "great": 1500,
+        "ultra": 2500,
+        "master": float("inf")
+    }
+
+    max_cp = max_cp_leagues.get(league)
+
+    pokemon_count = 1
+    if name2:
+        pokemon_count += 1
+    if name3:
+        pokemon_count += 1
+
+    if not name2:
+        name2 = ""
+
+    if not name3:
+        name3 = ""
+
+    final_data = []
+    for data in pokemon_data:
+        if data["speciesName"].lower() == name.lower() or data["speciesName"].lower() == name2.lower() or \
+                data["speciesName"].lower() == name3.lower():
+            final_data.append(data)
+
+    if len(final_data) != pokemon_count:
+        await ctx.respond("One or more Pokémon not found", ephemeral=True)
+        return
+
+    attack_spreads_dict = {}
+
+    for data in final_data:
+        base_attack, base_defense, base_hp = data["baseStats"]["atk"], data["baseStats"]["def"], data["baseStats"]["hp"]
+        attack_spreads_dict[data["speciesName"]] = {}
+        attack_spreads_dict[data["speciesName"]]["attack_spreads"] = await get_all_attack_spreads(base_attack, base_defense, base_hp, max_cp)
+        attack_spreads_dict[data["speciesName"]]["default_spreads"] = data[f"{league}_league_data"]["default"]["attack_stat"]
+        attack_spreads_dict[data["speciesName"]]["species_name"] = data["speciesName"]
+
+    # create a histogram using matplotlib
+    data_stream = io.BytesIO()
+
+    curves = []
+
+    for pokemon_spread in attack_spreads_dict.values():
+        attack_spreads = pokemon_spread["attack_spreads"]
+        species_name = pokemon_spread["species_name"]
+
+        bins = []
+        max_attack = max(attack_spreads)
+        min_attack = min(attack_spreads)
+        for i in range(int(min_attack), int(max_attack) + 1):
+            bins.append(i + 0.05)
+
+        counts, bins = np.histogram(attack_spreads, bins=bins)
+
+        curves.append(plt.stairs(counts, bins, fill=True, alpha=0.35, label=species_name))
+
+        mean_attack = np.mean(attack_spreads)
+        std_attack = np.std(attack_spreads)
+        x_values = np.linspace(min_attack, max_attack, 1000)
+        bell_curve = norm.pdf(x_values, mean_attack, std_attack)
+
+        bell_curve = bell_curve * max(counts) / max(bell_curve)
+
+        plt.plot(x_values, bell_curve, color="red", linewidth=2)
+
+        default_attack = pokemon_spread["default_spreads"]
+
+        # add a line for default ivs
+        plt.axvline(default_attack, color="black", linestyle="--")
+        plt.text(default_attack - 0.75, max(counts) * 0.4, f"{species_name} Default ({default_attack:.2f})", color="black",
+                 rotation=90)
+
+    plt.title(f"Attack Stat Distribution ({league.capitalize()} League)")
+    plt.legend(handles=curves)
+
+    plt.xlabel("Attack Stat")
+
+    plt.ylabel("Frequency")
+
+    plt.savefig(data_stream, format='png', bbox_inches="tight", dpi=120, pad_inches=0.2)
+
+    data_stream.seek(0)
+
+    file = discord.File(data_stream, filename="histogram.png")
+
+    await ctx.respond(file=file)
 
 
 @bot.slash_command(guild_ids=[DEV_GUILD_ID])
