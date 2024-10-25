@@ -1036,6 +1036,8 @@ async def histogram(ctx, league, name, name2, name3):
 
     plt.savefig(data_stream, format='png', bbox_inches="tight", dpi=120, pad_inches=0.2)
 
+    plt.clf()
+
     data_stream.seek(0)
 
     file = discord.File(data_stream, filename="histogram.png")
