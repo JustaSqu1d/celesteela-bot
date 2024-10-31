@@ -751,9 +751,9 @@ async def query(ctx, pokemon: str):
 
     embed.add_field(
         name="Master League Stats <:pogo_master_league:1295173143522050080>",
-        value=f"**CP: {master_league_level_50_combat_power}** ({master_league_level_51_combat_power})"
-              f"\n**Attack: {master_league_level_50_attack_stat:.2f}** ({master_league_level_51_attack_stat:.2f})"
-              f"\n**Defense: {master_league_level_50_defense_stat:.2f}** ({master_league_level_51_defense_stat:.2f})"
+        value=f"**CP: {master_league_level_50_combat_power}** ({master_league_level_51_combat_power} <:best_buddy_ribbon:1299902932111855629>)"
+              f"\n**Attack: {master_league_level_50_attack_stat:.2f}** ({master_league_level_51_attack_stat:.2f} <:best_buddy_ribbon:1299902932111855629>)"
+              f"\n**Defense: {master_league_level_50_defense_stat:.2f}** ({master_league_level_51_defense_stat:.2f} <:best_buddy_ribbon:1299902932111855629>)"
               f"\n**HP: {master_league_level_50_hp_stat}** ({master_league_level_51_hp_stat})",
         inline=False
     )
