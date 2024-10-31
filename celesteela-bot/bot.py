@@ -862,10 +862,10 @@ async def _stats(ctx, name, attack_iv, defense_iv, hp_iv):
 
     embed.add_field(
         name="Master League Stats <:pogo_master_league:1295173143522050080>",
-        value=f"**CP: {master_league_combat_power}** ({master_league_high_combat_power})"
-              f"\n**Attack: {master_league_attack_stat:.2f}** ({master_league_high_attack_stat:.2f})"
-              f"\n**Defense: {master_league_defense_stat:.2f}** ({master_league_high_defense_stat:.2f})"
-              f"\n**HP: {master_league_hp_stat}** ({master_league_high_hp_stat})",
+        value=f"**CP: {master_league_combat_power}** ({master_league_high_combat_power} <:best_buddy_ribbon:1299902932111855629>)"
+              f"\n**Attack: {master_league_attack_stat:.2f}** ({master_league_high_attack_stat:.2f} <:best_buddy_ribbon:1299902932111855629>)"
+              f"\n**Defense: {master_league_defense_stat:.2f}** ({master_league_high_defense_stat:.2f} <:best_buddy_ribbon:1299902932111855629>)"
+              f"\n**HP: {master_league_hp_stat}** ({master_league_high_hp_stat} <:best_buddy_ribbon:1299902932111855629>)",
         inline=False
     )
 
