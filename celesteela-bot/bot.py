@@ -1059,7 +1059,12 @@ async def sync_data(ctx):
     await ctx.respond(f"{ctx.author.mention} Data updated in {end_time - start_time:.2f} seconds")
 
 
-@bot.slash_command()
+@bot.slash_command(
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install,
+    }
+)
 async def sableye(ctx):
 
     # 12 random letters is the code
