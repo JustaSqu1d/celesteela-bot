@@ -1076,7 +1076,7 @@ async def sableye(ctx):
         description=f"Claim your free Sableye!\nCode:{code}",
         color=discord.Color.purple()
     )
-    embed.set_image(url="https://imgur.com/a/dNua42Y")
+    embed.set_image(url="https://i.imgur.com/ug1evlY.png")
     embed.set_footer(text="!sableye")
 
     await ctx.respond(embed=embed)
