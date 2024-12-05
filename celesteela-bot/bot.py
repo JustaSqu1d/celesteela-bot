@@ -3,6 +3,8 @@ import io
 import json
 import os
 import time
+import random
+import string
 from math import sqrt
 
 import aiofiles
@@ -1055,6 +1057,24 @@ async def sync_data(ctx):
     await update_data()
     end_time = time.time()
     await ctx.respond(f"{ctx.author.mention} Data updated in {end_time - start_time:.2f} seconds")
+
+
+@bot.slash_command()
+async def sableye(ctx):
+
+    # 12 random letters is the code
+
+    code = ''.join(random.choices(string.ascii_letters, k=12))
+
+    embed = discord.Embed(
+        title="Sableye Drop!",
+        description=f"Claim your free Sableye!\nCode:{code}",
+        color=discord.Color.purple()
+    )
+    embed.set_image(url="https://imgur.com/a/dNua42Y")
+    embed.set_footer(text="!sableye")
+
+    await ctx.respond(embed=embed)
 
 
 if __name__ == "__main__":
