@@ -1070,10 +1070,11 @@ async def sableye(ctx):
     # 12 random letters is the code
 
     code = ''.join(random.choices(string.ascii_letters, k=12))
+    code = code.upper()
 
     embed = discord.Embed(
         title="Sableye Drop!",
-        description=f"Claim your free Sableye!\nCode:{code}",
+        description=f"Claim your free Sableye!\nCode: {code}",
         color=discord.Color.purple()
     )
     embed.set_image(url="https://i.imgur.com/ug1evlY.png")
