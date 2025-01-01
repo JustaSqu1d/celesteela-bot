@@ -1083,5 +1083,23 @@ async def sableye(ctx):
     await ctx.respond(embed=embed)
 
 
+@bot.slash_command(
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install,
+    }
+)
+async def ping(ctx):
+    latency = int(bot.latency*1000)
+
+    embed = discord.Embed(
+        title="Pong!",
+        description=f"{latency} ms",
+        color=discord.Color.from_rgb(r=31, g=82, b=82)
+    )
+
+    await ctx.respond(embed=embed)
+
+
 if __name__ == "__main__":
     bot.run(BOT_TOKEN)
