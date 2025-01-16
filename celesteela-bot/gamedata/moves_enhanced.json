@@ -132,7 +132,7 @@
     {
         "uniqueId": "ICE_PUNCH",
         "type": "ice",
-        "power": 55.0,
+        "power": 60.0,
         "energyDelta": 40,
         "turns": 0,
         "uuid": 33,
@@ -496,7 +496,7 @@
     {
         "uniqueId": "THUNDER_PUNCH",
         "type": "electric",
-        "power": 55.0,
+        "power": 60.0,
         "energyDelta": 40,
         "turns": 0,
         "uuid": 77,
@@ -664,8 +664,12 @@
     {
         "uniqueId": "BULLDOZE",
         "type": "ground",
-        "power": 80.0,
-        "energyDelta": 60,
+        "power": 45.0,
+        "energyDelta": 45,
+        "buffs": {
+            "targetDefenseStatStageChange": -1,
+            "buffActivationChance": 0.5
+        },
         "turns": 0,
         "uuid": 95,
         "displayName": "Bulldoze",
@@ -835,7 +839,7 @@
     {
         "uniqueId": "FIRE_PUNCH",
         "type": "fire",
-        "power": 55.0,
+        "power": 60.0,
         "energyDelta": 40,
         "turns": 0,
         "uuid": 115,
@@ -1069,7 +1073,7 @@
     {
         "uniqueId": "THUNDER_SHOCK",
         "type": "electric",
-        "power": 3.0,
+        "power": 4.0,
         "energyDelta": 9,
         "turns": 2,
         "uuid": 205,
@@ -3264,6 +3268,34 @@
         "turns": 0,
         "uuid": 463,
         "displayName": "Sparkling Aria",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "RAGE_FIST",
+        "type": "POKEMON_TYPE_GHOST",
+        "power": 50.0,
+        "energyDelta": 35,
+        "buffs": {
+            "attackerAttackStatStageChange": 1,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 464,
+        "displayName": "Rage Fist",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "FLOWER_TRICK",
+        "type": "POKEMON_TYPE_GRASS",
+        "power": 35.0,
+        "energyDelta": 35,
+        "buffs": {
+            "attackerAttackStatStageChange": 1,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 465,
+        "displayName": "Flower Trick",
         "usageType": "charge"
     },
     {

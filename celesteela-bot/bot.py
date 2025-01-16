@@ -1078,7 +1078,7 @@ async def sableye(ctx):
         color=discord.Color.purple()
     )
     embed.set_image(url="https://i.imgur.com/ug1evlY.png")
-    embed.set_footer(text="!sableye")
+    embed.set_footer(text="!sableye (Parody)")
 
     await ctx.respond(embed=embed)
 
