@@ -3272,7 +3272,7 @@
     },
     {
         "uniqueId": "RAGE_FIST",
-        "type": "POKEMON_TYPE_GHOST",
+        "type": "ghost",
         "power": 50.0,
         "energyDelta": 35,
         "buffs": {
@@ -3286,7 +3286,7 @@
     },
     {
         "uniqueId": "FLOWER_TRICK",
-        "type": "POKEMON_TYPE_GRASS",
+        "type": "grass",
         "power": 35.0,
         "energyDelta": 35,
         "buffs": {
