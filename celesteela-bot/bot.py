@@ -980,11 +980,13 @@ async def reverse_iv(ctx, name, cp, level, floor_iv):
     embed.description = ""
 
     if solutions == 0:
-        embed.description += "No results found."
+        embed.description += "**No results found.**"
     else:
-        embed.description += f"{solutions} solutions found:\n"
+        embed.description += f"**{solutions} solutions found:**\n"
         for attack_iv, defense_iv, hp_iv in combinations:
             embed.description += f"{attack_iv}/{defense_iv}/{hp_iv}\n"
+
+    embed.set_footer(text=f"Possible IV Combinations at CP: {cp} | Level: {level} | Floor IV: {floor_iv}")
 
     await ctx.respond(embed=embed)
 
