@@ -655,7 +655,7 @@ async def query(ctx, pokemon: str):
             break
     else:
         embed = discord.Embed(
-            title="Pokemon not found",
+            title="Pokémon not found",
             description=f"The Pokémon (`{pokemon}`) does not exist.",
             color=discord.Color.red()
         )
@@ -933,6 +933,58 @@ async def move(ctx, move: str):
     embed.description = f"**Type**: {type_string} {final_data['type'].capitalize()}\n**Damage**: {final_data['power']}\n" \
                         f"**Energy**: {final_data['energyDelta']}\n"
     embed.description += move_string
+
+    await ctx.respond(embed=embed)
+
+
+@bot.slash_command(
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install
+    },
+    description="Find the stats of a Pokémon.",
+    name="reverse_iv"
+)
+@discord.option(name="name", description="The Pokémon to search for.", autocomplete=pokemon_autocomplete_search)
+@discord.option(name="cp", description="The CP of the Pokémon.", type=discord.SlashCommandOptionType.integer)
+@discord.option(name="level", description="The level of the Pokémon.", type=discord.SlashCommandOptionType.number)
+@discord.option(name="floor_iv", description="The floor IV of the Pokémon.", type=discord.SlashCommandOptionType.integer, required=False, default=0, min_value=0, max_value=15)
+async def reverse_iv(ctx, name, cp, level, floor_iv):
+    final_data = None
+    for data in pokemon_data:
+        if data["speciesName"].lower() == name.lower():
+            final_data = data
+            break
+    else:
+        await ctx.respond("Pokémon not found", ephemeral=True)
+
+    # round level to nearest 0.5
+    level = round(level * 2) / 2
+
+    combinations = []
+
+    for attack_iv in range(floor_iv, 16):
+        for defense_iv in range(floor_iv, 16):
+            for hp_iv in range(floor_iv, 16):
+                combat_power = await calculate_combat_power(final_data["baseStats"]["atk"], final_data["baseStats"]["def"],
+                                                            final_data["baseStats"]["hp"], level, attack_iv,
+                                                            defense_iv, hp_iv)
+                if combat_power == cp:
+                    combinations.append((attack_iv, defense_iv, hp_iv))
+
+    solutions = len(combinations)
+
+    embed = discord.Embed()
+
+    embed.title = f"#{final_data['dex']} {final_data['speciesName']} (CP: {cp})"
+    embed.description = ""
+
+    if solutions == 0:
+        embed.description += "No results found."
+    else:
+        embed.description += f"{solutions} solutions found:\n"
+        for attack_iv, defense_iv, hp_iv in combinations:
+            embed.description += f"{attack_iv}/{defense_iv}/{hp_iv}\n"
 
     await ctx.respond(embed=embed)
 
