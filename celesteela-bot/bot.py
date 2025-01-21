@@ -947,7 +947,7 @@ async def move(ctx, move: str):
 )
 @discord.option(name="name", description="The Pokémon to search for.", autocomplete=pokemon_autocomplete_search)
 @discord.option(name="cp", description="The CP of the Pokémon.", type=discord.SlashCommandOptionType.integer)
-@discord.option(name="level", description="The level of the Pokémon.", type=discord.SlashCommandOptionType.number)
+@discord.option(name="level", description="The level of the Pokémon.", type=discord.SlashCommandOptionType.number, min_value=1, max_value=51)
 @discord.option(name="floor_iv", description="The floor IV of the Pokémon.", type=discord.SlashCommandOptionType.integer, required=False, default=0, min_value=0, max_value=15)
 async def reverse_iv(ctx, name, cp, level, floor_iv):
     final_data = None
