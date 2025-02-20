@@ -947,9 +947,10 @@ async def move(ctx, move: str):
 )
 @discord.option(name="name", description="The Pokémon to search for.", autocomplete=pokemon_autocomplete_search)
 @discord.option(name="cp", description="The CP of the Pokémon.", type=discord.SlashCommandOptionType.integer)
-@discord.option(name="level", description="The level of the Pokémon.", type=discord.SlashCommandOptionType.number, min_value=1, max_value=51)
+@discord.option(name="level", description="The level of the Pokémon.", type=discord.SlashCommandOptionType.number, required=False, min_value=1, max_value=51)
 @discord.option(name="floor_iv", description="The floor IV of the Pokémon.", type=discord.SlashCommandOptionType.integer, required=False, default=0, min_value=0, max_value=15)
-async def reverse_iv(ctx, name, cp, level, floor_iv):
+@discord.option(name="hp", description="The HP of the Pokémon.", type=discord.SlashCommandOptionType.integer, required=False)
+async def reverse_iv(ctx, name, cp, level, floor_iv, hp):
     final_data = None
     for data in pokemon_data:
         if data["speciesName"].lower() == name.lower():
@@ -959,18 +960,28 @@ async def reverse_iv(ctx, name, cp, level, floor_iv):
         await ctx.respond("Pokémon not found", ephemeral=True)
 
     # round level to nearest 0.5
-    level = round(level * 2) / 2
+    if level:
+        level = round(level * 2) / 2
 
     combinations = []
+
+    levels_list = [level] if level else levels
 
     for attack_iv in range(floor_iv, 16):
         for defense_iv in range(floor_iv, 16):
             for hp_iv in range(floor_iv, 16):
-                combat_power = await calculate_combat_power(final_data["baseStats"]["atk"], final_data["baseStats"]["def"],
-                                                            final_data["baseStats"]["hp"], level, attack_iv,
-                                                            defense_iv, hp_iv)
-                if combat_power == cp:
-                    combinations.append((attack_iv, defense_iv, hp_iv))
+                for level_iter in levels_list:
+                    combat_power = await calculate_combat_power(final_data["baseStats"]["atk"], final_data["baseStats"]["def"],
+                                                                final_data["baseStats"]["hp"], level_iter, attack_iv,
+                                                                defense_iv, hp_iv)
+                    if combat_power == cp:
+                        if hp:
+                            hp_stat = await calculate_base_stat(final_data["baseStats"]["hp"], hp_iv, level_iter)
+                            hp_stat = max(int(hp_stat), 10)
+                            if hp_stat == hp:
+                                combinations.append((attack_iv, defense_iv, hp_iv))
+                        else:
+                            combinations.append((attack_iv, defense_iv, hp_iv))
 
     solutions = len(combinations)
 
@@ -986,7 +997,9 @@ async def reverse_iv(ctx, name, cp, level, floor_iv):
         for attack_iv, defense_iv, hp_iv in combinations:
             embed.description += f"{attack_iv}/{defense_iv}/{hp_iv}\n"
 
-    embed.set_footer(text=f"Possible IV Combinations at CP: {cp} | Level: {level} | Floor IV: {floor_iv}")
+    level_str = f"Level: {level}" if level else "Level: Any"
+
+    embed.set_footer(text=f"Possible IV Combinations at CP: {cp} | {level_str} | Floor IV: {floor_iv}")
 
     await ctx.respond(embed=embed)
 
