@@ -999,7 +999,9 @@ async def reverse_iv(ctx, name, cp, level, floor_iv, hp):
 
     level_str = f"Level: {level}" if level else "Level: Any"
 
-    embed.set_footer(text=f"Possible IV Combinations at CP: {cp} | {level_str} | Floor IV: {floor_iv}")
+    hp_str = f"HP: {hp}" if hp else "HP: Any"
+
+    embed.set_footer(text=f"Possible IV Combinations at CP: {cp} | {level_str} | {hp_str} | Floor IV: {floor_iv}")
 
     await ctx.respond(embed=embed)
 
