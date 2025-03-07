@@ -1,6 +1,7 @@
 import asyncio
 import io
 import json
+import math
 import os
 import time
 import random
@@ -77,14 +78,17 @@ async def update_data():
 
     move_data = new_move_data
 
-    async with aiofiles.open(filepath + "/gamedata/moves_enhanced.json", "w") as file:
+    async with aiofiles.open(filepath + "/gamedata/moves.json", "w") as file:
         await file.write(json.dumps(move_data, indent=4))
 
-    new_pokemon_data = []
     start_time = time.time()
 
+    async with aiofiles.open(filepath + "/gamedata/pokemon.json", "r") as file:
+        file_string = await file.read()
+        temp_pokemon_data = json.loads(file_string)
+
     tasks = []
-    for pokemon in pokemon_data:
+    for pokemon in temp_pokemon_data:
         print(f"({pokemon['dex']}) Processing {pokemon['speciesName']}")
         tasks.append(add_detailed_info(pokemon))
 
@@ -130,7 +134,7 @@ async def load_data():
         file_string = await file.read()
         cp_multipliers = json.loads(file_string)
 
-    async with aiofiles.open(filepath + "/gamedata/moves_enhanced.json", "r") as file:
+    async with aiofiles.open(filepath + "/gamedata/moves.json", "r") as file:
         file_string = await file.read()
         move_data = json.loads(file_string)
 
@@ -1114,6 +1118,136 @@ async def histogram(ctx, league, name, name2, name3):
     file = discord.File(data_stream, filename="histogram.png")
 
     await ctx.respond(file=file)
+
+
+async def calculate_damage(attack_stat, defense_stat, attacker, defender):
+    damage_dict = {}
+
+    is_attacker_shadow = "shadow" in attacker["tags"]
+    is_defender_shadow = "shadow" in defender["tags"]
+
+    for move in attacker["chargedMoves"]+attacker["fastMoves"]:
+        for data in move_data:
+            if data["uniqueId"].lower() == move.lower():
+                current_move = data
+                move_name = data["displayName"]
+                break
+        else:
+            continue
+
+        power = current_move["power"]
+        stab = 1.2 if current_move["type"] in attacker["types"] else 1
+        effectiveness = await get_type_multiplier(current_move["type"], defender["types"])
+        trainer_constant = 1.3
+
+        actual_attack_stat = attack_stat * 1.2 if is_attacker_shadow else attack_stat
+        actual_defense_stat = defense_stat * 0.8333333 if is_defender_shadow else defense_stat
+
+        damage = int(0.5 * power * (actual_attack_stat / actual_defense_stat) * stab * effectiveness * trainer_constant) + 1
+        damage_dict[move_name] = damage
+
+    return damage_dict
+
+
+
+def get_pokemon_by_name(name: str):
+    for data in pokemon_data:
+        if data["speciesName"].lower() == name.lower():
+            return data
+    return None
+
+
+async def determine_league_level(base_stats, league_data, max_cp: int):
+    level = 1
+    for lvl in levels:
+        cp = await calculate_combat_power(
+            base_stats["atk"],
+            base_stats["def"],
+            base_stats["hp"],
+            lvl,
+            league_data["attack_stat"],
+            league_data["defense_stat"],
+            league_data["hp_stat"]
+        )
+        if cp <= max_cp:
+            level = lvl
+    return level
+
+
+async def compute_attack_stat(pokemon: dict, league: str):
+    base_stats = pokemon["baseStats"]
+    if league == "master":
+        # For master league, IV is fixed at 15 and level is fixed at 50.
+        return await calculate_base_stat(base_stats["atk"], 15, 50)
+    else:
+        # For ultra and great leagues, get the league-specific data and determine level.
+        league_data = pokemon[f"{league}_league_data"]["default"]
+        max_cp = 2500 if league == "ultra" else 1500
+        level = await determine_league_level(base_stats, league_data, max_cp)
+        return await calculate_base_stat(base_stats["atk"], league_data["attack_stat"], level)
+
+
+async def compute_defense_stats(pokemon: dict, league: str):
+    base_stats = pokemon["baseStats"]
+    if league == "master":
+        level = 50
+        iv = 15
+        defense = await calculate_base_stat(base_stats["def"], iv, level)
+        # Ensure a minimum HP of 10.
+        hp = max(int(await calculate_base_stat(base_stats["hp"], iv, level)), 10)
+    else:
+        league_data = pokemon[f"{league}_league_data"]["default"]
+        max_cp = 2500 if league == "ultra" else 1500
+        level = await determine_league_level(base_stats, league_data, max_cp)
+        defense = await calculate_base_stat(base_stats["def"], league_data["defense_stat"], level)
+        hp = int(await calculate_base_stat(base_stats["hp"], league_data["hp_stat"], level))
+    return defense, hp
+
+
+@bot.slash_command(
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install
+    },
+    description="Damage calculator"
+)
+@discord.option(name="league", choices=["great", "ultra", "master"])
+@discord.option(name="attacker", description="The attacker's Pokémon.", autocomplete=pokemon_autocomplete_search)
+@discord.option(name="defender", description="The defender's Pokémon.", autocomplete=pokemon_autocomplete_search)
+async def damage(ctx, league, attacker, defender):
+    attacker_data = get_pokemon_by_name(attacker)
+    if not attacker_data:
+        await ctx.respond("Attacking Pokémon not found", ephemeral=True)
+        return
+
+    defender_data = get_pokemon_by_name(defender)
+    if not defender_data:
+        await ctx.respond("Defending Pokémon not found", ephemeral=True)
+        return
+
+    attack_stat = await compute_attack_stat(attacker_data, league)
+    defense_stat, hp_stat = await compute_defense_stats(defender_data, league)
+
+    damages = await calculate_damage(attack_stat, defense_stat, attacker_data, defender_data)
+    damages = {move: dmg for move, dmg in sorted(damages.items(), key=lambda item: item[1], reverse=True)}
+
+    embed = discord.Embed(
+        title=f"{attacker_data['speciesName']} vs {defender_data['speciesName']} ({league.capitalize()} League)"
+    )
+
+    description_lines = []
+    for move, dmg in damages.items():
+        hits_to_ko = math.ceil(hp_stat / dmg)
+        hits_display = "O" if hits_to_ko == 1 else hits_to_ko
+
+        percentage_string = f"{(dmg / hp_stat) * 100:.2f}%"
+
+        description_lines.append(f"**{move}**: {dmg} damage | {percentage_string} | {hits_display}HKO")
+
+    embed.description = "\n".join(description_lines)
+    await ctx.respond(embed=embed)
+
+
 
 
 @bot.slash_command(guild_ids=[DEV_GUILD_ID])
