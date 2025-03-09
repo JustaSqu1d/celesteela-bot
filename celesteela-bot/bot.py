@@ -1123,8 +1123,8 @@ async def histogram(ctx, league, name, name2, name3):
 async def calculate_damage(attack_stat, defense_stat, attacker, defender):
     damage_dict = {}
 
-    is_attacker_shadow = "shadow" in attacker["tags"]
-    is_defender_shadow = "shadow" in defender["tags"]
+    is_attacker_shadow = "shadow" in attacker.get("tags", [])
+    is_defender_shadow = "shadow" in defender.get("tags", [])
 
     for move in attacker["chargedMoves"]+attacker["fastMoves"]:
         for data in move_data:
