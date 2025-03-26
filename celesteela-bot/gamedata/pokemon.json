@@ -4285,7 +4285,7 @@
                 15
             ]
         },
-        "searchPriority": 12,
+        "searchPriority": 9,
         "buddyDistance": 3,
         "thirdMoveCost": 50000,
         "released": true,
@@ -17566,6 +17566,163 @@
         "released": true
     },
     {
+        "dex": 128,
+        "speciesName": "Tauros (Combat)",
+        "speciesId": "tauros_combat",
+        "baseStats": {
+            "atk": 210,
+            "def": 193,
+            "hp": 181
+        },
+        "types": [
+            "fighting",
+            "none"
+        ],
+        "fastMoves": [
+            "TACKLE",
+            "ZEN_HEADBUTT",
+            "DOUBLE_KICK"
+        ],
+        "chargedMoves": [
+            "EARTHQUAKE",
+            "CLOSE_COMBAT",
+            "IRON_HEAD",
+            "TRAILBLAZE"
+        ],
+        "tags": [
+            "regional",
+            "paldean"
+        ],
+        "defaultIVs": {
+            "cp500": [
+                6.5,
+                9,
+                15,
+                14
+            ],
+            "cp1500": [
+                19.5,
+                5,
+                15,
+                11
+            ],
+            "cp2500": [
+                35.5,
+                5,
+                10,
+                14
+            ]
+        },
+        "buddyDistance": 3,
+        "thirdMoveCost": 50000,
+        "released": false
+    },
+    {
+        "dex": 128,
+        "speciesName": "Tauros (Aqua)",
+        "speciesId": "tauros_aqua",
+        "baseStats": {
+            "atk": 210,
+            "def": 193,
+            "hp": 181
+        },
+        "types": [
+            "fighting",
+            "water"
+        ],
+        "fastMoves": [
+            "TACKLE",
+            "ZEN_HEADBUTT",
+            "DOUBLE_KICK"
+        ],
+        "chargedMoves": [
+            "EARTHQUAKE",
+            "AQUA_JET",
+            "IRON_HEAD",
+            "TRAILBLAZE"
+        ],
+        "tags": [
+            "regional",
+            "paldean"
+        ],
+        "defaultIVs": {
+            "cp500": [
+                6.5,
+                9,
+                15,
+                14
+            ],
+            "cp1500": [
+                19.5,
+                5,
+                15,
+                11
+            ],
+            "cp2500": [
+                35.5,
+                5,
+                10,
+                14
+            ]
+        },
+        "searchPriority": 2,
+        "buddyDistance": 3,
+        "thirdMoveCost": 50000,
+        "released": false
+    },
+    {
+        "dex": 128,
+        "speciesName": "Tauros (Blaze)",
+        "speciesId": "tauros_blaze",
+        "baseStats": {
+            "atk": 210,
+            "def": 193,
+            "hp": 181
+        },
+        "types": [
+            "fighting",
+            "fire"
+        ],
+        "fastMoves": [
+            "TACKLE",
+            "ZEN_HEADBUTT",
+            "DOUBLE_KICK"
+        ],
+        "chargedMoves": [
+            "EARTHQUAKE",
+            "FLAME_CHARGE",
+            "IRON_HEAD",
+            "TRAILBLAZE"
+        ],
+        "tags": [
+            "regional",
+            "paldean"
+        ],
+        "defaultIVs": {
+            "cp500": [
+                6.5,
+                9,
+                15,
+                14
+            ],
+            "cp1500": [
+                19.5,
+                5,
+                15,
+                11
+            ],
+            "cp2500": [
+                35.5,
+                5,
+                10,
+                14
+            ]
+        },
+        "buddyDistance": 3,
+        "thirdMoveCost": 50000,
+        "released": false
+    },
+    {
         "dex": 129,
         "speciesName": "Magikarp",
         "speciesId": "magikarp",
@@ -21582,7 +21739,7 @@
                 15
             ]
         },
-        "searchPriority": 3,
+        "searchPriority": 2,
         "buddyDistance": 1,
         "thirdMoveCost": 10000,
         "released": true,
@@ -27970,7 +28127,7 @@
                 15
             ]
         },
-        "searchPriority": 7,
+        "searchPriority": 3,
         "level25CP": 1267,
         "tags": [
             "shadoweligible"
@@ -35510,7 +35667,7 @@
         "tags": [
             "shadoweligible"
         ],
-        "searchPriority": 9,
+        "searchPriority": 10,
         "buddyDistance": 5,
         "thirdMoveCost": 75000,
         "released": true
@@ -40838,6 +40995,9 @@
                 15
             ]
         },
+        "nicknames": [
+            "clops"
+        ],
         "searchPriority": 7,
         "level25CP": 927,
         "tags": [
@@ -41045,7 +41205,11 @@
             "DARK_PULSE",
             "MEGAHORN",
             "THUNDER",
-            "PAYBACK"
+            "PAYBACK",
+            "BRUTAL_SWING"
+        ],
+        "eliteMoves": [
+            "BRUTAL_SWING"
         ],
         "defaultIVs": {
             "cp500": [
@@ -41102,7 +41266,11 @@
             "DARK_PULSE",
             "MEGAHORN",
             "THUNDER",
-            "PAYBACK"
+            "PAYBACK",
+            "BRUTAL_SWING"
+        ],
+        "eliteMoves": [
+            "BRUTAL_SWING"
         ],
         "defaultIVs": {
             "cp500": [
@@ -41154,7 +41322,8 @@
             "DARK_PULSE",
             "MEGAHORN",
             "THUNDER",
-            "PAYBACK"
+            "PAYBACK",
+            "BRUTAL_SWING"
         ],
         "defaultIVs": {
             "cp500": [
@@ -53113,13 +53282,16 @@
                 15
             ]
         },
+        "nicknames": [
+            "noir"
+        ],
         "level25CP": 1447,
         "tags": [
             "shadoweligible"
         ],
         "buddyDistance": 3,
         "thirdMoveCost": 50000,
-        "searchPriority": 6,
+        "searchPriority": 3,
         "released": true,
         "family": {
             "id": "FAMILY_DUSKULL",
@@ -67011,7 +67183,7 @@
                 11
             ]
         },
-        "searchPriority": 6,
+        "searchPriority": 3,
         "buddyDistance": 5,
         "thirdMoveCost": 75000,
         "released": true,
@@ -76895,6 +77067,7 @@
                 13
             ]
         },
+        "searchPriority": 4,
         "buddyDistance": 1,
         "thirdMoveCost": 10000,
         "released": true,
@@ -82359,7 +82532,7 @@
         },
         "buddyDistance": 5,
         "thirdMoveCost": 75000,
-        "released": false,
+        "released": true,
         "family": {
             "id": "FAMILY_SIZZLIPEDE",
             "evolutions": [
@@ -82412,7 +82585,7 @@
         },
         "buddyDistance": 5,
         "thirdMoveCost": 75000,
-        "released": false,
+        "released": true,
         "family": {
             "id": "FAMILY_SIZZLIPEDE",
             "parent": "sizzlipede"
@@ -84628,59 +84801,10 @@
     },
     {
         "dex": 888,
-        "speciesName": "Zacian",
-        "speciesId": "zacian",
-        "baseStats": {
-            "atk": 254,
-            "def": 236,
-            "hp": 192
-        },
-        "types": [
-            "fairy",
-            "steel"
-        ],
-        "fastMoves": [
-            "METAL_CLAW",
-            "SNARL",
-            "QUICK_ATTACK",
-            "FIRE_FANG"
-        ],
-        "chargedMoves": [
-            "PLAY_ROUGH",
-            "IRON_HEAD",
-            "WILD_CHARGE",
-            "CLOSE_COMBAT"
-        ],
-        "defaultIVs": {
-            "cp500": [
-                5,
-                8,
-                15,
-                12
-            ],
-            "cp1500": [
-                14,
-                9,
-                15,
-                15
-            ],
-            "cp2500": [
-                23.5,
-                6,
-                15,
-                15
-            ]
-        },
-        "buddyDistance": 20,
-        "thirdMoveCost": 100000,
-        "released": false
-    },
-    {
-        "dex": 888,
         "speciesName": "Zacian (Crowned Sword)",
         "speciesId": "zacian_crowned_sword",
         "baseStats": {
-            "atk": 332,
+            "atk": 295,
             "def": 240,
             "hp": 192
         },
@@ -84702,24 +84826,27 @@
         ],
         "defaultIVs": {
             "cp500": [
+                4.5,
                 4,
                 6,
-                15,
-                8
+                11
             ],
             "cp1500": [
-                11,
-                5,
-                14,
-                10
+                12.5,
+                4,
+                12,
+                8
             ],
             "cp2500": [
-                18,
-                4,
-                15,
-                15
+                20.5,
+                5,
+                11,
+                14
             ]
         },
+        "tags": [
+            "legendary"
+        ],
         "buddyDistance": 20,
         "thirdMoveCost": 100000,
         "released": false
@@ -84779,60 +84906,11 @@
     },
     {
         "dex": 889,
-        "speciesName": "Zamazenta",
-        "speciesId": "zamazenta",
-        "baseStats": {
-            "atk": 254,
-            "def": 236,
-            "hp": 192
-        },
-        "types": [
-            "fighting",
-            "steel"
-        ],
-        "fastMoves": [
-            "METAL_CLAW",
-            "SNARL",
-            "QUICK_ATTACK",
-            "ICE_FANG"
-        ],
-        "chargedMoves": [
-            "MOONBLAST",
-            "IRON_HEAD",
-            "CRUNCH",
-            "CLOSE_COMBAT"
-        ],
-        "defaultIVs": {
-            "cp500": [
-                5,
-                8,
-                15,
-                12
-            ],
-            "cp1500": [
-                14,
-                9,
-                15,
-                15
-            ],
-            "cp2500": [
-                23.5,
-                6,
-                15,
-                15
-            ]
-        },
-        "buddyDistance": 20,
-        "thirdMoveCost": 100000,
-        "released": false
-    },
-    {
-        "dex": 889,
         "speciesName": "Zamazenta (Crowned Shield)",
         "speciesId": "zamazenta_crowned_shield",
         "baseStats": {
-            "atk": 250,
-            "def": 292,
+            "atk": 231,
+            "def": 282,
             "hp": 192
         },
         "types": [
@@ -84853,24 +84931,27 @@
         ],
         "defaultIVs": {
             "cp500": [
-                4.5,
-                13,
-                15,
+                5,
+                10,
+                10,
                 15
             ],
             "cp1500": [
-                13,
+                14.5,
                 5,
-                15,
-                15
+                11,
+                14
             ],
             "cp2500": [
-                22,
+                24,
                 4,
-                15,
-                11
+                13,
+                15
             ]
         },
+        "tags": [
+            "legendary"
+        ],
         "buddyDistance": 20,
         "thirdMoveCost": 100000,
         "released": false
@@ -85565,6 +85646,53 @@
             "PSYCHIC",
             "ENERGY_BALL",
             "AVALANCHE"
+        ],
+        "defaultIVs": {
+            "cp500": [
+                4.5,
+                15,
+                13,
+                11
+            ],
+            "cp1500": [
+                13,
+                5,
+                10,
+                13
+            ],
+            "cp2500": [
+                21.5,
+                4,
+                14,
+                13
+            ]
+        },
+        "buddyDistance": 20,
+        "thirdMoveCost": 100000,
+        "released": false
+    },
+    {
+        "dex": 898,
+        "speciesName": "Calyrex (Shadow Rider)",
+        "speciesId": "calyrex_shadow_rider",
+        "baseStats": {
+            "atk": 324,
+            "def": 194,
+            "hp": 205
+        },
+        "types": [
+            "psychic",
+            "ghost"
+        ],
+        "fastMoves": [
+            "CONFUSION",
+            "TAKE_DOWN"
+        ],
+        "chargedMoves": [
+            "PSYSHOCK",
+            "PSYCHIC",
+            "ENERGY_BALL",
+            "SHADOW_BALL"
         ],
         "defaultIVs": {
             "cp500": [
@@ -86457,7 +86585,12 @@
             "FLAMETHROWER",
             "DISARMING_VOICE",
             "CRUNCH",
-            "SHADOW_BALL"
+            "SHADOW_BALL",
+            "BLAST_BURN",
+            "TORCH_SONG"
+        ],
+        "eliteMoves": [
+            "BLAST_BURN"
         ],
         "defaultIVs": {
             "cp500": [
@@ -86479,6 +86612,7 @@
                 11
             ]
         },
+        "searchPriority": 5,
         "nicknames": [
             "dirge"
         ],
@@ -91884,6 +92018,10 @@
                 15
             ]
         },
+        "searchPriority": 2,
+        "nicknames": [
+            "golden"
+        ],
         "buddyDistance": 5,
         "thirdMoveCost": 10000,
         "released": true,
