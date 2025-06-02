@@ -2481,7 +2481,7 @@
         "energyDelta": 55,
         "turns": 0,
         "uuid": 339,
-        "displayName": "Techno Blast (Douse)",
+        "displayName": "Techno Blast",
         "usageType": "charge"
     },
     {
@@ -3342,6 +3342,74 @@
         "turns": 0,
         "uuid": 468,
         "displayName": "Torch Song",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "BEHEMOTH_BLADE",
+        "type": "steel",
+        "power": 100.0,
+        "energyDelta": 55,
+        "turns": 0,
+        "uuid": 469,
+        "displayName": "Behemoth Blade",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "BEHEMOTH_BASH",
+        "type": "steel",
+        "power": 80.0,
+        "energyDelta": 45,
+        "turns": 0,
+        "uuid": 470,
+        "displayName": "Behemoth Bash",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "UPPER_HAND",
+        "type": "fighting",
+        "power": 70.0,
+        "energyDelta": 40,
+        "buffs": {
+            "targetDefenseStatStageChange": -1,
+            "buffActivationChance": 0.3
+        },
+        "turns": 0,
+        "uuid": 471,
+        "displayName": "Upper Hand",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "THUNDER_CAGE",
+        "type": "electric",
+        "power": 60.0,
+        "energyDelta": 40,
+        "buffs": {
+            "targetDefenseStatStageChange": -1,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 472,
+        "displayName": "Thunder Cage",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "CRUSH_GRIP",
+        "type": "normal",
+        "power": 110.0,
+        "energyDelta": 50,
+        "turns": 0,
+        "uuid": 485,
+        "displayName": "Crush Grip",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "DRAGON_ENERGY",
+        "type": "dragon",
+        "power": 100.0,
+        "energyDelta": 45,
+        "turns": 0,
+        "uuid": 486,
+        "displayName": "Dragon Energy",
         "usageType": "charge"
     },
     {
