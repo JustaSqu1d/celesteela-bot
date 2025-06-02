@@ -681,27 +681,34 @@ async def query(ctx, pokemon: str):
 
     embed.description = f"**Type**: {type_string}"
 
-    fast_move_string = ""
-    for move in final_data["fastMoves"]:
-        fast_move_string += await format_move_name(move) + "\n"
+    fast_move_string, charged_move_string = "", ""
 
-    fast_move_string = fast_move_string[:-1]
+    is_smeargle_or_mew = final_data["dex"] == 235 or final_data["dex"] == 151
+
+    if not is_smeargle_or_mew:  # Smeargle and Mew have too many moves
+
+        for move in final_data["fastMoves"]:
+            fast_move_string += await format_move_name(move) + "\n"
+
+        fast_move_string = fast_move_string[:-1]
+
+        for move in final_data["chargedMoves"]:
+            charged_move_string += await format_move_name(move) + "\n"
+
+        charged_move_string = charged_move_string[:-1]
+    else:
+        fast_move_string = "Too many moves to display."
+        charged_move_string = "Too many moves to display."
 
     embed.add_field(
         name="Fast Moves",
         value=fast_move_string
     )
-
-    charged_move_string = ""
-    for move in final_data["chargedMoves"]:
-        charged_move_string += await format_move_name(move) + "\n"
-
-    charged_move_string = charged_move_string[:-1]
-
     embed.add_field(
         name="Charged Moves",
         value=charged_move_string
     )
+
 
     pokemon_stat_data = await get_pokemon_stat(final_data)
 
@@ -764,11 +771,16 @@ async def query(ctx, pokemon: str):
         inline=False
     )
 
-    table = await create_pacing_table(final_data["pacing_data"])
+    if not is_smeargle_or_mew:  # Smeargle and Mew have too many moves
 
-    file = discord.File(table, filename="pacing_table.png")
+        table = await create_pacing_table(final_data["pacing_data"])
 
-    await ctx.respond(embed=embed, file=file)
+        file = discord.File(table, filename="pacing_table.png")
+
+        await ctx.respond(embed=embed, file=file)
+
+    else:
+        await ctx.respond(embed=embed)
 
 
 @bot.slash_command(
