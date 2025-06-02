@@ -116,7 +116,7 @@ async def format_move_name(move_name):
 async def get_type_multiplier(move_type, defender_types):
     multiplier = 1.0
     multiplier_dict = {
-        "SUPER_EFFECTIVE": 1.60000002384185791015625,
+        "SUPER_EFFECTIVE": 1.60000002384185791015625, # 32-bit float representation of 1.6
         "NEUTRAL": 1.0,
         "NOT_VERY_EFFECTIVE": 0.625,
         "IMMUNE": 0.390625,
@@ -901,10 +901,13 @@ async def calculate_damage(attack_stat, defense_stat, attacker, defender):
         power = current_move["power"]
         stab = 1.2000000476837158203125 if current_move["type"] in attacker["types"] else 1
         effectiveness = await get_type_multiplier(current_move["type"], defender["types"])
-        trainer_constant = 1.2999999523162841796875
 
-        actual_attack_stat = attack_stat * 1.2000000476837158203125 if is_attacker_shadow else attack_stat
-        actual_defense_stat = defense_stat * 0.833333313465118408203125 if is_defender_shadow else defense_stat
+        trainer_constant = 1.2999999523162841796875 # 32-bit float representation of 1.3
+        shadow_attack_constant = 1.2000000476837158203125 # 32-bit float representation of 1.2
+        shadow_defense_constant = 0.833333313465118408203125 # 32-bit float representation of 0.8333333
+
+        actual_attack_stat = attack_stat * shadow_attack_constant if is_attacker_shadow else attack_stat
+        actual_defense_stat = defense_stat * shadow_defense_constant if is_defender_shadow else defense_stat
 
         damage = int(
             0.5 * power * (actual_attack_stat / actual_defense_stat) * stab * effectiveness * trainer_constant) + 1
