@@ -1,9 +1,7 @@
-import asyncio
 import io
 import json
 import math
 import os
-import time
 import random
 import string
 from math import sqrt
@@ -57,51 +55,6 @@ async def on_ready():
     print("Data loaded")
 
 
-async def update_data():
-    global move_data, pokemon_data
-
-    new_move_data = []
-    for move in move_data:
-        try:
-            move["type"] = move["type"].lower().split("_")[2]
-        except IndexError:
-            pass
-
-        switcher = {"FUTURESIGHT": "FUTURE_SIGHT", "TECHNO_BLAST_WATER": "TECHNO_BLAST_DOUSE"}
-
-        switcher2 = {"Techno Blast Water": "Techno Blast (Douse)"}
-
-        move["uniqueId"] = switcher.get(move["uniqueId"], move["uniqueId"]).replace("_FAST", "")
-        move["displayName"] = switcher2.get(move["displayName"], move["displayName"])
-
-        new_move_data.append(move)
-
-    move_data = new_move_data
-
-    async with aiofiles.open(filepath + "/gamedata/moves.json", "w") as file:
-        await file.write(json.dumps(move_data, indent=4))
-
-    start_time = time.time()
-
-    async with aiofiles.open(filepath + "/gamedata/pokemon.json", "r") as file:
-        file_string = await file.read()
-        temp_pokemon_data = json.loads(file_string)
-
-    tasks = []
-    for pokemon in temp_pokemon_data:
-        print(f"({pokemon['dex']}) Processing {pokemon['speciesName']}")
-        tasks.append(add_detailed_info(pokemon))
-
-    new_pokemon_data = await asyncio.gather(*tasks)
-
-    pokemon_data = new_pokemon_data
-    end_time = time.time()
-    print(f"Processed all Pokémon in {end_time - start_time:.2f} seconds")
-
-    async with aiofiles.open(filepath + "/gamedata/pokemon_enhanced.json", "w") as file:
-        await file.write(json.dumps(pokemon_data, indent=4))
-
-
 async def get_type_emoji(type):
     switcher = {
         "bug": "<:bug:1295144501563756544>",
@@ -138,7 +91,7 @@ async def load_data():
         file_string = await file.read()
         move_data = json.loads(file_string)
 
-    async with aiofiles.open(filepath + "/gamedata/pokemon_enhanced.json", "r") as file:
+    async with aiofiles.open(filepath + "/gamedata/pokemon.json", "r") as file:
         file_string = await file.read()
         pokemon_data = json.loads(file_string)
 
@@ -160,30 +113,10 @@ async def format_move_name(move_name):
             return f"{type_string} {move['displayName']}"
 
 
-async def calculate_damage_ranges(attacker, defender, move):
-    half_circle_rule = 0.5
-
-    attack = attacker["attack_stat"]
-
-    defense = defender["defense_stat"]
-
-    trainer_constant = 1.3
-
-    stab_multiplier = 1.2 if move["type"] in attacker["types"] else 1.0
-
-    type_multiplier = get_type_multiplier(move["type"], defender["types"])
-
-    modifiers = trainer_constant * stab_multiplier * type_multiplier
-
-    damage = int(half_circle_rule * move["power"] * (attack / defense) * modifiers) + 1
-
-    return damage
-
-
 async def get_type_multiplier(move_type, defender_types):
     multiplier = 1.0
     multiplier_dict = {
-        "SUPER_EFFECTIVE": 1.6,
+        "SUPER_EFFECTIVE": 1.60000002384185791015625,
         "NEUTRAL": 1.0,
         "NOT_VERY_EFFECTIVE": 0.625,
         "IMMUNE": 0.390625,
@@ -268,195 +201,6 @@ async def get_all_attack_spreads(base_attack: int, base_defense: int, base_hp: i
                 spreads.append(calculated_attack)
 
     return spreads
-
-
-async def add_detailed_info(pokemon_json):
-    base_attack = pokemon_json["baseStats"]["atk"]
-    base_defense = pokemon_json["baseStats"]["def"]
-    base_hp = pokemon_json["baseStats"]["hp"]
-
-    ivs = range(0, 16)
-
-    pokemon_ranks = []
-
-    master_league_data_level_50 = await calculate_pokemon_data(base_attack, base_defense, base_hp, "50.0", 15, 15, 15)
-    master_league_data_level_51 = await calculate_pokemon_data(base_attack, base_defense, base_hp, "51.0", 15, 15, 15)
-
-    pokemon_json["master_league_data"] = {
-        "level_50": master_league_data_level_50,
-        "level_51": master_league_data_level_51
-    }
-
-    for attack_iv in ivs:
-        for defense_iv in ivs:
-            for hp_iv in ivs:
-                is_great_league_done = False
-                is_ultra_league_done = False
-                for level in levels:
-                    combat_power = await calculate_combat_power(base_attack, base_defense, base_hp, level, attack_iv,
-                                                                defense_iv,
-                                                                hp_iv)
-                    if combat_power > 1500 and not is_great_league_done:
-                        is_great_league_done = True
-
-                        data = await calculate_pokemon_data(base_attack, base_defense, base_hp, str(float(level) - 0.5),
-                                                            attack_iv, defense_iv,
-                                                            hp_iv)
-                        pokemon_ranks.append(data)
-
-                    if combat_power > 2500 and not is_ultra_league_done:
-                        is_ultra_league_done = True
-
-                        data = await calculate_pokemon_data(base_attack, base_defense, base_hp, str(float(level) - 0.5),
-                                                            attack_iv, defense_iv,
-                                                            hp_iv)
-                        pokemon_ranks.append(data)
-
-                    if is_great_league_done and is_ultra_league_done:
-                        break
-
-    # check if it is under or equal to 1500 combat power
-    GREAT_LEAGUE_CP_LIMIT = 1500
-    highest_great_league_data = {
-        "highest_attack_stat": {
-            "attack_stat": 0,
-        },
-        "highest_defense_stat": {
-            "defense_stat": 0,
-        },
-        "highest_hp_stat": {
-            "hp_stat": 0,
-        },
-        "highest_stat_product": {
-            "stat_product": 0,
-        },
-        "lowest_attack_stat": {
-            "attack_stat": 9999,
-        },
-        "lowest_defense_stat": {
-            "defense_stat": 9999,
-        },
-        "lowest_hp_stat": {
-            "hp_stat": 9999,
-        }
-    }
-    ULTRA_LEAGUE_CP_LIMIT = 2500
-    highest_ultra_league_data = {
-        "highest_attack_stat": {
-            "attack_stat": 0,
-        },
-        "highest_defense_stat": {
-            "defense_stat": 0,
-        },
-        "highest_hp_stat": {
-            "hp_stat": 0,
-        },
-        "highest_stat_product": {
-            "stat_product": 0,
-        },
-        "lowest_attack_stat": {
-            "attack_stat": 9999,
-        },
-        "lowest_defense_stat": {
-            "defense_stat": 9999,
-        },
-        "lowest_hp_stat": {
-            "hp_stat": 9999,
-        }
-    }
-
-    for entry in pokemon_ranks:
-        if entry["combat_power"] <= GREAT_LEAGUE_CP_LIMIT:
-            highest_great_league_data = await update_highest_lowest_stats(entry, highest_great_league_data)
-
-        if GREAT_LEAGUE_CP_LIMIT < entry["combat_power"] <= ULTRA_LEAGUE_CP_LIMIT:
-            highest_ultra_league_data = await update_highest_lowest_stats(entry, highest_ultra_league_data)
-
-    default_great_league_level, default_great_league_attack_iv, default_great_league_defense_iv, default_great_league_hp_iv = \
-        pokemon_json["defaultIVs"]["cp1500"]
-
-    default_great_league_data = await calculate_pokemon_data(
-        base_attack, base_defense, base_hp, default_great_league_level, default_great_league_attack_iv,
-        default_great_league_defense_iv, default_great_league_hp_iv
-    )
-
-    default_ultra_league_level, default_ultra_league_attack_iv, default_ultra_league_defense_iv, default_ultra_league_hp_iv = \
-        pokemon_json["defaultIVs"]["cp2500"]
-
-    default_ultra_league_data = await calculate_pokemon_data(
-        base_attack, base_defense, base_hp, default_ultra_league_level, default_ultra_league_attack_iv,
-        default_ultra_league_defense_iv, default_ultra_league_hp_iv
-    )
-
-    highest_great_league_data["default"] = default_great_league_data
-    highest_ultra_league_data["default"] = default_ultra_league_data
-
-    pokemon_json["great_league_data"] = highest_great_league_data
-    pokemon_json["ultra_league_data"] = highest_ultra_league_data
-
-    pacing_data = {}
-
-    for fast_move in pokemon_json["fastMoves"]:
-        for move in move_data:
-            if move["uniqueId"] == fast_move:
-                fast_move_data = move
-                break
-        else:
-            raise ValueError(f"Fast move {fast_move} not found in move data")
-
-        pacing_data[fast_move_data["uniqueId"]] = {}
-
-        for charge_move in pokemon_json["chargedMoves"]:
-            for move in move_data:
-                if move["uniqueId"] == charge_move:
-                    charge_move_data = move
-                    break
-            else:
-                raise ValueError(f"Charge move {charge_move} not found in move data")
-
-            # how many fast moves are needed to charge the charge move
-            fast_move_energy = fast_move_data["energyDelta"]
-            charge_move_energy = charge_move_data["energyDelta"]
-
-            pacing = []
-
-            energy = 0
-            turns = 0
-            while len(pacing) < 5:
-                energy += fast_move_energy
-                turns += 1
-                if energy >= charge_move_energy or turns > 100:
-                    pacing.append(turns)
-                    energy -= charge_move_energy
-                    turns = 0
-
-            pacing_data[fast_move_data["uniqueId"]][charge_move_data["uniqueId"]] = pacing
-
-    pokemon_json["pacing_data"] = pacing_data
-
-    return pokemon_json
-
-
-async def update_highest_lowest_stats(entry, highest_data):
-    # Update highest stats
-    if entry["attack_stat"] > highest_data["highest_attack_stat"]["attack_stat"]:
-        highest_data["highest_attack_stat"] = entry
-    if entry["defense_stat"] > highest_data["highest_defense_stat"]["defense_stat"]:
-        highest_data["highest_defense_stat"] = entry
-    if entry["hp_stat"] > highest_data["highest_hp_stat"]["hp_stat"]:
-        highest_data["highest_hp_stat"] = entry
-    if entry["stat_product"] > highest_data["highest_stat_product"]["stat_product"]:
-        highest_data["highest_stat_product"] = entry
-
-    # Update lowest stats
-    if entry["attack_stat"] < highest_data["lowest_attack_stat"]["attack_stat"]:
-        highest_data["lowest_attack_stat"] = entry
-    if entry["defense_stat"] < highest_data["lowest_defense_stat"]["defense_stat"]:
-        highest_data["lowest_defense_stat"] = entry
-    if entry["hp_stat"] < highest_data["lowest_hp_stat"]["hp_stat"]:
-        highest_data["lowest_hp_stat"] = entry
-
-    return highest_data
 
 
 async def create_pacing_table(pacing_data):
@@ -708,7 +452,6 @@ async def query(ctx, pokemon: str):
         name="Charged Moves",
         value=charged_move_string
     )
-
 
     pokemon_stat_data = await get_pokemon_stat(final_data)
 
@@ -963,9 +706,12 @@ async def move(ctx, move: str):
 )
 @discord.option(name="name", description="The Pokémon to search for.", autocomplete=pokemon_autocomplete_search)
 @discord.option(name="cp", description="The CP of the Pokémon.", type=discord.SlashCommandOptionType.integer)
-@discord.option(name="level", description="The level of the Pokémon.", type=discord.SlashCommandOptionType.number, required=False, min_value=1, max_value=51)
-@discord.option(name="floor_iv", description="The floor IV of the Pokémon.", type=discord.SlashCommandOptionType.integer, required=False, default=0, min_value=0, max_value=15)
-@discord.option(name="hp", description="The HP of the Pokémon.", type=discord.SlashCommandOptionType.integer, required=False)
+@discord.option(name="level", description="The level of the Pokémon.", type=discord.SlashCommandOptionType.number,
+                required=False, min_value=1, max_value=51)
+@discord.option(name="floor_iv", description="The floor IV of the Pokémon.",
+                type=discord.SlashCommandOptionType.integer, required=False, default=0, min_value=0, max_value=15)
+@discord.option(name="hp", description="The HP of the Pokémon.", type=discord.SlashCommandOptionType.integer,
+                required=False)
 async def reverse_iv(ctx, name, cp, level, floor_iv, hp):
     final_data = None
     for data in pokemon_data:
@@ -987,7 +733,8 @@ async def reverse_iv(ctx, name, cp, level, floor_iv, hp):
         for defense_iv in range(floor_iv, 16):
             for hp_iv in range(floor_iv, 16):
                 for level_iter in levels_list:
-                    combat_power = await calculate_combat_power(final_data["baseStats"]["atk"], final_data["baseStats"]["def"],
+                    combat_power = await calculate_combat_power(final_data["baseStats"]["atk"],
+                                                                final_data["baseStats"]["def"],
                                                                 final_data["baseStats"]["hp"], level_iter, attack_iv,
                                                                 defense_iv, hp_iv)
                     if combat_power == cp:
@@ -1075,8 +822,11 @@ async def histogram(ctx, league, name, name2, name3):
     for data in final_data:
         base_attack, base_defense, base_hp = data["baseStats"]["atk"], data["baseStats"]["def"], data["baseStats"]["hp"]
         attack_spreads_dict[data["speciesName"]] = {}
-        attack_spreads_dict[data["speciesName"]]["attack_spreads"] = await get_all_attack_spreads(base_attack, base_defense, base_hp, max_cp)
-        attack_spreads_dict[data["speciesName"]]["default_spreads"] = data[f"{league}_league_data"]["default"]["attack_stat"]
+        attack_spreads_dict[data["speciesName"]]["attack_spreads"] = await get_all_attack_spreads(base_attack,
+                                                                                                  base_defense, base_hp,
+                                                                                                  max_cp)
+        attack_spreads_dict[data["speciesName"]]["default_spreads"] = data[f"{league}_league_data"]["default"][
+            "attack_stat"]
         attack_spreads_dict[data["speciesName"]]["species_name"] = data["speciesName"]
 
     # create a histogram using matplotlib
@@ -1111,7 +861,8 @@ async def histogram(ctx, league, name, name2, name3):
 
         # add a line for default ivs
         plt.axvline(default_attack, color="black", linestyle="--")
-        plt.text(default_attack - 0.75, max(counts) * 0.4, f"{species_name} Default ({default_attack:.2f})", color="black",
+        plt.text(default_attack - 0.75, max(counts) * 0.4, f"{species_name} Default ({default_attack:.2f})",
+                 color="black",
                  rotation=90)
 
     plt.title(f"Attack Stat Distribution ({league.capitalize()} League)")
@@ -1138,7 +889,7 @@ async def calculate_damage(attack_stat, defense_stat, attacker, defender):
     is_attacker_shadow = "shadow" in attacker.get("tags", [])
     is_defender_shadow = "shadow" in defender.get("tags", [])
 
-    for move in attacker["chargedMoves"]+attacker["fastMoves"]:
+    for move in attacker["chargedMoves"] + attacker["fastMoves"]:
         for data in move_data:
             if data["uniqueId"].lower() == move.lower():
                 current_move = data
@@ -1148,18 +899,18 @@ async def calculate_damage(attack_stat, defense_stat, attacker, defender):
             continue
 
         power = current_move["power"]
-        stab = 1.2 if current_move["type"] in attacker["types"] else 1
+        stab = 1.2000000476837158203125 if current_move["type"] in attacker["types"] else 1
         effectiveness = await get_type_multiplier(current_move["type"], defender["types"])
-        trainer_constant = 1.3
+        trainer_constant = 1.2999999523162841796875
 
-        actual_attack_stat = attack_stat * 1.2 if is_attacker_shadow else attack_stat
-        actual_defense_stat = defense_stat * 0.8333333 if is_defender_shadow else defense_stat
+        actual_attack_stat = attack_stat * 1.2000000476837158203125 if is_attacker_shadow else attack_stat
+        actual_defense_stat = defense_stat * 0.833333313465118408203125 if is_defender_shadow else defense_stat
 
-        damage = int(0.5 * power * (actual_attack_stat / actual_defense_stat) * stab * effectiveness * trainer_constant) + 1
+        damage = int(
+            0.5 * power * (actual_attack_stat / actual_defense_stat) * stab * effectiveness * trainer_constant) + 1
         damage_dict[move_name] = damage
 
     return damage_dict
-
 
 
 def get_pokemon_by_name(name: str):
@@ -1260,20 +1011,6 @@ async def damage(ctx, league, attacker, defender):
     await ctx.respond(embed=embed)
 
 
-
-
-@bot.slash_command(guild_ids=[DEV_GUILD_ID])
-async def sync_data(ctx):
-    if ctx.author.id in bot.owner_ids:
-        return
-
-    await ctx.defer()
-    start_time = time.time()
-    await update_data()
-    end_time = time.time()
-    await ctx.respond(f"{ctx.author.mention} Data updated in {end_time - start_time:.2f} seconds")
-
-
 @bot.slash_command(
     integration_types={
         discord.IntegrationType.guild_install,
@@ -1281,7 +1018,6 @@ async def sync_data(ctx):
     }
 )
 async def sableye(ctx):
-
     # 12 random letters is the code
 
     code = ''.join(random.choices(string.ascii_letters, k=12))
@@ -1305,7 +1041,7 @@ async def sableye(ctx):
     }
 )
 async def ping(ctx):
-    latency = int(bot.latency*1000)
+    latency = int(bot.latency * 1000)
 
     embed = discord.Embed(
         title="Pong!",
