@@ -4,6 +4,10 @@
         "type": "normal",
         "power": 60.0,
         "energyDelta": 45,
+        "buffs": {
+            "targetDefenseStatStageChange": -1,
+            "buffActivationChance": 1.0
+        },
         "turns": 0,
         "uuid": 13,
         "displayName": "Wrap",
@@ -483,10 +487,10 @@
         "uniqueId": "PARABOLIC_CHARGE",
         "type": "electric",
         "power": 70.0,
-        "energyDelta": 50,
+        "energyDelta": 45,
         "buffs": {
             "attackerDefenseStatStageChange": 1,
-            "buffActivationChance": 0.66
+            "buffActivationChance": 1.0
         },
         "turns": 0,
         "uuid": 75,
@@ -1027,7 +1031,7 @@
     {
         "uniqueId": "FURY_CUTTER",
         "type": "bug",
-        "power": 2.0,
+        "power": 3.0,
         "energyDelta": 4,
         "turns": 1,
         "uuid": 200,
@@ -1037,7 +1041,7 @@
     {
         "uniqueId": "BUG_BITE",
         "type": "bug",
-        "power": 3.0,
+        "power": 4.0,
         "energyDelta": 3,
         "turns": 1,
         "uuid": 201,
@@ -1118,7 +1122,7 @@
         "uniqueId": "EMBER",
         "type": "fire",
         "power": 7.0,
-        "energyDelta": 6,
+        "energyDelta": 7,
         "turns": 2,
         "uuid": 209,
         "displayName": "Ember",
@@ -1278,7 +1282,7 @@
         "uniqueId": "ACID",
         "type": "poison",
         "power": 6.0,
-        "energyDelta": 5,
+        "energyDelta": 8,
         "turns": 2,
         "uuid": 225,
         "displayName": "Acid",
@@ -1317,7 +1321,7 @@
     {
         "uniqueId": "BULLET_PUNCH",
         "type": "steel",
-        "power": 6.0,
+        "power": 8.0,
         "energyDelta": 7,
         "turns": 2,
         "uuid": 229,
@@ -1854,7 +1858,7 @@
         "energyDelta": 45,
         "buffs": {
             "targetDefenseStatStageChange": -1,
-            "buffActivationChance": 0.3
+            "buffActivationChance": 0.2
         },
         "turns": 0,
         "uuid": 279,
@@ -1918,7 +1922,7 @@
     {
         "uniqueId": "DOOM_DESIRE",
         "type": "steel",
-        "power": 75.0,
+        "power": 80.0,
         "energyDelta": 40,
         "turns": 0,
         "uuid": 286,
@@ -2917,7 +2921,7 @@
     {
         "uniqueId": "DOUBLE_IRON_BASH",
         "type": "steel",
-        "power": 50.0,
+        "power": 55.0,
         "energyDelta": 35,
         "turns": 0,
         "uuid": 381,
@@ -3175,9 +3179,9 @@
     {
         "uniqueId": "METAL_SOUND",
         "type": "steel",
-        "power": 3.0,
+        "power": 5.0,
         "energyDelta": 8,
-        "turns": 2,
+        "turns": 1,
         "uuid": 402,
         "displayName": "Metal Sound",
         "usageType": "fast"
