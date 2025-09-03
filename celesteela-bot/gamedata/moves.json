@@ -56,8 +56,8 @@
     {
         "uniqueId": "FLAME_WHEEL",
         "type": "fire",
-        "power": 60.0,
-        "energyDelta": 55,
+        "power": 80.0,
+        "energyDelta": 45,
         "turns": 0,
         "uuid": 21,
         "displayName": "Flame Wheel",
@@ -176,7 +176,7 @@
     {
         "uniqueId": "DRILL_PECK",
         "type": "flying",
-        "power": 65.0,
+        "power": 70.0,
         "energyDelta": 40,
         "turns": 0,
         "uuid": 38,
@@ -216,8 +216,8 @@
     {
         "uniqueId": "AERIAL_ACE",
         "type": "flying",
-        "power": 55.0,
-        "energyDelta": 40,
+        "power": 60.0,
+        "energyDelta": 45,
         "turns": 0,
         "uuid": 45,
         "displayName": "Aerial Ace",
@@ -352,8 +352,8 @@
     {
         "uniqueId": "SEED_BOMB",
         "type": "grass",
-        "power": 65.0,
-        "energyDelta": 45,
+        "power": 55.0,
+        "energyDelta": 40,
         "turns": 0,
         "uuid": 59,
         "displayName": "Seed Bomb",
@@ -401,7 +401,7 @@
     {
         "uniqueId": "ROCK_SLIDE",
         "type": "rock",
-        "power": 65.0,
+        "power": 75.0,
         "energyDelta": 45,
         "turns": 0,
         "uuid": 64,
@@ -541,7 +541,7 @@
         "uniqueId": "DRAGON_PULSE",
         "type": "dragon",
         "power": 90.0,
-        "energyDelta": 60,
+        "energyDelta": 55,
         "turns": 0,
         "uuid": 82,
         "displayName": "Dragon Pulse",
@@ -550,8 +550,8 @@
     {
         "uniqueId": "DRAGON_CLAW",
         "type": "dragon",
-        "power": 50.0,
-        "energyDelta": 35,
+        "power": 80.0,
+        "energyDelta": 50,
         "turns": 0,
         "uuid": 83,
         "displayName": "Dragon Claw",
@@ -762,7 +762,7 @@
         "uniqueId": "WATER_PULSE",
         "type": "water",
         "power": 80.0,
-        "energyDelta": 55,
+        "energyDelta": 50,
         "turns": 0,
         "uuid": 105,
         "displayName": "Water Pulse",
@@ -961,7 +961,7 @@
     {
         "uniqueId": "BODY_SLAM",
         "type": "normal",
-        "power": 50.0,
+        "power": 55.0,
         "energyDelta": 35,
         "turns": 0,
         "uuid": 131,
@@ -1071,8 +1071,8 @@
     {
         "uniqueId": "DRAGON_BREATH",
         "type": "dragon",
-        "power": 4.0,
-        "energyDelta": 3,
+        "power": 3.0,
+        "energyDelta": 4,
         "turns": 1,
         "uuid": 204,
         "displayName": "Dragon Breath",
@@ -1121,8 +1121,8 @@
     {
         "uniqueId": "EMBER",
         "type": "fire",
-        "power": 7.0,
-        "energyDelta": 7,
+        "power": 4.0,
+        "energyDelta": 9,
         "turns": 2,
         "uuid": 209,
         "displayName": "Ember",
@@ -1142,7 +1142,7 @@
         "uniqueId": "PECK",
         "type": "flying",
         "power": 6.0,
-        "energyDelta": 5,
+        "energyDelta": 8,
         "turns": 2,
         "uuid": 211,
         "displayName": "Peck",
@@ -1382,7 +1382,7 @@
         "uniqueId": "CONFUSION",
         "type": "psychic",
         "power": 16.0,
-        "energyDelta": 12,
+        "energyDelta": 14,
         "turns": 4,
         "uuid": 235,
         "displayName": "Confusion",
@@ -1422,7 +1422,7 @@
         "uniqueId": "STEEL_WING",
         "type": "steel",
         "power": 7.0,
-        "energyDelta": 6,
+        "energyDelta": 5,
         "turns": 2,
         "uuid": 239,
         "displayName": "Steel Wing",
@@ -1535,7 +1535,7 @@
     {
         "uniqueId": "VOLT_SWITCH",
         "type": "electric",
-        "power": 12.0,
+        "power": 14.0,
         "energyDelta": 16,
         "turns": 4,
         "uuid": 250,
@@ -1573,8 +1573,8 @@
     {
         "uniqueId": "DRAGON_TAIL",
         "type": "dragon",
-        "power": 13.0,
-        "energyDelta": 9,
+        "power": 9.0,
+        "energyDelta": 12,
         "turns": 3,
         "uuid": 253,
         "displayName": "Dragon Tail",
@@ -1617,8 +1617,8 @@
     {
         "uniqueId": "SKY_ATTACK",
         "type": "flying",
-        "power": 85.0,
-        "energyDelta": 55,
+        "power": 75.0,
+        "energyDelta": 50,
         "turns": 0,
         "uuid": 257,
         "displayName": "Sky Attack",
@@ -1727,7 +1727,7 @@
         "uniqueId": "GYRO_BALL",
         "type": "steel",
         "power": 80.0,
-        "energyDelta": 60,
+        "energyDelta": 50,
         "turns": 0,
         "uuid": 267,
         "displayName": "Gyro Ball",
@@ -1986,7 +1986,7 @@
     {
         "uniqueId": "WEATHER_BALL_FIRE",
         "type": "fire",
-        "power": 55.0,
+        "power": 60.0,
         "energyDelta": 35,
         "turns": 0,
         "uuid": 292,
@@ -1996,7 +1996,7 @@
     {
         "uniqueId": "WEATHER_BALL_ICE",
         "type": "ice",
-        "power": 55.0,
+        "power": 60.0,
         "energyDelta": 35,
         "turns": 0,
         "uuid": 293,
@@ -2006,7 +2006,7 @@
     {
         "uniqueId": "WEATHER_BALL_ROCK",
         "type": "rock",
-        "power": 55.0,
+        "power": 60.0,
         "energyDelta": 35,
         "turns": 0,
         "uuid": 294,
@@ -2016,7 +2016,7 @@
     {
         "uniqueId": "WEATHER_BALL_WATER",
         "type": "water",
-        "power": 55.0,
+        "power": 60.0,
         "energyDelta": 35,
         "turns": 0,
         "uuid": 295,
@@ -2036,7 +2036,7 @@
     {
         "uniqueId": "SMACK_DOWN",
         "type": "rock",
-        "power": 11.0,
+        "power": 12.0,
         "energyDelta": 8,
         "turns": 3,
         "uuid": 297,
@@ -2307,8 +2307,8 @@
     {
         "uniqueId": "CHARM",
         "type": "fairy",
-        "power": 15.0,
-        "energyDelta": 6,
+        "power": 13.0,
+        "energyDelta": 8,
         "turns": 3,
         "uuid": 320,
         "displayName": "Charm",
@@ -2407,8 +2407,8 @@
     {
         "uniqueId": "AURA_SPHERE",
         "type": "fighting",
-        "power": 100.0,
-        "energyDelta": 55,
+        "power": 80.0,
+        "energyDelta": 40,
         "turns": 0,
         "uuid": 332,
         "displayName": "Aura Sphere",
@@ -2598,7 +2598,7 @@
     {
         "uniqueId": "WEATHER_BALL_NORMAL",
         "type": "normal",
-        "power": 55.0,
+        "power": 60.0,
         "energyDelta": 35,
         "turns": 0,
         "uuid": 352,
@@ -2898,10 +2898,10 @@
         "uniqueId": "BREAKING_SWIPE",
         "type": "dragon",
         "power": 50.0,
-        "energyDelta": 35,
+        "energyDelta": 50,
         "buffs": {
             "targetAttackStatStageChange": -1,
-            "buffActivationChance": 0.5
+            "buffActivationChance": 1.0
         },
         "turns": 0,
         "uuid": 379,
@@ -2974,7 +2974,7 @@
         "uniqueId": "LEAFAGE",
         "type": "grass",
         "power": 6.0,
-        "energyDelta": 7,
+        "energyDelta": 8,
         "turns": 2,
         "uuid": 385,
         "displayName": "Leafage",
@@ -3069,7 +3069,7 @@
         "energyDelta": 50,
         "buffs": {
             "targetAttackStatStageChange": -1,
-            "buffActivationChance": 0.3
+            "buffActivationChance": 0.1
         },
         "turns": 0,
         "uuid": 393,
@@ -3181,7 +3181,7 @@
         "type": "steel",
         "power": 5.0,
         "energyDelta": 8,
-        "turns": 1,
+        "turns": 2,
         "uuid": 402,
         "displayName": "Metal Sound",
         "usageType": "fast"
@@ -3397,6 +3397,30 @@
         "usageType": "charge"
     },
     {
+        "uniqueId": "DYNAMAX_CANNON",
+        "type": "dragon",
+        "power": 80.0,
+        "energyDelta": 45,
+        "turns": 0,
+        "uuid": 482,
+        "displayName": "Dynamax Cannon",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "CLANGING_SCALES",
+        "type": "dragon",
+        "power": 120.0,
+        "energyDelta": 45,
+        "buffs": {
+            "attackerDefenseStatStageChange": -1,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 484,
+        "displayName": "Clanging Scales",
+        "usageType": "charge"
+    },
+    {
         "uniqueId": "CRUSH_GRIP",
         "type": "normal",
         "power": 110.0,
@@ -3414,6 +3438,34 @@
         "turns": 0,
         "uuid": 486,
         "displayName": "Dragon Energy",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "AQUA_STEP",
+        "type": "water",
+        "power": 55.0,
+        "energyDelta": 40,
+        "buffs": {
+            "attackerAttackStatStageChange": 1,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 487,
+        "displayName": "Aqua Step",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "CHILLING_WATER",
+        "type": "water",
+        "power": 60.0,
+        "energyDelta": 45,
+        "buffs": {
+            "targetAttackStatStageChange": -1,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 488,
+        "displayName": "Chilling Water",
         "usageType": "charge"
     },
     {

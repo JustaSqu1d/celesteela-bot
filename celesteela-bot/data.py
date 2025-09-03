@@ -472,6 +472,30 @@ async def add_detailed_info(pokemon_json, moves_data) -> dict:
             if move["uniqueId"] == fast_move:
                 fast_move_data = move
                 break
+            elif fast_move == "AEGISLASH_CHARGE_PSYCHO_CUT":
+                fast_move_data = {
+                    "uniqueId": "AEGISLASH_CHARGE_PSYCHO_CUT",
+                    "type": "psychic",
+                    "power": 0,
+                    "energyDelta": 6,
+                    "turns": 2,
+                    "uuid": 1001,
+                    "displayName": "Psycho Cut",
+                    "usageType": "fast",
+                }
+                break
+            elif fast_move == "AEGISLASH_CHARGE_AIR_SLASH":
+                fast_move_data = {
+                    "uniqueId": "AEGISLASH_CHARGE_AIR_SLASH",
+                    "type": "flying",
+                    "power": 0,
+                    "energyDelta": 6,
+                    "turns": 3,
+                    "uuid": 1002,
+                    "displayName": "Air Slash",
+                    "usageType": "fast",
+                }
+                break
         else:
             raise ValueError(f"Fast move {fast_move} not found in move data")
 
