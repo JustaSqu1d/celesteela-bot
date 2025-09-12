@@ -7,22 +7,17 @@ import os
 import random
 import re
 import string
-import time
 from math import sqrt
 
 import aiofiles
+import aiohttp
 import discord
 import dotenv
 import matplotlib.pyplot as plt
 import numpy as np
-from bs4 import BeautifulSoup
 from PIL import Image, ImageDraw, ImageFont
 from rapidfuzz import fuzz, process
 from scipy.stats import norm
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 activity = discord.Activity(
     name="Trainers throw on alignment", type=discord.ActivityType.watching
@@ -376,138 +371,36 @@ async def create_pacing_table(pacing_data):
 
 
 async def scrape_leaderboard():
-    def blocking_scrape():
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--window-size=1920,1080")
-        options.add_argument("--log-level=3")
-        options.add_argument("--incognito")
+    def parse_trainer_data(data_string):
+        pattern = re.compile(
+            r'{\\"trainerName\\":\\"(.*?)\\",'
+            r'\\"rating\\":(\d+),'
+            r'\\"leaderboardRank\\":(\d+),'
+            r'\\"rankLevel\\":(\d+),'
+            r'\\"team\\":\\".*?\\",'
+            r'\\"totalBattles\\":(\d+)}'
+        )
+        matches = pattern.findall(data_string)
+        trainers_data = []
+        for match in matches:
+            trainer_dict = {
+                "name": match[0],
+                "rating": int(match[1]),
+                "place": int(match[2]),
+                "rank": int(match[3]),
+                "total battles played": int(match[4]),
+            }
+            trainers_data.append(trainer_dict)
 
-        driver = webdriver.Chrome(options=options)
-        all_players_data = []
-        try:
-            driver.get("https://pokemongo.com/leaderboard")
+        return trainers_data
 
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located(
-                    (By.CLASS_NAME, "Leaderboard_container__Vwat9")
-                )
-            )
-
-            pages_container = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located(
-                    (By.CLASS_NAME, "PlayerRankings_pages__JDKVt")
-                )
-            )
-
-            initial_page_buttons = pages_container.find_elements(
-                By.CLASS_NAME, "PlayerRankings_pageButton__WGDjj"
-            )
-            num_pages = len(initial_page_buttons)
-            print(f"Found {num_pages} pages to scrape.")
-
-            # 3. Iterate through each page
-            for i in range(num_pages):
-                print(f"Scraping data from page {i + 1}/{num_pages}...")
-
-                # Re-find the page buttons in each iteration to avoid StaleElementReferenceException.
-                pages_container = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located(
-                        (By.CLASS_NAME, "PlayerRankings_pages__JDKVt")
-                    )
-                )
-                page_buttons = pages_container.find_elements(
-                    By.CLASS_NAME, "PlayerRankings_pageButton__WGDjj"
-                )
-
-                target_button = page_buttons[i]
-
-                # Use JavaScript to click the button. This can sometimes be more reliable than
-                # `element.click()` if there are overlaying elements or complex JS handlers.
-                driver.execute_script("arguments[0].click();", target_button)
-
-                # Wait for the UI to update: specifically, wait for the clicked button to become "active"
-                WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located(
-                        (
-                            By.CSS_SELECTOR,
-                            f".PlayerRankings_pageButton__WGDjj:nth-child({i+1}).PlayerRankings_active___Tyy1",
-                        )
-                    )
-                )
-
-                time.sleep(0.5)
-
-                soup = BeautifulSoup(driver.page_source, "html.parser")
-
-                trainer_tiles = soup.find_all(
-                    "div", class_="TrainerTile_container__9GMW6"
-                )
-
-                if not trainer_tiles:
-                    print(
-                        f"No trainer data found on page {i + 1}. Moving to next page or finishing."
-                    )
-                    continue
-
-                for tile in trainer_tiles:
-                    place_elem = tile.select_one(
-                        "div.TrainerTile_trainerCol__vo2_Y.TrainerTile_rank__znPkb"
-                    )
-                    place = (
-                        int(place_elem.get_text(strip=True)) if place_elem else "N/A"
-                    )
-
-                    name_elem = tile.select_one("div.TrainerTile_name__pz9_B")
-                    name = name_elem.get_text(strip=True) if name_elem else "N/A"
-
-                    rank_level_elem = tile.select_one(
-                        "div.TrainerTile_trainer__fTCa7 > div.TrainerTile_rank__znPkb"
-                    )
-                    rank_level = "N/A"
-                    if rank_level_elem:
-                        rank_level_raw = rank_level_elem.get_text(strip=True)
-                        match = re.search(
-                            r"\d+", rank_level_raw
-                        )  # Extract only the number
-                        if match:
-                            rank_level = int(match.group())
-
-                    rating_elem = tile.select_one("div.TrainerTile_rating__kLGH9")
-                    rating = (
-                        int(rating_elem.get_text(strip=True)) if rating_elem else "N/A"
-                    )
-
-                    total_battles_elem = tile.select_one(
-                        "div.TrainerTile_totalCount__lEWtC"
-                    )
-                    total_battles = "N/A"
-                    if total_battles_elem:
-                        total_battles_raw = total_battles_elem.get_text(strip=True)
-                        match = re.search(
-                            r"\d+", total_battles_raw
-                        )  # Extract only the number
-                        if match:
-                            total_battles = int(match.group())
-
-                    player_data = {
-                        "name": name,
-                        "rating": rating,
-                        "total battles played": total_battles,
-                        "rank": rank_level,
-                        "place": place,
-                    }
-                    all_players_data.append(player_data)
-
-        finally:
-            driver.quit()
-
-        return all_players_data
-
-    # Run the blocking Selenium code in a thread
-    all_players_data = await asyncio.to_thread(blocking_scrape)
-    return all_players_data
+    with aiohttp.ClientSession() as session:
+        async with session.get("https://pokemongo.com/leaderboard") as response:
+            text = await response.text()
+            text = text.split("children\":\"GO Battle League Rankings")[0]
+            text = text.split("PlayerRankings_trainers on Trainer")[1]
+            leaderboard = parse_trainer_data(text)
+            return leaderboard
 
 
 class PokemonStats:
@@ -1592,7 +1485,6 @@ async def leaderboard(ctx):
         "Withrd9",
     ]
 
-    # only include players in target_players
     filtered_players = [
         player for player in all_players_data if player["name"] in target_players
     ]
