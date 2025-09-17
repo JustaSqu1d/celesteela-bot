@@ -394,13 +394,20 @@ async def scrape_leaderboard():
 
         return trainers_data
 
-    async with aiohttp.ClientSession() as session:
-        async with session.get("https://pokemongo.com/leaderboard") as response:
-            text = await response.text()
-            text = text.split("children\":\"GO Battle League Rankings")[0]
-            text = text.split("PlayerRankings_trainers on Trainer")[1]
-            leaderboard = parse_trainer_data(text)
-            return leaderboard
+    max_retries = 5
+    for attempt in range(max_retries):
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get("https://pokemongo.com/leaderboard") as response:
+                    text = await response.text()
+                    text = text.split("children", "GO Battle League Rankings")[0]
+                    text = text.split("PlayerRankings_trainers on Trainer")[1]
+                    leaderboard = parse_trainer_data(text)
+                    return leaderboard
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise
+            await asyncio.sleep(1)
 
 
 class PokemonStats:
@@ -1464,13 +1471,18 @@ async def leaderboard(ctx):
     all_players_data = await scrape_leaderboard()
     target_players = [
         "17gecko",
+        "617veesok", 
         "AbsolTrainBest",
         "Aest9772",
+        "Aiden3222",
+        "dcpharmd",
         "Elec06Pokemon",
+        "ehsvr",
         "Exeggutor8787",
         "fabiou7190",
         "Fgatn",
         "FlyGonnaGetYou",
+        "freddychow",
         "Jacoloco2",
         "Kazim33",
         "KurtGOldSilver",
@@ -1480,13 +1492,15 @@ async def leaderboard(ctx):
         "Sceptileice25",
         "Shadowfacts1272",
         "SsThorn",
-        "tangyplatypus",
+        "Tangyplatypus",
         "TheMegaJuncko",
         "Withrd9",
     ]
 
     filtered_players = [
-        player for player in all_players_data if player["name"] in target_players
+        player
+        for player in all_players_data
+        if player["name"].lower() in [name.lower() for name in target_players]
     ]
 
     filtered_players.sort(key=lambda x: x["place"])
@@ -1494,7 +1508,7 @@ async def leaderboard(ctx):
     embed = discord.Embed(
         title="hGHC Leaderboard",
         color=discord.Color.gold(),
-        url="https://pokemongo.com/leaderboard"
+        url="https://pokemongo.com/leaderboard",
     )
     embed.set_thumbnail(url="https://i.imgur.com/zPgM9HG.png")
     embed.timestamp = datetime.datetime.now(datetime.timezone.utc)
