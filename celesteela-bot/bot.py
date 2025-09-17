@@ -400,7 +400,7 @@ async def scrape_leaderboard():
             async with aiohttp.ClientSession() as session:
                 async with session.get("https://pokemongo.com/leaderboard") as response:
                     text = await response.text()
-                    text = text.split("children", "GO Battle League Rankings")[0]
+                    text = text.split("children\":\"GO Battle League Rankings")[0]
                     text = text.split("PlayerRankings_trainers on Trainer")[1]
                     leaderboard = parse_trainer_data(text)
                     return leaderboard
