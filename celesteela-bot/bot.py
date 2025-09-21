@@ -1498,7 +1498,7 @@ async def leaderboard(ctx):
     ]
 
     tmj_aliases = [
-        "TheMegaJacoloco".
+        "TheMegaJacoloco",
         "TheMegaJonkus",
         "TheMegaJunckoloco",
         "TheMegaJack o' Lanturn",
