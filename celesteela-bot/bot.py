@@ -1497,6 +1497,27 @@ async def leaderboard(ctx):
         "Withrd9",
     ]
 
+    tmj_aliases = [
+        "TheMegaJacoloco".
+        "TheMegaJonkus",
+        "TheMegaJunckoloco",
+        "TheMegaJack o' Lanturn",
+        "TheMegaJinkaton",
+        "TheMegaPachi",
+        "TheMega<:DedennePunched:1385335348434960455>"
+        "TheMegaJuncrow"
+        "TheDynanaxJuncko",
+        "TheGigantamaxJuncko",
+        "TheTerastallizedJuncko",
+        "TheShadowJuncko",
+        "TheShinyJuncko",
+        "TheLuckyJuncko",
+        "TheHundoJuncko",
+        "TheXXLJuncko",
+    ]
+
+    tmj_alias = random.choice(tmj_aliases)
+
     filtered_players = [
         player
         for player in all_players_data
@@ -1516,7 +1537,7 @@ async def leaderboard(ctx):
     description_lines = []
     for player in filtered_players:
         description_lines.append(
-            f"**#{player['place']}. {player['name']}** - {player['rating']}"
+            f"**#{player['place']}. {player['name']}** - {player['rating']}".replace("TheMegaJuncko", tmj_alias)
         )
 
     embed.description = "\n".join(description_lines)
