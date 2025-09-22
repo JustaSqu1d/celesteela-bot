@@ -1592,7 +1592,9 @@ async def leaderboard(ctx):
         description_lines.append(
             f"**#{player['place']}. {player['name']}** - {player['rating']}".replace(
                 "TheMegaJuncko", tmj_alias
-            ).replace("Aest9772", "XxBastiLover_noBastiNoLifexX").replace("SsThorn", "LGBThorn")
+            )
+            .replace("Aest9772", "XxBastiLover_noBastiNoLifexX")
+            .replace("SsThorn", "LGBThorn🏳️‍🌈")
         )
 
     embed.description = "\n".join(description_lines)
