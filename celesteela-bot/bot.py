@@ -400,7 +400,7 @@ async def scrape_leaderboard():
             async with aiohttp.ClientSession() as session:
                 async with session.get("https://pokemongo.com/leaderboard") as response:
                     text = await response.text()
-                    text = text.split("children\":\"GO Battle League Rankings")[0]
+                    text = text.split('children":"GO Battle League Rankings')[0]
                     text = text.split("PlayerRankings_trainers on Trainer")[1]
                     leaderboard = parse_trainer_data(text)
                     return leaderboard
@@ -1471,7 +1471,7 @@ async def leaderboard(ctx):
     all_players_data = await scrape_leaderboard()
     target_players = [
         "17gecko",
-        "617veesok", 
+        "617veesok",
         "AbsolTrainBest",
         "Aest9772",
         "Aiden3222",
@@ -1498,25 +1498,78 @@ async def leaderboard(ctx):
     ]
 
     tmj_aliases = [
-        "TheMegaJacoloco",
-        "TheMegaJonkus",
-        "TheMegaJunckoloco",
-        "TheMegaJack o' Lanturn",
-        "TheMegaJinkaton",
-        "TheMegaPachi",
-        "TheMega<:DedennePunched:1385335348434960455>"
-        "TheMegaJuncrow"
-        "TheDynanaxJuncko",
-        "TheGigantamaxJuncko",
-        "TheTerastallizedJuncko",
-        "TheShadowJuncko",
-        "TheShinyJuncko",
-        "TheLuckyJuncko",
-        "TheHundoJuncko",
-        "TheXXLJuncko",
+        {
+            "name": "TheMegaJacoloco",
+            "weight": 10,
+        },
+        {
+            "name": "TheMegaJonkus",
+            "weight": 10,
+        },
+        {
+            "name": "TheMegaJunckoloco",
+            "weight": 8,
+        },
+        {
+            "name": "TheMegaJack o' Lanturn",
+            "weight": 10,
+        },
+        {
+            "name": "TheMegaJinkaton",
+            "weight": 10,
+        },
+        {
+            "name": "TheMegaPachi",
+            "weight": 10,
+        },
+        {
+            "name": "TheMega<:DedennePunched:1385335348434960455>",
+            "weight": 20,
+        },
+        {
+            "name": "TheMegaJuncrow",
+            "weight": 10,
+        },
+        {
+            "name": "TheDynanaxJuncko",
+            "weight": 1,
+        },
+        {
+            "name": "TheGigantamaxJuncko",
+            "weight": 1,
+        },
+        {
+            "name": "TheTerastallizedJuncko",
+            "weight": 1,
+        },
+        {
+            "name": "TheShadowJuncko",
+            "weight": 1,
+        },
+        {
+            "name": "TheShinyJuncko",
+            "weight": 1,
+        },
+        {
+            "name": "TheLuckyJuncko",
+            "weight": 1,
+        },
+        {
+            "name": "TheHundoJuncko",
+            "weight": 1,
+        },
+        {
+            "name": "TheXXLJuncko",
+            "weight": 1,
+        },
     ]
 
-    tmj_alias = random.choice(tmj_aliases)
+    # Select a random alias using weights
+    tmj_alias = random.choices(
+        [alias["name"] for alias in tmj_aliases],
+        weights=[alias["weight"] for alias in tmj_aliases],
+        k=1,
+    )[0]
 
     filtered_players = [
         player
@@ -1537,7 +1590,9 @@ async def leaderboard(ctx):
     description_lines = []
     for player in filtered_players:
         description_lines.append(
-            f"**#{player['place']}. {player['name']}** - {player['rating']}".replace("TheMegaJuncko", tmj_alias)
+            f"**#{player['place']}. {player['name']}** - {player['rating']}".replace(
+                "TheMegaJuncko", tmj_alias
+            ).replace("Aest9772", "XxBastiLover_noBastiNoLifexX").replace("SsThorn", "LGBThorn")
         )
 
     embed.description = "\n".join(description_lines)
