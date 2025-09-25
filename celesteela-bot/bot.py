@@ -1571,6 +1571,8 @@ async def leaderboard(ctx):
         k=1,
     )[0]
 
+    number = random.randint(0, 9)
+
     filtered_players = [
         player
         for player in all_players_data
@@ -1595,6 +1597,7 @@ async def leaderboard(ctx):
             )
             .replace("Aest9772", "XxBastiLover_noBastiNoLifexX")
             .replace("SsThorn", "LGBThorn🏳️‍🌈")
+            .replace("Elec06Pokemon", f"Elec0{number}Pokemon")
         )
 
     embed.description = "\n".join(description_lines)
