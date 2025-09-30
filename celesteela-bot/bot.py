@@ -1468,7 +1468,16 @@ async def ping(ctx):
 )
 async def leaderboard(ctx):
     await ctx.defer()
-    all_players_data = await scrape_leaderboard()
+    try:
+        all_players_data = await scrape_leaderboard()
+    except IndexError:
+        embed = discord.Embed(
+            title="❌ Failed to fetch leaderboard data.",
+            color=discord.Color.red(),
+        )
+        await ctx.respond(embed=embed, ephemeral=True)
+        return
+    
     target_players = [
         "17gecko",
         "617veesok",
