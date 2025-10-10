@@ -1494,6 +1494,7 @@ async def leaderboard(ctx):
         "freddychow",
         "Jacoloco2",
         "Kazim33",
+        "keapton",
         "KurtGOldSilver",
         "Lsh188",
         "OutOfPoket",
