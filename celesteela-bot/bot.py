@@ -1477,7 +1477,7 @@ async def leaderboard(ctx):
         )
         await ctx.respond(embed=embed, ephemeral=True)
         return
-    
+
     target_players = [
         "17gecko",
         "617veesok",
@@ -1505,6 +1505,7 @@ async def leaderboard(ctx):
         "Tangyplatypus",
         "TheMegaJuncko",
         "Withrd9",
+        "Kilieboyy",
     ]
 
     tmj_aliases = [

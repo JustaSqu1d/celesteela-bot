@@ -3469,6 +3469,31 @@
         "usageType": "charge"
     },
     {
+        "uniqueId": "SECRET_SWORD",
+        "type": "fighting",
+        "power": 70.0,
+        "energyDelta": 35,
+        "buffs": {},
+        "turns": 0,
+        "uuid": 489,
+        "displayName": "Secret Sword",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "BEAK_BLAST",
+        "type": "flying",
+        "power": 110.0,
+        "energyDelta": 55,
+        "buffs": {
+            "targetAttackStatStageChange": -1,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 490,
+        "displayName": "Beak Blast",
+        "usageType": "charge"
+    },
+    {
         "uniqueId": "HIDDEN_POWER_BUG",
         "type": "bug",
         "power": 9.0,
