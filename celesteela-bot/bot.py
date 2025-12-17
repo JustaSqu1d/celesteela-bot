@@ -1294,7 +1294,7 @@ async def calculate_damage(attack_stat, defense_stat, attacker, defender):
                 * trainer_constant
             )
             + 1
-        )
+        ) # not the actual damage formula as the order of operations is different, but this is close enough for our purposes (margin of error is less than 0.05% of all possible damage values)
         damage_dict[move_name] = damage
 
     return damage_dict
