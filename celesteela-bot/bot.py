@@ -1464,9 +1464,10 @@ async def ping(ctx):
     integration_types={
         discord.IntegrationType.guild_install,
         discord.IntegrationType.user_install,
-    }
+    },
+    description="The current hGHC players on the GBL leaderboard",
 )
-async def leaderboard(ctx):
+async def leaderboard_hghc(ctx):
     await ctx.defer()
     try:
         all_players_data = await scrape_leaderboard()
@@ -1484,6 +1485,8 @@ async def leaderboard(ctx):
         "AbsolTrainBest",
         "Aest9772",
         "Aiden3222",
+        "Beelzeboy",
+        "boem20",
         "dcpharmd",
         "Elec06Pokemon",
         "ehsvr",
@@ -1495,8 +1498,10 @@ async def leaderboard(ctx):
         "Jacoloco2",
         "Kazim33",
         "keapton",
+        "Kilieboyy",
         "KurtGOldSilver",
         "Lsh188",
+        "Nickname29585",
         "OutOfPoket",
         "PvPotato333",
         "Sceptileice25",
@@ -1504,8 +1509,9 @@ async def leaderboard(ctx):
         "SsThorn",
         "Tangyplatypus",
         "TheMegaJuncko",
+        "TheyLuvJy",
+        "XXBlueNationXX",
         "Withrd9",
-        "Kilieboyy",
     ]
 
     tmj_aliases = [
@@ -1609,6 +1615,117 @@ async def leaderboard(ctx):
             .replace("Aest9772", "XxBastiLover_noBastiNoLifexX")
             .replace("SsThorn", "LGBThorn🏳️‍🌈")
             .replace("Elec06Pokemon", f"Elec0{number}Pokemon")
+        )
+
+    embed.description = "\n".join(description_lines)
+    await ctx.respond(embed=embed)
+
+
+@bot.slash_command(
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install,
+    },
+    description="The current Tea & Pizza players on the GBL leaderboard",
+)
+async def leaderboard_tp(ctx):
+    await ctx.defer()
+    try:
+        all_players_data = await scrape_leaderboard()
+    except IndexError:
+        embed = discord.Embed(
+            title="❌ Failed to fetch leaderboard data.",
+            color=discord.Color.red(),
+        )
+        await ctx.respond(embed=embed, ephemeral=True)
+        return
+
+    target_players = [
+        "19Laurens92",
+        "AdamLans",
+        "Alitik",
+        "AnicorXIII",
+        "blazinglyblaze",
+        "BmaxtRocket",
+        "Bowly93",
+        "brunohadji",
+        "CachtonFR",
+        "Cesarrr07VF",
+        "CLeonardo77",
+        "CoIin6ix",
+        "CsommesZ",
+        "Deanosky",
+        "Derpdude171717",
+        "eyt131",
+        "fieseluise",
+        "FjantigaFyran",
+        "g0nE1001",
+        "givemeyourarms",
+        "Hikhami",
+        "HkAssassin16",
+        "Iheartgingers",
+        "JavierV20",
+        "Jeroenizard",
+        "Kazim33",
+        "Kelio380",
+        "Kilieboyy",
+        "LimeFang",
+        "mdke1",
+        "memiGrr",
+        "MEweedle",
+        "MingaLing129",
+        "Momitaaaaaaaaaa",
+        "MrCraigyBoy",
+        "Nesabethan",
+        "obedomac",
+        "Ospete",
+        "PennyWhammix",
+        "PvpDavid07",
+        "richiebeckett85",
+        "Samy85",
+        "SirKori",
+        "Statastan",
+        "SusySusie",
+        "TarantinychFan",
+        "ThomasYoung1997",
+        "TomahawkUK",
+        "TTSsvenovik",
+        "Withrd9",
+        "WTMGo",
+        "xPenchu",
+        "YungQas"
+    ]
+
+    # Select a random alias
+    withrd_alias = random.choice(
+        [
+            "Withrd<:withrd_yay:1366690197579763762>",
+            "Withrd<:WithrdFacepalm:1417200118901244066>",
+            "Withrd<:WithrdZesty:1474716730113786057>",
+            "Withrd9",
+        ]
+    )
+
+    filtered_players = [
+        player
+        for player in all_players_data
+        if player["name"].lower() in [name.lower() for name in target_players]
+    ]
+
+    filtered_players.sort(key=lambda x: x["place"])
+
+    embed = discord.Embed(
+        title="Tea & Pizza Leaderboard",
+        color=discord.Color.gold(),
+        url="https://pokemongo.com/leaderboard",
+    )
+    # embed.set_thumbnail(url="")
+    embed.timestamp = datetime.datetime.now(datetime.timezone.utc)
+
+    description_lines = []
+    for player in filtered_players:
+        description_lines.append(
+            f"**#{player['place']}. {player['name']}** - {player['rating']}".replace("Withrd9", withrd_alias)
         )
 
     embed.description = "\n".join(description_lines)
