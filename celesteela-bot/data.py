@@ -163,7 +163,10 @@ async def fetch_moves_data() -> list:
 
     for entry in response:
         template_id = entry.get("templateId")
-        if template_id.startswith("COMBAT_V"):
+        if (
+            template_id.startswith("COMBAT_V")
+            and template_id != "COMBAT_VNEXT_CODE_GATE"
+        ):
             move_data = await process_move_data(template_id, entry)
             moves.append(move_data)
 
@@ -243,6 +246,7 @@ async def process_move_data(template_id: str, entry: dict) -> dict:
                          .replace("Techno Blast Douse", "Techno Blast")
                          .replace("Techno Blast Shock", "Techno Blast")
                          .replace("Roar Of Time", "Roar of Time")
+                         .replcae("Pyroball", "Pyro Ball")
                          ).strip()
 
     move_data["displayName"] = move_display_name

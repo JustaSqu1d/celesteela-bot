@@ -206,8 +206,8 @@
     {
         "uniqueId": "HEAT_WAVE",
         "type": "fire",
-        "power": 95.0,
-        "energyDelta": 75,
+        "power": 75.0,
+        "energyDelta": 45,
         "turns": 0,
         "uuid": 42,
         "displayName": "Heat Wave",
@@ -287,7 +287,7 @@
         "power": 50.0,
         "energyDelta": 35,
         "buffs": {
-            "attackerAttackStatStageChange": 2,
+            "attackerAttackStatStageChange": 1,
             "buffActivationChance": 0.125
         },
         "turns": 0,
@@ -387,7 +387,7 @@
     {
         "uniqueId": "ROCK_TOMB",
         "type": "rock",
-        "power": 80.0,
+        "power": 75.0,
         "energyDelta": 50,
         "buffs": {
             "targetAttackStatStageChange": -1,
@@ -530,8 +530,8 @@
     {
         "uniqueId": "TWISTER",
         "type": "dragon",
-        "power": 45.0,
-        "energyDelta": 45,
+        "power": 70.0,
+        "energyDelta": 40,
         "turns": 0,
         "uuid": 80,
         "displayName": "Twister",
@@ -682,8 +682,8 @@
     {
         "uniqueId": "MUD_BOMB",
         "type": "ground",
-        "power": 60.0,
-        "energyDelta": 40,
+        "power": 65.0,
+        "energyDelta": 45,
         "turns": 0,
         "uuid": 96,
         "displayName": "Mud Bomb",
@@ -1101,8 +1101,8 @@
     {
         "uniqueId": "LOW_KICK",
         "type": "fighting",
-        "power": 4.0,
-        "energyDelta": 5,
+        "power": 5.0,
+        "energyDelta": 8,
         "turns": 2,
         "uuid": 207,
         "displayName": "Low Kick",
@@ -1132,7 +1132,7 @@
         "uniqueId": "WING_ATTACK",
         "type": "flying",
         "power": 5.0,
-        "energyDelta": 7,
+        "energyDelta": 8,
         "turns": 2,
         "uuid": 210,
         "displayName": "Wing Attack",
@@ -1191,8 +1191,8 @@
     {
         "uniqueId": "MUD_SHOT",
         "type": "ground",
-        "power": 4.0,
-        "energyDelta": 8,
+        "power": 3.0,
+        "energyDelta": 9,
         "turns": 2,
         "uuid": 216,
         "displayName": "Mud Shot",
@@ -1291,7 +1291,7 @@
     {
         "uniqueId": "PSYCHO_CUT",
         "type": "psychic",
-        "power": 3.0,
+        "power": 4.0,
         "energyDelta": 9,
         "turns": 2,
         "uuid": 226,
@@ -1321,7 +1321,7 @@
     {
         "uniqueId": "BULLET_PUNCH",
         "type": "steel",
-        "power": 8.0,
+        "power": 7.0,
         "energyDelta": 7,
         "turns": 2,
         "uuid": 229,
@@ -1361,7 +1361,7 @@
     {
         "uniqueId": "MUD_SLAP",
         "type": "ground",
-        "power": 12.0,
+        "power": 11.0,
         "energyDelta": 10,
         "turns": 3,
         "uuid": 233,
@@ -1627,7 +1627,7 @@
     {
         "uniqueId": "SAND_TOMB",
         "type": "ground",
-        "power": 25.0,
+        "power": 40.0,
         "energyDelta": 40,
         "buffs": {
             "targetDefenseStatStageChange": -1,
@@ -1888,8 +1888,8 @@
     {
         "uniqueId": "WATERFALL",
         "type": "water",
-        "power": 12.0,
-        "energyDelta": 8,
+        "power": 11.0,
+        "energyDelta": 10,
         "turns": 3,
         "uuid": 283,
         "displayName": "Waterfall",
@@ -2036,7 +2036,7 @@
     {
         "uniqueId": "SMACK_DOWN",
         "type": "rock",
-        "power": 12.0,
+        "power": 11.0,
         "energyDelta": 8,
         "turns": 3,
         "uuid": 297,
@@ -2227,7 +2227,7 @@
     {
         "uniqueId": "DRAIN_PUNCH",
         "type": "fighting",
-        "power": 20.0,
+        "power": 40.0,
         "energyDelta": 40,
         "buffs": {
             "attackerDefenseStatStageChange": 1,
@@ -3150,7 +3150,7 @@
         "uniqueId": "VOLT_TACKLE",
         "type": "electric",
         "power": 90.0,
-        "energyDelta": 50,
+        "energyDelta": 40,
         "buffs": {
             "attackerDefenseStatStageChange": -1,
             "buffActivationChance": 1.0
@@ -3495,6 +3495,44 @@
         "turns": 0,
         "uuid": 490,
         "displayName": "Beak Blast",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "MIND_BLOWN",
+        "type": "fire",
+        "power": 90.0,
+        "energyDelta": 35,
+        "buffs": {
+            "attackerDefenseStatStageChange": -4,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 491,
+        "displayName": "Mind Blown",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "DRUM_BEATING",
+        "type": "grass",
+        "power": 60.0,
+        "energyDelta": 35,
+        "buffs": {
+            "targetAttackStatStageChange": -1,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 492,
+        "displayName": "Drum Beating",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "PYROBALL",
+        "type": "fire",
+        "power": 75.0,
+        "energyDelta": 40,
+        "turns": 0,
+        "uuid": 493,
+        "displayName": "Pyro Ball",
         "usageType": "charge"
     },
     {
