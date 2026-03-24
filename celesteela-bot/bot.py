@@ -1780,9 +1780,6 @@ async def leaderboard_tp(ctx):
 
 
 @bot.slash_command(
-    integration_types={
-        discord.IntegrationType.guild_install,
-    },
     guild_ids=[DEV_GUILD_ID],
     description="Find your opponent's team.",
 )
