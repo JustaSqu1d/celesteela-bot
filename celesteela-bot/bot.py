@@ -1787,32 +1787,32 @@ async def leaderboard_tp(ctx):
     name="player",
     description="The player to search for.",
     choices=[
-        "Nickname29585",
-        "boem20",
-        "Kilieboyy",
-        "Exeggutor8787",
-        "SsThorn",
-        "Withrd9",
+        "Aest9772",
         "Beelzeboy",
+        "boem20",
+        "Elec06Pokemon",
+        "Exeggutor8787",
+        "Fgatn",
+        "Jacoloco2",
+        "Kilieboyy",
+        "Lsh188",
+        "Marcy454",
+        "Nickname29585",
         "OutOfPoket",
         "PvPotato333",
-        "Jacoloco2",
         "Sceptileice25",
         "Shadowfacts1272",
-        "Lsh188",
+        "SsThorn",
+        "Tangyplatypus",
         "TheyLuvJy",
         "Tigersoni17",
-        "Aest9772",
-        "Marcy454",
-        "Tangyplatypus",
-        "Elec06Pokemon",
-        "Fgatn",
+        "Withrd9",
     ],
 )
 async def team(ctx, player: str):
     await ctx.defer()
 
-    bracket_url = f"https://api.zygarden.gg/api/v2/{TOURNAMENT_ID}/bracket"
+    bracket_url = f"https://api.zygarden.gg/api/v2/community/{TOURNAMENT_ID}/bracket"
 
     async with aiohttp.ClientSession() as session:
         async with session.get(bracket_url) as response:
