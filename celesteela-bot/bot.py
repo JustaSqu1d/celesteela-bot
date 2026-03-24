@@ -1961,16 +1961,17 @@ async def team(ctx, player: str):
     guild_ids=[DEV_GUILD_ID],
     description="See the current meta trends.",
 )
-@discord.option(
-    input_type=discord.SlashCommandOptionType.integer,
-    name="round",
-    description="The round to view. Defaults to the current round.",
-    min_value=1,
-    max_value=9,
-    required=False,
-    default=-1,
-)
-async def usage(ctx, round_num: int):
+async def usage(
+    ctx,
+    round_num: discord.Option(
+        int,
+        description="The round to view. Defaults to the current round.",
+        min_value=1,
+        max_value=9,
+        required=False,
+        default=-1,
+    ),  # type: ignore
+):
     await ctx.defer()
 
     bracket_url = f"https://api.zygarden.gg/api/v2/community/{TOURNAMENT_ID}/brackets"
@@ -2044,9 +2045,7 @@ async def usage(ctx, round_num: int):
     description_lines = []
     for usage in usage_list:
         shadow_percentage = (
-            (usage["shadow_count"] / usage["count"]) * 100
-            if usage["count"] > 0
-            else 0
+            (usage["shadow_count"] / usage["count"]) * 100 if usage["count"] > 0 else 0
         )
 
         shadow_percentage_string = f"{shadow_percentage:.1f}%"
