@@ -1831,7 +1831,7 @@ async def team(ctx, player: str):
                 return
             bracket_data = await response.json()
 
-    current_round = bracket_data["round"]
+    current_round = bracket_data["round"] - 1
     all_rounds = bracket_data["rounds"]
 
     player_roster = None
