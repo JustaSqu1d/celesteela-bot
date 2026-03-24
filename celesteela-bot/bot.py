@@ -2004,6 +2004,8 @@ async def usage(ctx, round_num: int):
         await ctx.respond(embed=embed, ephemeral=True)
         return
 
+    total = 20
+
     for match_round in bracket_data["rounds"]:
         if match_round["round"] == round_num:
             usage_data = {}
@@ -2012,6 +2014,10 @@ async def usage(ctx, round_num: int):
                     roster = matchup[participant]["roster"]
                     for pokemon in roster:
                         name = pokemon["name"]
+
+                        if name.startswith("Gourgeist"):
+                            name = "Gourgeist"
+
                         is_shadow = pokemon.get("isShadow", False)
                         if name not in usage_data:
                             usage_data[name] = {
@@ -2047,17 +2053,15 @@ async def usage(ctx, round_num: int):
         if shadow_percentage == 100:
             shadow_percentage_string = "100%"
 
-        usage_percent_string = f"{(usage['count'] / 16) * 100:.1f}%"
-
-        # ignore shadow percentage if it is zero
+        usage_percent_string = f"{(usage['count'] / total) * 100:.1f}%"
 
         if shadow_percentage > 0:
             description_lines.append(
-                f"**{usage['name']}** - {usage['count']}/16 | {usage_percent_string} ({usage['shadow_count']}/{usage['count']} | {shadow_percentage_string}<:shadow:1485897998855569449>)"
+                f"**{usage['name']}** - {usage['count']}/{total} | {usage_percent_string} ({usage['shadow_count']}/{usage['count']} | {shadow_percentage_string}<:shadow:1485897998855569449>)"
             )
         else:
             description_lines.append(
-                f"**{usage['name']}** - {usage['count']}/16 | {usage_percent_string}"
+                f"**{usage['name']}** - {usage['count']}/{total} | {usage_percent_string}"
             )
 
     embed = discord.Embed(
