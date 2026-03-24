@@ -373,11 +373,7 @@ async def create_pacing_table(pacing_data):
 
 async def roster_to_components(roster, player_name):
     components = [
-        discord.ui.Container(
-            discord.ui.Section(
-                discord.ui.TextDisplay(f"## {player_name}'s Team"),
-            )
-        )
+        discord.ui.TextDisplay(f"## {player_name}'s Team"),
     ]
 
     for pokemon in roster:
@@ -400,11 +396,11 @@ async def roster_to_components(roster, player_name):
             base_name = pokemon_name
 
         if is_shadow:
-            shadow_name_section = "<:shadow:1485897998855569449>"
+            shadow_name_section = " <:shadow:1485897998855569449>"
         else:
             shadow_name_section = ""
 
-        display_name = f"## {shadow_name_section}{form_name_section}{base_name}"
+        display_name = f"## {form_name_section}{base_name}{shadow_name_section}"
 
         pokemon_container = discord.ui.Container(
             discord.ui.Section(
