@@ -35,7 +35,7 @@ type_chart = {}
 
 dotenv.load_dotenv()
 DEV_GUILD_ID = int(os.getenv("DEV_GUILD_ID"))
-TOURNAMENT_ID = int(os.getenv("TOURNAMENT_ID"))
+TOURNAMENT_ID = os.getenv("TOURNAMENT_ID")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 levels = [
