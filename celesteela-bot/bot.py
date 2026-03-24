@@ -142,6 +142,89 @@ levels = [
     "51.0",
 ]
 
+round_1_manual_changes = {
+    "Marcy454": [
+        {
+            "id": "forretress",
+            "name": "Forretress",
+            "isShadow": False,
+            "dexEntry": 205,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Johto",
+            "variant": "",
+            "fastMove": "VOLT_SWITCH",
+            "chargeMoveOne": "SAND_TOMB",
+            "chargeMoveTwo": "ROCK_TOMB",
+        },
+        {
+            "id": "guzzlord",
+            "name": "Guzzlord",
+            "isShadow": False,
+            "dexEntry": 799,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Alola",
+            "variant": "",
+            "fastMove": "DRAGON_TAIL",
+            "chargeMoveOne": "BRUTAL_SWING",
+            "chargeMoveTwo": "SLUDGE_BOMB",
+        },
+        {
+            "id": "medicham",
+            "name": "Medicham",
+            "isShadow": False,
+            "dexEntry": 308,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Hoenn",
+            "variant": "",
+            "fastMove": "PSYCHO_CUT",
+            "chargeMoveOne": "ICE_PUNCH",
+            "chargeMoveTwo": "DYNAMIC_PUNCH",
+        },
+        {
+            "id": "wigglytuff",
+            "name": "Wigglytuff",
+            "isShadow": False,
+            "dexEntry": 40,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Kanto",
+            "variant": "",
+            "fastMove": "CHARM",
+            "chargeMoveOne": "SWIFT",
+            "chargeMoveTwo": "ICY_WIND",
+        },
+        {
+            "id": "quagsire",
+            "name": "Quagsire",
+            "isShadow": True,
+            "dexEntry": 195,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Johto",
+            "variant": "",
+            "fastMove": "MUD_SHOT",
+            "chargeMoveOne": "AQUA_TAIL",
+            "chargeMoveTwo": "STONE_EDGE",
+        },
+        {
+            "id": "corviknight",
+            "name": "Corviknight",
+            "isShadow": False,
+            "dexEntry": 823,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Galar",
+            "variant": "",
+            "fastMove": "SAND_ATTACK",
+            "chargeMoveOne": "AIR_CUTTER",
+            "chargeMoveTwo": "PAYBACK",
+        },
+    ]
+}
+
 filepath = os.path.dirname(__file__)
 
 
@@ -371,9 +454,9 @@ async def create_pacing_table(pacing_data):
     return image_bytes
 
 
-async def roster_to_components(roster, player_name):
+async def roster_to_components(roster, player_name, timezone):
     components = [
-        discord.ui.TextDisplay(f"## {player_name}'s Team"),
+        discord.ui.TextDisplay(f"## {player_name}'s Team (Timezone: {timezone})"),
     ]
 
     for pokemon in roster:
@@ -1837,107 +1920,32 @@ async def team(ctx, player: str):
 
     player_roster = None
 
-    manual_changes = {
-        "Marcy454": [
-            {
-                "id": "forretress",
-                "name": "Forretress",
-                "isShadow": False,
-                "dexEntry": 205,
-                "isMega": False,
-                "isBestBuddy": False,
-                "region": "Johto",
-                "variant": "",
-                "fastMove": "VOLT_SWITCH",
-                "chargeMoveOne": "SAND_TOMB",
-                "chargeMoveTwo": "ROCK_TOMB",
-            },
-            {
-                "id": "guzzlord",
-                "name": "Guzzlord",
-                "isShadow": False,
-                "dexEntry": 799,
-                "isMega": False,
-                "isBestBuddy": False,
-                "region": "Alola",
-                "variant": "",
-                "fastMove": "DRAGON_TAIL",
-                "chargeMoveOne": "BRUTAL_SWING",
-                "chargeMoveTwo": "SLUDGE_BOMB",
-            },
-            {
-                "id": "medicham",
-                "name": "Medicham",
-                "isShadow": False,
-                "dexEntry": 308,
-                "isMega": False,
-                "isBestBuddy": False,
-                "region": "Hoenn",
-                "variant": "",
-                "fastMove": "PSYCHO_CUT",
-                "chargeMoveOne": "ICE_PUNCH",
-                "chargeMoveTwo": "DYNAMIC_PUNCH",
-            },
-            {
-                "id": "wigglytuff",
-                "name": "Wigglytuff",
-                "isShadow": False,
-                "dexEntry": 40,
-                "isMega": False,
-                "isBestBuddy": False,
-                "region": "Kanto",
-                "variant": "",
-                "fastMove": "CHARM",
-                "chargeMoveOne": "SWIFT",
-                "chargeMoveTwo": "ICY_WIND",
-            },
-            {
-                "id": "quagsire",
-                "name": "Quagsire",
-                "isShadow": True,
-                "dexEntry": 195,
-                "isMega": False,
-                "isBestBuddy": False,
-                "region": "Johto",
-                "variant": "",
-                "fastMove": "MUD_SHOT",
-                "chargeMoveOne": "AQUA_TAIL",
-                "chargeMoveTwo": "STONE_EDGE",
-            },
-            {
-                "id": "corviknight",
-                "name": "Corviknight",
-                "isShadow": False,
-                "dexEntry": 823,
-                "isMega": False,
-                "isBestBuddy": False,
-                "region": "Galar",
-                "variant": "",
-                "fastMove": "SAND_ATTACK",
-                "chargeMoveOne": "AIR_CUTTER",
-                "chargeMoveTwo": "PAYBACK",
-            },
-        ]
-    }
+    timezone = "?"
 
-    if player in manual_changes:
-        player_roster = manual_changes[player]
-    else:
-        for match_round in all_rounds:
-            if match_round["round"] == current_round:
-                for matchup in match_round["matchups"]:
-                    player1 = matchup["participant1"]["name"]
-                    player2 = matchup["participant2"]["name"]
+    for match_round in all_rounds:
+        if match_round["round"] == current_round:
+            for matchup in match_round["matchups"]:
+                player1 = matchup["participant1"]["name"]
+                player2 = matchup["participant2"]["name"]
 
-                    if player1 == player:
+                if player1 == player:
+                    if player in round_1_manual_changes and current_round == 1:
+                        player_roster = round_1_manual_changes[player]
+                    else:
                         player_roster = matchup["participant1"]["roster"]
-                        break
-                    elif player2 == player:
+
+                    timezone = matchup.get("participant1", {}).get("timeZone", "?")
+                    break
+                elif player2 == player:
+                    if player in round_1_manual_changes and current_round == 1:
+                        player_roster = round_1_manual_changes[player]
+                    else:
                         player_roster = matchup["participant2"]["roster"]
-                        break
+                    timezone = matchup.get("participant2", {}).get("timeZone", "?")
+                    break
 
     if player_roster is not None:
-        components = await roster_to_components(player_roster, player)
+        components = await roster_to_components(player_roster, player, timezone)
 
         view = discord.ui.DesignerView(*components)
         await ctx.respond(view=view)
@@ -1947,6 +1955,117 @@ async def team(ctx, player: str):
             color=discord.Color.red(),
         )
         await ctx.respond(embed=embed, ephemeral=True)
+
+
+@bot.slash_command(
+    guild_ids=[DEV_GUILD_ID],
+    description="See the current meta trends.",
+)
+@discord.option(
+    input_type=discord.SlashCommandOptionType.integer,
+    name="round",
+    description="The round to view. Defaults to the current round.",
+    min_value=1,
+    max_value=9,
+    required=False,
+    default=-1,
+)
+async def usage(ctx, round_num: int):
+    await ctx.defer()
+
+    bracket_url = f"https://api.zygarden.gg/api/v2/community/{TOURNAMENT_ID}/brackets"
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(bracket_url) as response:
+            if response.status != 200:
+                embed = discord.Embed(
+                    title="❌ Failed to fetch bracket data.",
+                    color=discord.Color.red(),
+                )
+                await ctx.respond(embed=embed, ephemeral=True)
+
+                print(
+                    f"Failed to fetch bracket data: {response.status}, {await response.text()}"
+                )
+
+                return
+            bracket_data = await response.json()
+
+    current_round = bracket_data["round"] - 1
+
+    if round_num == -1:
+        round_num = current_round
+    if round_num > current_round:
+        embed = discord.Embed(
+            title="❌ Invalid round number.",
+            description=f"The current round is {current_round}.",
+            color=discord.Color.red(),
+        )
+        await ctx.respond(embed=embed, ephemeral=True)
+        return
+
+    for match_round in bracket_data["rounds"]:
+        if match_round["round"] == round_num:
+            usage_data = {}
+            for matchup in match_round["matchups"]:
+                for participant in ["participant1", "participant2"]:
+                    roster = matchup[participant]["roster"]
+                    for pokemon in roster:
+                        name = pokemon["name"]
+                        is_shadow = pokemon.get("isShadow", False)
+                        if name not in usage_data:
+                            usage_data[name] = {
+                                "count": 1,
+                                "shadow_count": 1 if is_shadow else 0,
+                            }
+                        else:
+                            usage_data[name]["count"] += 1
+                            if is_shadow:
+                                usage_data[name]["shadow_count"] += 1
+
+    usage_list = []
+    for name, data in usage_data.items():
+        usage_list.append(
+            {
+                "name": name,
+                "count": data["count"],
+                "shadow_count": data["shadow_count"],
+            }
+        )
+
+    usage_list.sort(key=lambda x: x["count"], reverse=True)
+
+    description_lines = []
+    for usage in usage_list:
+        shadow_percentage = (
+            (usage["shadow_count"] / usage["count"]) * 100
+            if usage["count"] > 0
+            else 0
+        )
+
+        shadow_percentage_string = f"{shadow_percentage:.1f}%"
+        if shadow_percentage == 100:
+            shadow_percentage_string = "100%"
+
+        usage_percent_string = f"{(usage['count'] / 16) * 100:.1f}%"
+
+        # ignore shadow percentage if it is zero
+
+        if shadow_percentage > 0:
+            description_lines.append(
+                f"**{usage['name']}** - {usage['count']}/16 | {usage_percent_string} ({usage['shadow_count']}/{usage['count']} | {shadow_percentage_string}<:shadow:1485897998855569449>)"
+            )
+        else:
+            description_lines.append(
+                f"**{usage['name']}** - {usage['count']}/16 | {usage_percent_string}"
+            )
+
+    embed = discord.Embed(
+        title=f"Usage Statistics - Round {round_num}",
+        description="\n".join(description_lines),
+        color=discord.Color.blue(),
+    )
+    await ctx.respond(embed=embed)
 
 
 if __name__ == "__main__":
