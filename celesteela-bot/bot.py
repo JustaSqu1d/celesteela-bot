@@ -35,6 +35,7 @@ type_chart = {}
 
 dotenv.load_dotenv()
 DEV_GUILD_ID = int(os.getenv("DEV_GUILD_ID"))
+TOURNAMENT_ID = int(os.getenv("TOURNAMENT_ID"))
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 levels = [
@@ -368,6 +369,50 @@ async def create_pacing_table(pacing_data):
     image_bytes.seek(0)
 
     return image_bytes
+
+
+async def roster_to_components(roster):
+    components = []
+
+    for pokemon in roster:
+        fast_move = await format_move_name(pokemon["fastMove"])
+        charge_move_one = await format_move_name(pokemon["chargeMoveOne"])
+        charge_move_two = await format_move_name(pokemon["chargeMoveTwo"])
+        pokemon_name = pokemon["name"]
+        is_shadow = pokemon["isShadow"]
+
+        pokemon_id = pokemon["id"].replace("_", "-")
+
+        image_url = f"https://cdn.zygarden.gg/sprites/{pokemon_id}.png"
+
+        if "(" in pokemon_name and ")" in pokemon_name:
+            form_name = pokemon_name.split("(")[1].split(")")[0]
+            form_name_section = f"{form_name} "
+            base_name = pokemon_name.split(" (")[0]
+        else:
+            form_name_section = ""
+            base_name = pokemon_name
+
+        if is_shadow:
+            shadow_name_section = "<:shadow:1485897998855569449>"
+        else:
+            shadow_name_section = ""
+
+        display_name = f"## {shadow_name_section}{form_name_section}{base_name}"
+
+        pokemon_container = discord.ui.Container(
+            discord.ui.Section(
+                discord.ui.TextDisplay(display_name),
+                discord.ui.TextDisplay(
+                    f"{fast_move}\n{charge_move_one}\n{charge_move_two}"
+                ),
+                accessory=discord.ui.Thumbnail(url=image_url),
+            )
+        )
+
+        components.append(pokemon_container)
+
+    return components
 
 
 async def scrape_leaderboard():
@@ -1294,7 +1339,7 @@ async def calculate_damage(attack_stat, defense_stat, attacker, defender):
                 * trainer_constant
             )
             + 1
-        ) # not the actual damage formula as the order of operations is different, but this is close enough for our purposes (margin of error is less than 0.05% of all possible damage values)
+        )  # not the actual damage formula as the order of operations is different, but this is close enough for our purposes (margin of error is less than 0.05% of all possible damage values)
         damage_dict[move_name] = damage
 
     return damage_dict
@@ -1693,7 +1738,7 @@ async def leaderboard_tp(ctx):
         "Withrd9",
         "WTMGo",
         "xPenchu",
-        "YungQas"
+        "YungQas",
     ]
 
     # Select a random alias
@@ -1725,11 +1770,93 @@ async def leaderboard_tp(ctx):
     description_lines = []
     for player in filtered_players:
         description_lines.append(
-            f"**#{player['place']}. {player['name']}** - {player['rating']}".replace("Withrd9", withrd_alias)
+            f"**#{player['place']}. {player['name']}** - {player['rating']}".replace(
+                "Withrd9", withrd_alias
+            )
         )
 
     embed.description = "\n".join(description_lines)
     await ctx.respond(embed=embed)
+
+
+@bot.slash_command(
+    integration_types={
+        discord.IntegrationType.guild_install,
+    },
+    guild_ids=[DEV_GUILD_ID],
+    description="Find your opponent's team.",
+)
+@discord.option(
+    name="player",
+    description="The player to search for.",
+    choices=[
+        "Nickname29585",
+        "boem20",
+        "Kilieboyy",
+        "Exeggutor8787",
+        "SsThorn",
+        "Withrd9",
+        "Beelzeboy",
+        "OutOfPoket",
+        "PvPotato333",
+        "Jacoloco2",
+        "Sceptileice25",
+        "Shadowfacts1272",
+        "Lsh188",
+        "TheyLuvJy",
+        "Tigersoni17",
+        "Aest9772",
+        "Marcy454",
+        "Tangyplatypus",
+        "Elec06Pokemon",
+        "Fgatn",
+    ],
+)
+async def team(ctx, player: str):
+    await ctx.defer()
+
+    bracket_url = f"https://api.zygarden.gg/api/v2/{TOURNAMENT_ID}/bracket"
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(bracket_url) as response:
+            if response.status != 200:
+                embed = discord.Embed(
+                    title="❌ Failed to fetch bracket data.",
+                    color=discord.Color.red(),
+                )
+                await ctx.respond(embed=embed, ephemeral=True)
+                return
+            bracket_data = await response.json()
+
+    current_round = bracket_data["round"]
+    all_rounds = bracket_data["rounds"]
+
+    player_roster = None
+
+    for match_round in all_rounds:
+        if match_round["round"] == current_round:
+            for matchup in match_round["matchups"]:
+                player1 = matchup["participant1"]["name"]
+                player2 = matchup["participant2"]["name"]
+
+                if player1 == player:
+                    player_roster = matchup["participant1"]["roster"]
+                    break
+                elif player2 == player:
+                    player_roster = matchup["participant2"]["roster"]
+                    break
+
+    if player_roster is not None:
+        components = roster_to_components(player_roster)
+
+        view = discord.ui.DesignerView(*components)
+        await ctx.respond(view=view)
+    else:
+        embed = discord.Embed(
+            title="❌ Player not found.",
+            color=discord.Color.red(),
+        )
+        await ctx.respond(embed=embed, ephemeral=True)
 
 
 if __name__ == "__main__":
