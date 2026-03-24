@@ -371,8 +371,14 @@ async def create_pacing_table(pacing_data):
     return image_bytes
 
 
-async def roster_to_components(roster):
-    components = []
+async def roster_to_components(roster, player_name):
+    components = [
+        discord.ui.Container(
+            discord.ui.Section(
+                discord.ui.TextDisplay(f"## {player_name}'s Team"),
+            )
+        )
+    ]
 
     for pokemon in roster:
         fast_move = await format_move_name(pokemon["fastMove"])
@@ -1844,7 +1850,7 @@ async def team(ctx, player: str):
                     break
 
     if player_roster is not None:
-        components = await roster_to_components(player_roster)
+        components = await roster_to_components(player_roster, player)
 
         view = discord.ui.DesignerView(*components)
         await ctx.respond(view=view)
