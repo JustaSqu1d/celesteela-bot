@@ -1812,7 +1812,7 @@ async def leaderboard_tp(ctx):
 async def team(ctx, player: str):
     await ctx.defer()
 
-    bracket_url = f"https://api.zygarden.gg/api/v2/community/{TOURNAMENT_ID}/bracket"
+    bracket_url = f"https://api.zygarden.gg/api/v2/community/{TOURNAMENT_ID}/brackets"
 
     async with aiohttp.ClientSession() as session:
         async with session.get(bracket_url) as response:
