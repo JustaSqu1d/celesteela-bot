@@ -1844,7 +1844,7 @@ async def team(ctx, player: str):
                     break
 
     if player_roster is not None:
-        components = roster_to_components(player_roster)
+        components = await roster_to_components(player_roster)
 
         view = discord.ui.DesignerView(*components)
         await ctx.respond(view=view)
