@@ -1,4 +1,4 @@
-py-cord==2.6.1
+py-cord==2.7.0
 python-dotenv==1.0.1
 aiofiles==24.1.0
 python-Levenshtein==0.26.0
