@@ -1824,6 +1824,9 @@ async def team(ctx, player: str):
                     color=discord.Color.red(),
                 )
                 await ctx.respond(embed=embed, ephemeral=True)
+
+                print(f"Failed to fetch bracket data: {response.status}, {await response.text()}")
+
                 return
             bracket_data = await response.json()
 
