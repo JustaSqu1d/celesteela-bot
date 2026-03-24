@@ -1825,7 +1825,9 @@ async def team(ctx, player: str):
                 )
                 await ctx.respond(embed=embed, ephemeral=True)
 
-                print(f"Failed to fetch bracket data: {response.status}, {await response.text()}")
+                print(
+                    f"Failed to fetch bracket data: {response.status}, {await response.text()}"
+                )
 
                 return
             bracket_data = await response.json()
@@ -1835,18 +1837,104 @@ async def team(ctx, player: str):
 
     player_roster = None
 
-    for match_round in all_rounds:
-        if match_round["round"] == current_round:
-            for matchup in match_round["matchups"]:
-                player1 = matchup["participant1"]["name"]
-                player2 = matchup["participant2"]["name"]
+    manual_changes = {
+        "Marcy454": [
+            {
+                "id": "forretress",
+                "name": "Forretress",
+                "isShadow": False,
+                "dexEntry": 205,
+                "isMega": False,
+                "isBestBuddy": False,
+                "region": "Johto",
+                "variant": "",
+                "fastMove": "VOLT_SWITCH",
+                "chargeMoveOne": "SAND_TOMB",
+                "chargeMoveTwo": "ROCK_TOMB",
+            },
+            {
+                "id": "guzzlord",
+                "name": "Guzzlord",
+                "isShadow": False,
+                "dexEntry": 799,
+                "isMega": False,
+                "isBestBuddy": False,
+                "region": "Alola",
+                "variant": "",
+                "fastMove": "DRAGON_TAIL",
+                "chargeMoveOne": "BRUTAL_SWING",
+                "chargeMoveTwo": "SLUDGE_BOMB",
+            },
+            {
+                "id": "medicham",
+                "name": "Medicham",
+                "isShadow": False,
+                "dexEntry": 308,
+                "isMega": False,
+                "isBestBuddy": False,
+                "region": "Hoenn",
+                "variant": "",
+                "fastMove": "PSYCHO_CUT",
+                "chargeMoveOne": "ICE_PUNCH",
+                "chargeMoveTwo": "DYNAMIC_PUNCH",
+            },
+            {
+                "id": "wigglytuff",
+                "name": "Wigglytuff",
+                "isShadow": False,
+                "dexEntry": 40,
+                "isMega": False,
+                "isBestBuddy": False,
+                "region": "Kanto",
+                "variant": "",
+                "fastMove": "CHARM",
+                "chargeMoveOne": "SWIFT",
+                "chargeMoveTwo": "ICY_WIND",
+            },
+            {
+                "id": "quagsire",
+                "name": "Quagsire",
+                "isShadow": True,
+                "dexEntry": 195,
+                "isMega": False,
+                "isBestBuddy": False,
+                "region": "Johto",
+                "variant": "",
+                "fastMove": "MUD_SHOT",
+                "chargeMoveOne": "AQUA_TAIL",
+                "chargeMoveTwo": "STONE_EDGE",
+            },
+            {
+                "id": "corviknight",
+                "name": "Corviknight",
+                "isShadow": False,
+                "dexEntry": 823,
+                "isMega": False,
+                "isBestBuddy": False,
+                "region": "Galar",
+                "variant": "",
+                "fastMove": "SAND_ATTACK",
+                "chargeMoveOne": "AIR_CUTTER",
+                "chargeMoveTwo": "PAYBACK",
+            },
+        ]
+    }
 
-                if player1 == player:
-                    player_roster = matchup["participant1"]["roster"]
-                    break
-                elif player2 == player:
-                    player_roster = matchup["participant2"]["roster"]
-                    break
+    if player in manual_changes:
+        player_roster = manual_changes[player]
+    else:
+        for match_round in all_rounds:
+            if match_round["round"] == current_round:
+                for matchup in match_round["matchups"]:
+                    player1 = matchup["participant1"]["name"]
+                    player2 = matchup["participant2"]["name"]
+
+                    if player1 == player:
+                        player_roster = matchup["participant1"]["roster"]
+                        break
+                    elif player2 == player:
+                        player_roster = matchup["participant2"]["roster"]
+                        break
 
     if player_roster is not None:
         components = await roster_to_components(player_roster, player)
