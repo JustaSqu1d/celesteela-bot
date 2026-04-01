@@ -167,7 +167,7 @@ round_2_manual_changes = {
             "name": "Clodsire",
             "isShadow": False,
             "variant": "",
-            "fastMove": "MUD_SHOT",
+            "fastMove": "POISON_STING",
             "chargeMoveOne": "STONE_EDGE",
             "chargeMoveTwo": "EARTHQUAKE",
         },
