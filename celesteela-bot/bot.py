@@ -142,166 +142,62 @@ levels = [
     "51.0",
 ]
 
-round_1_manual_changes = {
-    "Marcy454": [
+round_2_manual_changes = {
+    "boem20": [
         {
-            "id": "forretress",
-            "name": "Forretress",
-            "isShadow": False,
-            "dexEntry": 205,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Johto",
+            "id": "malamar",
+            "name": "Malamar",
+            "isShadow": True,
             "variant": "",
-            "fastMove": "VOLT_SWITCH",
-            "chargeMoveOne": "SAND_TOMB",
-            "chargeMoveTwo": "ROCK_TOMB",
+            "fastMove": "PSYWAVE",
+            "chargeMoveOne": "FOUL_PLAY",
+            "chargeMoveTwo": "SUPER_POWER",
         },
         {
-            "id": "guzzlord",
-            "name": "Guzzlord",
+            "id": "feraligatr",
+            "name": "Feraligatr",
             "isShadow": False,
-            "dexEntry": 799,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Alola",
             "variant": "",
-            "fastMove": "DRAGON_TAIL",
-            "chargeMoveOne": "BRUTAL_SWING",
-            "chargeMoveTwo": "SLUDGE_BOMB",
+            "fastMove": "SHADOW_CLAW",
+            "chargeMoveOne": "HYDRO_CANNON",
+            "chargeMoveTwo": "ICE_BEAM",
+        },
+        {
+            "id": "clodsire",
+            "name": "Clodsire",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "MUD_SHOT",
+            "chargeMoveOne": "STONE_EDGE",
+            "chargeMoveTwo": "EARTHQUAKE",
         },
         {
             "id": "medicham",
             "name": "Medicham",
             "isShadow": False,
-            "dexEntry": 308,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Hoenn",
             "variant": "",
             "fastMove": "PSYCHO_CUT",
             "chargeMoveOne": "ICE_PUNCH",
             "chargeMoveTwo": "DYNAMIC_PUNCH",
         },
         {
-            "id": "wigglytuff",
-            "name": "Wigglytuff",
+            "id": "ninetales_alolan",
+            "name": "Ninetales (Alolan)",
             "isShadow": False,
-            "dexEntry": 40,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Kanto",
-            "variant": "",
-            "fastMove": "CHARM",
-            "chargeMoveOne": "SWIFT",
-            "chargeMoveTwo": "ICY_WIND",
+            "variant": "alolan",
+            "fastMove": "POWDER_SNOW",
+            "chargeMoveOne": "WEATHER_BALL_ICE",
+            "chargeMoveTwo": "DAZZLING_GLEAM",
         },
         {
-            "id": "quagsire",
-            "name": "Quagsire",
-            "isShadow": True,
-            "dexEntry": 195,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Johto",
+            "id": "diggersby",
+            "name": "Diggersby",
+            "isShadow": False,
             "variant": "",
             "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "AQUA_TAIL",
-            "chargeMoveTwo": "STONE_EDGE",
-        },
-        {
-            "id": "corviknight",
-            "name": "Corviknight",
-            "isShadow": False,
-            "dexEntry": 823,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Galar",
-            "variant": "",
-            "fastMove": "SAND_ATTACK",
-            "chargeMoveOne": "AIR_CUTTER",
-            "chargeMoveTwo": "PAYBACK",
-        },
-    ],
-    "SsThorn": [
-        {
-            "id": "guzzlord",
-            "name": "Guzzlord",
-            "isShadow": False,
-            "dexEntry": 799,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Alola",
-            "variant": "",
-            "fastMove": "DRAGON_TAIL",
-            "chargeMoveOne": "BRUTAL_SWING",
-            "chargeMoveTwo": "DRAGON_CLAW",
-        },
-        {
-            "id": "quagsire",
-            "name": "Quagsire",
-            "isShadow": True,
-            "dexEntry": 195,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Johto",
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "AQUA_TAIL",
-            "chargeMoveTwo": "STONE_EDGE",
-        },
-        {
-            "id": "forretress",
-            "name": "Forretress",
-            "isShadow": True,
-            "dexEntry": 205,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Johto",
-            "variant": "",
-            "fastMove": "VOLT_SWITCH",
-            "chargeMoveOne": "SAND_TOMB",
-            "chargeMoveTwo": "ROCK_TOMB",
-        },
-        {
-            "id": "gourgeist_super",
-            "name": "Gourgeist (Super)",
-            "isShadow": False,
-            "dexEntry": 711,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Kalos",
-            "variant": "super",
-            "fastMove": "INCINERATE",
-            "chargeMoveOne": "SEED_BOMB",
-            "chargeMoveTwo": "SHADOW_BALL",
-        },
-        {
-            "id": "empoleon",
-            "name": "Empoleon",
-            "isShadow": False,
-            "dexEntry": 395,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Sinnoh",
-            "variant": "",
-            "fastMove": "METAL_SOUND",
-            "chargeMoveOne": "HYDRO_CANNON",
-            "chargeMoveTwo": "DRILL_PECK",
-        },
-        {
-            "id": "weezing_galarian",
-            "name": "Weezing (Galarian)",
-            "isShadow": True,
-            "dexEntry": 110,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Galar",
-            "variant": "galarian",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "BRUTAL_SWING",
-            "chargeMoveTwo": "SLUDGE",
-        },
+            "chargeMoveOne": "FIRE_PUNCH",
+            "chargeMoveTwo": "SCORCHING_SANDS",
+        }
     ],
 }
 
@@ -2009,16 +1905,16 @@ async def team(ctx, player: str):
                 player2 = matchup["participant2"]["name"]
 
                 if player1 == player:
-                    if player in round_1_manual_changes and current_round == 1:
-                        player_roster = round_1_manual_changes[player]
+                    if player in round_2_manual_changes and current_round == 3:
+                        player_roster = round_2_manual_changes[player]
                     else:
                         player_roster = matchup["participant1"]["roster"]
 
                     timezone = matchup.get("participant1", {}).get("timeZone", "?")
                     break
                 elif player2 == player:
-                    if player in round_1_manual_changes and current_round == 1:
-                        player_roster = round_1_manual_changes[player]
+                    if player in round_2_manual_changes and current_round == 3:
+                        player_roster = round_2_manual_changes[player]
                     else:
                         player_roster = matchup["participant2"]["roster"]
                     timezone = matchup.get("participant2", {}).get("timeZone", "?")
