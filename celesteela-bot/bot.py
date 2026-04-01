@@ -1905,7 +1905,7 @@ async def team(ctx, player: str):
                 player2 = matchup["participant2"]["name"]
 
                 if player1 == player:
-                    if player in round_2_manual_changes and current_round == 3:
+                    if player in round_2_manual_changes and current_round == 2:
                         player_roster = round_2_manual_changes[player]
                     else:
                         player_roster = matchup["participant1"]["roster"]
@@ -1913,7 +1913,7 @@ async def team(ctx, player: str):
                     timezone = matchup.get("participant1", {}).get("timeZone", "?")
                     break
                 elif player2 == player:
-                    if player in round_2_manual_changes and current_round == 3:
+                    if player in round_2_manual_changes and current_round == 2:
                         player_roster = round_2_manual_changes[player]
                     else:
                         player_roster = matchup["participant2"]["roster"]
