@@ -199,6 +199,62 @@ round_2_manual_changes = {
             "chargeMoveTwo": "SCORCHING_SANDS",
         }
     ],
+    "Marcy454": [
+        {
+            "id": "malamar",
+            "name": "Malamar",
+            "isShadow": True,
+            "variant": "",
+            "fastMove": "PSYWAVE",
+            "chargeMoveOne": "SUPER_POWER",
+            "chargeMoveTwo": "FOUL_PLAY",
+        },
+        {
+            "id": "corviknight",
+            "name": "Corviknight",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "SAND_ATTACK",
+            "chargeMoveOne": "AIR_CUTTER",
+            "chargeMoveTwo": "PAYBACK",
+        },
+        {
+            "id": "quagsire",
+            "name": "Quagsire",
+            "isShadow": True,
+            "variant": "",
+            "fastMove": "MUD_SHOT",
+            "chargeMoveOne": "AQUA_TAIL",
+            "chargeMoveTwo": "STONE_EDGE",
+        },
+        {
+            "id": "florges",
+            "name": "Florges",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "FAIRY_WIND",
+            "chargeMoveOne": "CHILLING_WATER",
+            "chargeMoveTwo": "TRAILBLAZE",
+        },
+        {
+            "id": "lickilicky",
+            "name": "Lickilicky",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "ROLLOUT",
+            "chargeMoveOne": "BODY_SLAM",
+            "chargeMoveTwo": "SHADOW_BALL",
+        },
+        {
+            "id": "sandslash_alolan",
+            "name": "Sandslash (Alolan)",
+            "isShadow": True,
+            "variant": "alolan",
+            "fastMove": "SHADOW_CLAW",
+            "chargeMoveOne": "ICE_PUNCH",
+            "chargeMoveTwo": "DRILL_RUN",
+        }
+    ]
 }
 
 filepath = os.path.dirname(__file__)
@@ -268,7 +324,7 @@ async def format_move_name(move_name):
         "AEGISLASH_CHARGE_PSYCHO_CUT": "PSYCHO_CUT",
         "AEGISLASH_CHARGE_AIR_SLASH": "AIR_SLASH",
     }
-    
+
     if move_name in move_overrides:
         move_name = move_overrides[move_name]
 
