@@ -264,6 +264,14 @@ async def load_data():
 
 
 async def format_move_name(move_name):
+    move_overrides = {
+        "AEGISLASH_CHARGE_PSYCHO_CUT": "PSYCHO_CUT",
+        "AEGISLASH_CHARGE_AIR_SLASH": "AIR_SLASH",
+    }
+    
+    if move_name in move_overrides:
+        move_name = move_overrides[move_name]
+
     for move in move_data:
         if move["uniqueId"].lower() == move_name.lower():
             type_string = await get_type_emoji(move["type"])
