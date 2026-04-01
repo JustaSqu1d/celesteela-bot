@@ -203,7 +203,7 @@ round_2_manual_changes = {
         {
             "id": "malamar",
             "name": "Malamar",
-            "isShadow": True,
+            "isShadow": False,
             "variant": "",
             "fastMove": "PSYWAVE",
             "chargeMoveOne": "SUPER_POWER",
