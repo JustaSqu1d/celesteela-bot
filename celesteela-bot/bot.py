@@ -392,7 +392,7 @@ round_3_manual_changes = {
             "chargeMoveTwo": "DRILL_RUN",
         },
     ],
-    "Tigersoni17": {
+    "Tigersoni17": [
         {
             "id": "diggersby",
             "name": "Diggersby",
@@ -446,8 +446,8 @@ round_3_manual_changes = {
             "fastMove": "SHADOW_CLAW",
             "chargeMoveOne": "HYDRO_CANNON",
             "chargeMoveTwo": "ICE_BEAM",
-        }
-    }
+        },
+    ],
 }
 
 filepath = os.path.dirname(__file__)
