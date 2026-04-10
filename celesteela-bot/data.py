@@ -216,6 +216,7 @@ async def process_move_data(template_id: str, entry: dict) -> dict:
                .replace("_FAST", "")
                .replace("FUTURESIGHT", "FUTURE_SIGHT")
                .replace("TECHNO_BLAST_WATER", "TECHNO_BLAST_DOUSE")
+               .replace("PYROBALL", "PYRO_BALL")
                )
     move_data["uniqueId"] = move_id
 
@@ -246,7 +247,6 @@ async def process_move_data(template_id: str, entry: dict) -> dict:
                          .replace("Techno Blast Douse", "Techno Blast")
                          .replace("Techno Blast Shock", "Techno Blast")
                          .replace("Roar Of Time", "Roar of Time")
-                         .replcae("Pyroball", "Pyro Ball")
                          ).strip()
 
     move_data["displayName"] = move_display_name

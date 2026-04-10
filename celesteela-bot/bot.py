@@ -335,6 +335,121 @@ round_2_manual_changes = {
     ],
 }
 
+round_3_manual_changes = {
+    "Marcy454": [
+        {
+            "id": "malamar",
+            "name": "Malamar",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "PSYWAVE",
+            "chargeMoveOne": "SUPER_POWER",
+            "chargeMoveTwo": "FOUL_PLAY",
+        },
+        {
+            "id": "corviknight",
+            "name": "Corviknight",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "SAND_ATTACK",
+            "chargeMoveOne": "AIR_CUTTER",
+            "chargeMoveTwo": "PAYBACK",
+        },
+        {
+            "id": "quagsire",
+            "name": "Quagsire",
+            "isShadow": True,
+            "variant": "",
+            "fastMove": "MUD_SHOT",
+            "chargeMoveOne": "AQUA_TAIL",
+            "chargeMoveTwo": "STONE_EDGE",
+        },
+        {
+            "id": "florges",
+            "name": "Florges",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "FAIRY_WIND",
+            "chargeMoveOne": "CHILLING_WATER",
+            "chargeMoveTwo": "TRAILBLAZE",
+        },
+        {
+            "id": "lickilicky",
+            "name": "Lickilicky",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "ROLLOUT",
+            "chargeMoveOne": "BODY_SLAM",
+            "chargeMoveTwo": "SHADOW_BALL",
+        },
+        {
+            "id": "sandslash_alolan",
+            "name": "Sandslash (Alolan)",
+            "isShadow": True,
+            "variant": "alolan",
+            "fastMove": "SHADOW_CLAW",
+            "chargeMoveOne": "ICE_PUNCH",
+            "chargeMoveTwo": "DRILL_RUN",
+        },
+    ],
+    "Tigersoni17": {
+        {
+            "id": "diggersby",
+            "name": "Diggersby",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "MUD_SHOT",
+            "chargeMoveOne": "FIRE_PUNCH",
+            "chargeMoveTwo": "SCORCHING_SANDS",
+        },
+        {
+            "id": "corsola_galarian",
+            "name": "Corsola (Galarian)",
+            "isShadow": False,
+            "variant": "galarian",
+            "fastMove": "ASTONISH",
+            "chargeMoveOne": "POWER_GEM",
+            "chargeMoveTwo": "NIGHT_SHADE",
+        },
+        {
+            "id": "corviknight",
+            "name": "Corviknight",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "SAND_ATTACK",
+            "chargeMoveOne": "PAYBACK",
+            "chargeMoveTwo": "AIR_CUTTER",
+        },
+        {
+            "id": "guzzlord",
+            "name": "Guzzlord",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "DRAGON_TAIL",
+            "chargeMoveOne": "BRUTAL_SWING",
+            "chargeMoveTwo": "SLUDGE_BOMB",
+        },
+        {
+            "id": "florges",
+            "name": "Florges",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "FAIRY_WIND",
+            "chargeMoveOne": "CHILLING_WATER",
+            "chargeMoveTwo": "TRAILBLAZE",
+        },
+        {
+            "id": "feraligatr",
+            "name": "Feraligatr",
+            "isShadow": False,
+            "variant": "",
+            "fastMove": "SHADOW_CLAW",
+            "chargeMoveOne": "HYDRO_CANNON",
+            "chargeMoveTwo": "ICE_BEAM",
+        }
+    }
+}
+
 filepath = os.path.dirname(__file__)
 
 
@@ -2049,6 +2164,8 @@ async def team(ctx, player: str):
                 if player1 == player:
                     if player in round_2_manual_changes and current_round == 2:
                         player_roster = round_2_manual_changes[player]
+                    elif player in round_3_manual_changes and current_round == 3:
+                        player_roster = round_3_manual_changes[player]
                     else:
                         player_roster = matchup["participant1"]["roster"]
 
@@ -2057,6 +2174,8 @@ async def team(ctx, player: str):
                 elif player2 == player:
                     if player in round_2_manual_changes and current_round == 2:
                         player_roster = round_2_manual_changes[player]
+                    elif player in round_3_manual_changes and current_round == 3:
+                        player_roster = round_3_manual_changes[player]
                     else:
                         player_roster = matchup["participant2"]["roster"]
                     timezone = matchup.get("participant2", {}).get("timeZone", "?")

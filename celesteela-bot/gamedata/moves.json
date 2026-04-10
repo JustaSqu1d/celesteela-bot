@@ -3526,13 +3526,23 @@
         "usageType": "charge"
     },
     {
-        "uniqueId": "PYROBALL",
+        "uniqueId": "PYRO_BALL",
         "type": "fire",
         "power": 75.0,
         "energyDelta": 40,
         "turns": 0,
         "uuid": 493,
         "displayName": "Pyro Ball",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "GIGATON_HAMMER",
+        "type": "steel",
+        "power": 130.0,
+        "energyDelta": 60,
+        "turns": 0,
+        "uuid": 494,
+        "displayName": "Gigaton Hammer",
         "usageType": "charge"
     },
     {
