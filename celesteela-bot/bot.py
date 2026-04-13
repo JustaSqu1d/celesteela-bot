@@ -1789,10 +1789,9 @@ async def damage(ctx, league, attacker, defender):
     }
 )
 async def sableye(ctx):
-    # 12 random letters is the code
-
-    code = "".join(random.choices(string.ascii_letters, k=12))
-    code = code.upper()
+    code = "".join(
+        random.choices(string.ascii_uppercase + string.digits, k=13)
+    )  # 13 random letters and digits
 
     embed = discord.Embed(
         title="Sableye Drop!",
