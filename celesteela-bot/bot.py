@@ -1804,7 +1804,7 @@ async def sableye(ctx):
     button = discord.ui.Button(
         label="Claim Reward!",
         style=discord.ButtonStyle.link,
-        url=f"https://store.pokemongo.com/offer-redemption?password={code}",
+        url=f"https://store.pokemongo.com/offer-redemption?passcode={code}",
     )
 
     view = discord.ui.View()
