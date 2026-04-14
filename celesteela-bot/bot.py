@@ -1801,7 +1801,16 @@ async def sableye(ctx):
     embed.set_image(url="https://i.imgur.com/ug1evlY.png")
     embed.set_footer(text="!sableye (Parody)")
 
-    await ctx.respond(embed=embed)
+    button = discord.ui.Button(
+        label="Claim Reward!",
+        style=discord.ButtonStyle.link,
+        url=f"https://store.pokemongo.com/offer-redemption?password={code}",
+    )
+
+    view = discord.ui.View()
+    view.add_item(button)
+
+    await ctx.respond(embed=embed, view=view)
 
 
 @bot.slash_command(
@@ -1855,7 +1864,6 @@ async def leaderboard_hghc(ctx):
         "Exeggutor8787",
         "fabiou7190",
         "Fgatn",
-        "FlyGonnaGetYou",
         "freddychow",
         "Jacoloco2",
         "Kazim33",
