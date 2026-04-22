@@ -669,8 +669,8 @@ round_4_manual_changes = {
             "region": "Hoenn",
             "variant": "",
             "fastMove": "DRAGON_BREATH",
-            "chargeMoveOne": "DAZZLING_GLEAM",
-            "chargeMoveTwo": "MOONBLAST",
+            "chargeMoveOne": "FLAMETHROWER",
+            "chargeMoveTwo": "SKY_ATTACK",
         },
         {
             "id": "corsola_galarian",
