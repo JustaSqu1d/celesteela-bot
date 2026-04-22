@@ -620,6 +620,7 @@ round_4_manual_changes = {
         }
     ]
 }
+round_5_manual_changes = {}
 
 filepath = os.path.dirname(__file__)
 
@@ -2349,6 +2350,8 @@ async def team(ctx, player: str):
                         player_roster = round_3_manual_changes[player]
                     elif player in round_4_manual_changes and current_round == 4:
                         player_roster = round_4_manual_changes[player]
+                    elif player in round_5_manual_changes and current_round == 5:
+                        player_roster = round_5_manual_changes[player]
                     else:
                         player_roster = matchup["participant1"]["roster"]
 
@@ -2359,6 +2362,10 @@ async def team(ctx, player: str):
                         player_roster = round_2_manual_changes[player]
                     elif player in round_3_manual_changes and current_round == 3:
                         player_roster = round_3_manual_changes[player]
+                    elif player in round_4_manual_changes and current_round == 4:
+                        player_roster = round_4_manual_changes[player]
+                    elif player in round_5_manual_changes and current_round == 5:
+                        player_roster = round_5_manual_changes[player]
                     else:
                         player_roster = matchup["participant2"]["roster"]
                     timezone = matchup.get("participant2", {}).get("timeZone", "?")
@@ -2432,7 +2439,17 @@ async def usage(
             usage_data = {}
             for matchup in match_round["matchups"]:
                 for participant in ["participant1", "participant2"]:
-                    roster = matchup[participant]["roster"]
+                    if participant in round_2_manual_changes and match_round["round"] == 2:
+                        roster = round_2_manual_changes[matchup[participant]["name"]]
+                    elif participant in round_3_manual_changes and match_round["round"] == 3:
+                        roster = round_3_manual_changes[matchup[participant]["name"]]
+                    elif participant in round_4_manual_changes and match_round["round"] == 4:
+                        roster = round_4_manual_changes[matchup[participant]["name"]]
+                    elif participant in round_5_manual_changes and match_round["round"] == 5:
+                        roster = round_5_manual_changes[matchup[participant]["name"]]
+                    else:
+                        roster = matchup[participant]["roster"]
+
                     for pokemon in roster:
                         name = pokemon["name"]
 
