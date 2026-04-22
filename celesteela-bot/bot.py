@@ -505,7 +505,7 @@ round_4_manual_changes = {
             "fastMove": "BUG_BITE",
             "chargeMoveOne": "SAND_TOMB",
             "chargeMoveTwo": "ROCK_TOMB",
-        }
+        },
     ],
     "Elec06Pokemon": [
         {
@@ -561,7 +561,7 @@ round_4_manual_changes = {
             "fastMove": "SHADOW_CLAW",
             "chargeMoveOne": "HYDRO_CANNON",
             "chargeMoveTwo": "ICE_BEAM",
-        }
+        },
     ],
     "Kilieboyy": [
         {
@@ -617,9 +617,90 @@ round_4_manual_changes = {
             "fastMove": "SHADOW_CLAW",
             "chargeMoveOne": "HYDRO_CANNON",
             "chargeMoveTwo": "ICE_BEAM",
-        }
-    ]
+        },
+    ],
+    "Shadowfacts1272": [
+        {
+            "id": "tinkaton",
+            "name": "Tinkaton",
+            "isShadow": False,
+            "dexEntry": 959,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Paldea",
+            "variant": "",
+            "fastMove": "FAIRY_WIND",
+            "chargeMoveOne": "GIGATON_HAMMER",
+            "chargeMoveTwo": "BULLDOZE",
+        },
+        {
+            "id": "quagsire",
+            "name": "Quagsire",
+            "isShadow": True,
+            "dexEntry": 195,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Johto",
+            "variant": "",
+            "fastMove": "MUD_SHOT",
+            "chargeMoveOne": "AQUA_TAIL",
+            "chargeMoveTwo": "STONE_EDGE",
+        },
+        {
+            "id": "diggersby",
+            "name": "Diggersby",
+            "isShadow": False,
+            "dexEntry": 660,
+            "isMega": False,
+            "isBestBuddy": True,
+            "region": "Kalos",
+            "variant": "",
+            "fastMove": "MUD_SHOT",
+            "chargeMoveOne": "SCORCHING_SANDS",
+            "chargeMoveTwo": "FIRE_PUNCH",
+        },
+        {
+            "id": "altaria",
+            "name": "Altaria",
+            "isShadow": False,
+            "dexEntry": 334,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Hoenn",
+            "variant": "",
+            "fastMove": "DRAGON_BREATH",
+            "chargeMoveOne": "DAZZLING_GLEAM",
+            "chargeMoveTwo": "MOONBLAST",
+        },
+        {
+            "id": "corsola_galarian",
+            "name": "Corsola (Galarian)",
+            "isShadow": False,
+            "dexEntry": 222,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Galar",
+            "variant": "galarian",
+            "fastMove": "ASTONISH",
+            "chargeMoveOne": "NIGHT_SHADE",
+            "chargeMoveTwo": "POWER_GEM",
+        },
+        {
+            "id": "feraligatr",
+            "name": "Feraligatr",
+            "isShadow": False,
+            "dexEntry": 160,
+            "isMega": False,
+            "isBestBuddy": False,
+            "region": "Johto",
+            "variant": "",
+            "fastMove": "SHADOW_CLAW",
+            "chargeMoveOne": "HYDRO_CANNON",
+            "chargeMoveTwo": "ICE_BEAM",
+        },
+    ],
 }
+
 round_5_manual_changes = {}
 
 filepath = os.path.dirname(__file__)
