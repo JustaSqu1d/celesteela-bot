@@ -2347,6 +2347,8 @@ async def team(ctx, player: str):
                         player_roster = round_2_manual_changes[player]
                     elif player in round_3_manual_changes and current_round == 3:
                         player_roster = round_3_manual_changes[player]
+                    elif player in round_4_manual_changes and current_round == 4:
+                        player_roster = round_4_manual_changes[player]
                     else:
                         player_roster = matchup["participant1"]["roster"]
 
