@@ -2749,5 +2749,41 @@ async def usage(
     await ctx.respond(embed=embed)
 
 
+@bot.slash_command(
+    name="to_stats",
+    description="See the tournament host and related statistics.",
+    guild_ids=[744241283341746267]
+)
+async def tournament_hosts(ctx):
+    await ctx.defer()
+    tournament_archive_channel = bot.get_channel(745666281956442162)
+    authors = {}
+    message_count = 0
+
+    async for message in tournament_archive_channel.history(limit=None):
+        print(message.id, message_count)
+        message_count += 1
+
+        if message.author.id not in authors:
+            authors[message.author.id] = {
+                "name": message.author.display_name,
+                "count": 0,
+            }
+
+        authors[message.author.id]["count"] += 1
+
+    authors = dict(sorted(authors.items(), key=lambda item: item[1]["count"], reverse=True))
+
+    embed = discord.Embed()
+    embed.title = "Tournament Hosts"
+    embed.description = ""
+    for _, data in authors.items():
+        embed.description += f"**{data['name']}** - {data['count']}\n"
+
+    embed.set_footer(text=f"Total Messages: {message_count}")
+
+    await ctx.respond(embed=embed)
+
+
 if __name__ == "__main__":
     bot.run(BOT_TOKEN)
