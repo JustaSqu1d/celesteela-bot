@@ -18,6 +18,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from rapidfuzz import fuzz, process
 from scipy.stats import norm
+from discord.ext import commands
+
 
 activity = discord.Activity(
     name="Trainers throw on alignment", type=discord.ActivityType.watching
@@ -2754,6 +2756,7 @@ async def usage(
     description="See the tournament host and related statistics.",
     guild_ids=[744241283341746267]
 )
+@commands.cooldown(1, 3600, commands.BucketType.default)
 async def tournament_hosts(ctx):
     await ctx.defer()
     tournament_archive_channel = bot.get_channel(745666281956442162)
