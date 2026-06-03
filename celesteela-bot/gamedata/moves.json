@@ -2,7 +2,7 @@
     {
         "uniqueId": "WRAP",
         "type": "normal",
-        "power": 60.0,
+        "power": 70.0,
         "energyDelta": 45,
         "buffs": {
             "targetDefenseStatStageChange": -1,
@@ -116,7 +116,7 @@
     {
         "uniqueId": "EARTHQUAKE",
         "type": "ground",
-        "power": 110.0,
+        "power": 120.0,
         "energyDelta": 65,
         "turns": 0,
         "uuid": 31,
@@ -167,7 +167,7 @@
         "uniqueId": "FLASH_CANNON",
         "type": "steel",
         "power": 110.0,
-        "energyDelta": 70,
+        "energyDelta": 65,
         "turns": 0,
         "uuid": 36,
         "displayName": "Flash Cannon",
@@ -226,8 +226,8 @@
     {
         "uniqueId": "DRILL_RUN",
         "type": "ground",
-        "power": 80.0,
-        "energyDelta": 45,
+        "power": 70.0,
+        "energyDelta": 40,
         "turns": 0,
         "uuid": 46,
         "displayName": "Drill Run",
@@ -898,7 +898,7 @@
         "uniqueId": "HURRICANE",
         "type": "flying",
         "power": 110.0,
-        "energyDelta": 65,
+        "energyDelta": 60,
         "turns": 0,
         "uuid": 122,
         "displayName": "Hurricane",
@@ -1671,7 +1671,7 @@
     {
         "uniqueId": "SILVER_WIND",
         "type": "bug",
-        "power": 60.0,
+        "power": 75.0,
         "energyDelta": 45,
         "buffs": {
             "attackerAttackStatStageChange": 1,
@@ -1790,8 +1790,8 @@
     {
         "uniqueId": "ENERGY_BALL",
         "type": "grass",
-        "power": 90.0,
-        "energyDelta": 55,
+        "power": 80.0,
+        "energyDelta": 45,
         "buffs": {
             "targetDefenseStatStageChange": -1,
             "buffActivationChance": 0.1
@@ -2115,7 +2115,7 @@
         "uniqueId": "EARTH_POWER",
         "type": "ground",
         "power": 90.0,
-        "energyDelta": 55,
+        "energyDelta": 50,
         "buffs": {
             "targetDefenseStatStageChange": -1,
             "buffActivationChance": 0.1
@@ -2307,7 +2307,7 @@
     {
         "uniqueId": "CHARM",
         "type": "fairy",
-        "power": 13.0,
+        "power": 12.0,
         "energyDelta": 8,
         "turns": 3,
         "uuid": 320,
@@ -2555,7 +2555,7 @@
         "uniqueId": "GUST",
         "type": "flying",
         "power": 16.0,
-        "energyDelta": 12,
+        "energyDelta": 14,
         "turns": 4,
         "uuid": 345,
         "displayName": "Gust",
@@ -2959,8 +2959,8 @@
     {
         "uniqueId": "DRAGON_ASCENT",
         "type": "flying",
-        "power": 150.0,
-        "energyDelta": 70,
+        "power": 110.0,
+        "energyDelta": 45,
         "buffs": {
             "attackerDefenseStatStageChange": -1,
             "buffActivationChance": 1.0
@@ -3543,6 +3543,16 @@
         "turns": 0,
         "uuid": 494,
         "displayName": "Gigaton Hammer",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "PLASMA_FISTS",
+        "type": "electric",
+        "power": 60.0,
+        "energyDelta": 35,
+        "turns": 0,
+        "uuid": 497,
+        "displayName": "Plasma Fists",
         "usageType": "charge"
     },
     {
