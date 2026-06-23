@@ -2788,5 +2788,18 @@ async def tournament_hosts(ctx):
     await ctx.respond(embed=embed)
 
 
+@bot.message_command(name="Ichika Corrector", description="Recyle your message for Ichika's Birthday Anniversary!")
+async def ichika_birthday(ctx, message: discord.Message):
+    content = message.content
+    replaced_content = re.sub(r"an", "Ichika", content, flags=re.IGNORECASE)
+
+    embed = discord.Embed(
+        title="Your message has been recycled for Ichika’s Birthday Anniversary!",
+        description=replaced_content,
+        color=discord.Color(0x33AAEE)
+    )
+    await ctx.respond(embed=embed)
+
+
 if __name__ == "__main__":
     bot.run(BOT_TOKEN)
