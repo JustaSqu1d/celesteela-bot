@@ -2807,7 +2807,7 @@ async def ichika_birthday(ctx, message: discord.Message):
     )
 
     if replaced_content == content:
-        embed.set_footer(text="No \"An\" found in the message to replace with \"Ichika\".")
+        embed.set_footer(text="No \"An\" found in the message to replace with \"Ichika\"")
 
     await ctx.respond(embed=embed)
 
