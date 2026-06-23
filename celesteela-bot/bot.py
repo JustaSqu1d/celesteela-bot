@@ -2806,8 +2806,13 @@ async def ichika_birthday(ctx, message: discord.Message):
         color=discord.Color(0x33AAEE)
     )
 
+    footer_text = ""
+
     if replaced_content == content:
-        embed.set_footer(text="No \"An\" found in the message to replace with \"Ichika\"")
+        footer_text = "No \"An\" found in the message to replace with \"Ichika\"\n\n"
+
+    footer_text += "[What is this?](https://gist.github.com/JustaSqu1d/c0bff9677d7f75cf68f995cc379f06bd)"
+    embed.set_footer(text=footer_text)
 
     await ctx.respond(embed=embed)
 
