@@ -2788,6 +2788,25 @@ async def tournament_hosts(ctx):
     await ctx.respond(embed=embed)
 
 
+def get_ichika_corrector_embed(content: str) -> discord.Embed:
+    replaced_content = re.sub(r"an", "Ichika", content, flags=re.IGNORECASE)
+
+    embed = discord.Embed(
+        title="Your message has been recycled for Ichika’s Birthday Anniversary!",
+        description=replaced_content,
+        color=discord.Color(0x33AAEE),
+    )
+
+    if replaced_content == content:
+        embed.description += (
+            '\n\n-# No "An" found in the message to replace with "Ichika"'
+        )
+
+    embed.description += "\n\n-# [What is this?](https://gist.github.com/JustaSqu1d/c0bff9677d7f75cf68f995cc379f06bd)"
+
+    return embed
+
+
 @bot.message_command(
     name="Ichika Corrector",
     description="Recyle your message for Ichika's Birthday Anniversary!",
@@ -2797,21 +2816,42 @@ async def tournament_hosts(ctx):
     },
 )
 async def ichika_birthday(ctx, message: discord.Message):
-    content = message.content
-    replaced_content = re.sub(r"an", "Ichika", content, flags=re.IGNORECASE)
-
-    embed = discord.Embed(
-        title="Your message has been recycled for Ichika’s Birthday Anniversary!",
-        description=replaced_content,
-        color=discord.Color(0x33AAEE)
-    )
-
-    if replaced_content == content:
-        embed.description += "\n\n-# No \"An\" found in the message to replace with \"Ichika\""
-
-    embed.description += "\n\n-# [What is this?](https://gist.github.com/JustaSqu1d/c0bff9677d7f75cf68f995cc379f06bd)"
-
+    embed = get_ichika_corrector_embed(message.content)
     await ctx.respond(embed=embed)
+
+
+@bot.slash_command(
+    name="ichika_corrector",
+    description="Recyle your message for Ichika's Birthday Anniversary!",
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install,
+    },
+)
+async def ichika_corrector(ctx):
+
+    class IchikaCorrectorModal(discord.ui.Modal):
+        def __init__(self):
+            super().__init__(
+                title="Ichika Corrector",
+                custom_id="ichika_corrector_modal",
+            )
+            self.add_item(
+                discord.ui.TextInput(
+                    label="Enter your message:",
+                    style=discord.TextInputStyle.paragraph,
+                    custom_id="message_input",
+                    placeholder="Type your message here...",
+                    required=True,
+                )
+            )
+
+        async def callback(self, interaction: discord.Interaction):
+            message_content = self.children[0].value
+            embed = get_ichika_corrector_embed(message_content)
+            await interaction.response.send_message(embed=embed)
+
+    await ctx.send_modal(IchikaCorrectorModal())
 
 
 if __name__ == "__main__":
