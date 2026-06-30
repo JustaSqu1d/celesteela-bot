@@ -2839,7 +2839,7 @@ async def ichika_corrector(ctx):
             self.add_item(
                 discord.ui.TextInput(
                     label="Enter your message:",
-                    style=discord.TextInputStyle.paragraph,
+                    style=discord.InputTextStyle.long,
                     custom_id="message_input",
                     placeholder="Type your message here...",
                     required=True,
