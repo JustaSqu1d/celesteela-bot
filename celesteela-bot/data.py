@@ -143,8 +143,10 @@ async def fetch_pvpoke_data() -> list:
             response = await response.text()
             response = loads(response)
 
+    remove_ids = ["clodsiresb", "cradily_b", "golisopodsh"]
+
     response = [pokemon for pokemon in response if
-                pokemon["speciesId"] != "clodsiresb"]  # remove Clodsire (Sludge Bomb)
+                pokemon["speciesId"] not in remove_ids]
 
     return response
 
@@ -166,6 +168,9 @@ async def fetch_moves_data() -> list:
         if (
             template_id.startswith("COMBAT_V")
             and template_id != "COMBAT_VNEXT_CODE_GATE"
+            and template_id
+            != "COMBAT_VNEXT_USE_MATCHING_START_TURN_FOR_FAST_ATTACK_ENABLE_ROLL_BACK"
+            and template_id[8:12].isdigit()
         ):
             move_data = await process_move_data(template_id, entry)
             moves.append(move_data)

@@ -3556,6 +3556,34 @@
         "usageType": "charge"
     },
     {
+        "uniqueId": "GLAIVE_RUSH",
+        "type": "dragon",
+        "power": 90.0,
+        "energyDelta": 40,
+        "buffs": {
+            "attackerDefenseStatStageChange": -1,
+            "buffActivationChance": 1.0
+        },
+        "turns": 0,
+        "uuid": 590,
+        "displayName": "Glaive Rush",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "SNIPE_SHOT",
+        "type": "water",
+        "power": 65.0,
+        "energyDelta": 35,
+        "buffs": {
+            "attackerAttackStatStageChange": 2,
+            "buffActivationChance": 0.125
+        },
+        "turns": 0,
+        "uuid": 592,
+        "displayName": "Snipe Shot",
+        "usageType": "charge"
+    },
+    {
         "uniqueId": "HIDDEN_POWER_BUG",
         "type": "bug",
         "power": 9.0,
