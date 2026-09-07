@@ -2275,7 +2275,7 @@ async def leaderboard_hghc(ctx):
         "boem20",
         "CaspianPike",
         "dcpharmd",
-        "DHCunited",
+        "DHCUnited",
         "Elec06Pokemon",
         "ehsvr",
         "Exeggutor8787",
