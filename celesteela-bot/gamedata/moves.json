@@ -27,7 +27,7 @@
         "uniqueId": "DARK_PULSE",
         "type": "dark",
         "power": 80.0,
-        "energyDelta": 50,
+        "energyDelta": 45,
         "turns": 0,
         "uuid": 16,
         "displayName": "Dark Pulse",
@@ -270,7 +270,7 @@
     {
         "uniqueId": "POISON_FANG",
         "type": "poison",
-        "power": 45.0,
+        "power": 50.0,
         "energyDelta": 40,
         "buffs": {
             "targetDefenseStatStageChange": -1,
@@ -298,8 +298,8 @@
     {
         "uniqueId": "BUBBLE_BEAM",
         "type": "water",
-        "power": 25.0,
-        "energyDelta": 40,
+        "power": 50.0,
+        "energyDelta": 50,
         "buffs": {
             "targetAttackStatStageChange": -1,
             "buffActivationChance": 1.0
@@ -456,7 +456,7 @@
     {
         "uniqueId": "SHADOW_BALL",
         "type": "ghost",
-        "power": 100.0,
+        "power": 90.0,
         "energyDelta": 50,
         "turns": 0,
         "uuid": 70,
@@ -467,7 +467,7 @@
         "uniqueId": "MAGNET_BOMB",
         "type": "steel",
         "power": 70.0,
-        "energyDelta": 45,
+        "energyDelta": 40,
         "turns": 0,
         "uuid": 72,
         "displayName": "Magnet Bomb",
@@ -476,7 +476,7 @@
     {
         "uniqueId": "IRON_HEAD",
         "type": "steel",
-        "power": 70.0,
+        "power": 85.0,
         "energyDelta": 50,
         "turns": 0,
         "uuid": 74,
@@ -570,8 +570,12 @@
     {
         "uniqueId": "DRAINING_KISS",
         "type": "fairy",
-        "power": 60.0,
+        "power": 80.0,
         "energyDelta": 55,
+        "buffs": {
+            "attackerDefenseStatStageChange": 1,
+            "buffActivationChance": 1.0
+        },
         "turns": 0,
         "uuid": 85,
         "displayName": "Draining Kiss",
@@ -590,8 +594,8 @@
     {
         "uniqueId": "MOONBLAST",
         "type": "fairy",
-        "power": 110.0,
-        "energyDelta": 60,
+        "power": 90.0,
+        "energyDelta": 50,
         "buffs": {
             "targetAttackStatStageChange": -1,
             "buffActivationChance": 0.1
@@ -668,11 +672,11 @@
     {
         "uniqueId": "BULLDOZE",
         "type": "ground",
-        "power": 45.0,
-        "energyDelta": 45,
+        "power": 80.0,
+        "energyDelta": 55,
         "buffs": {
             "targetDefenseStatStageChange": -1,
-            "buffActivationChance": 0.5
+            "buffActivationChance": 1.0
         },
         "turns": 0,
         "uuid": 95,
@@ -751,8 +755,8 @@
     {
         "uniqueId": "BRINE",
         "type": "water",
-        "power": 60.0,
-        "energyDelta": 50,
+        "power": 100.0,
+        "energyDelta": 60,
         "turns": 0,
         "uuid": 104,
         "displayName": "Brine",
@@ -883,11 +887,11 @@
     {
         "uniqueId": "AIR_CUTTER",
         "type": "flying",
-        "power": 45.0,
-        "energyDelta": 35,
+        "power": 60.0,
+        "energyDelta": 40,
         "buffs": {
             "attackerAttackStatStageChange": 1,
-            "buffActivationChance": 0.3
+            "buffActivationChance": 0.125
         },
         "turns": 0,
         "uuid": 121,
@@ -961,8 +965,8 @@
     {
         "uniqueId": "BODY_SLAM",
         "type": "normal",
-        "power": 55.0,
-        "energyDelta": 35,
+        "power": 65.0,
+        "energyDelta": 40,
         "turns": 0,
         "uuid": 131,
         "displayName": "Body Slam",
@@ -1051,8 +1055,8 @@
     {
         "uniqueId": "BITE",
         "type": "dark",
-        "power": 4.0,
-        "energyDelta": 2,
+        "power": 2.0,
+        "energyDelta": 4,
         "turns": 1,
         "uuid": 202,
         "displayName": "Bite",
@@ -1101,7 +1105,7 @@
     {
         "uniqueId": "LOW_KICK",
         "type": "fighting",
-        "power": 5.0,
+        "power": 6.0,
         "energyDelta": 8,
         "turns": 2,
         "uuid": 207,
@@ -1231,8 +1235,8 @@
     {
         "uniqueId": "SCRATCH",
         "type": "normal",
-        "power": 4.0,
-        "energyDelta": 2,
+        "power": 3.0,
+        "energyDelta": 4,
         "turns": 1,
         "uuid": 220,
         "displayName": "Scratch",
@@ -1525,7 +1529,7 @@
     {
         "uniqueId": "CHARGE_BEAM",
         "type": "electric",
-        "power": 5.0,
+        "power": 6.0,
         "energyDelta": 11,
         "turns": 3,
         "uuid": 249,
@@ -1627,8 +1631,8 @@
     {
         "uniqueId": "SAND_TOMB",
         "type": "ground",
-        "power": 40.0,
-        "energyDelta": 40,
+        "power": 55.0,
+        "energyDelta": 45,
         "buffs": {
             "targetDefenseStatStageChange": -1,
             "buffActivationChance": 1.0
@@ -1651,7 +1655,7 @@
     {
         "uniqueId": "INFESTATION",
         "type": "bug",
-        "power": 6.0,
+        "power": 10.0,
         "energyDelta": 12,
         "turns": 3,
         "uuid": 260,
@@ -1824,8 +1828,8 @@
     {
         "uniqueId": "MIRROR_COAT",
         "type": "psychic",
-        "power": 60.0,
-        "energyDelta": 55,
+        "power": 75.0,
+        "energyDelta": 45,
         "turns": 0,
         "uuid": 276,
         "displayName": "Mirror Coat",
@@ -1878,8 +1882,8 @@
     {
         "uniqueId": "TAKE_DOWN",
         "type": "normal",
-        "power": 5.0,
-        "energyDelta": 8,
+        "power": 14.0,
+        "energyDelta": 9,
         "turns": 3,
         "uuid": 282,
         "displayName": "Take Down",
@@ -1942,7 +1946,7 @@
     {
         "uniqueId": "PSYCHO_BOOST",
         "type": "psychic",
-        "power": 70.0,
+        "power": 85.0,
         "energyDelta": 35,
         "buffs": {
             "attackerAttackStatStageChange": -2,
@@ -2142,7 +2146,7 @@
     {
         "uniqueId": "LUNGE",
         "type": "bug",
-        "power": 60.0,
+        "power": 70.0,
         "energyDelta": 45,
         "buffs": {
             "targetAttackStatStageChange": -1,
@@ -2270,7 +2274,7 @@
         "uniqueId": "BLAZE_KICK",
         "type": "fire",
         "power": 60.0,
-        "energyDelta": 40,
+        "energyDelta": 35,
         "turns": 0,
         "uuid": 317,
         "displayName": "Blaze Kick",
@@ -2810,7 +2814,7 @@
         "uniqueId": "SHADOW_FORCE",
         "type": "ghost",
         "power": 120.0,
-        "energyDelta": 90,
+        "energyDelta": 65,
         "turns": 0,
         "uuid": 371,
         "displayName": "Shadow Force",
@@ -2874,7 +2878,7 @@
         "uniqueId": "HIGH_HORSEPOWER",
         "type": "ground",
         "power": 100.0,
-        "energyDelta": 60,
+        "energyDelta": 55,
         "turns": 0,
         "uuid": 377,
         "displayName": "High Horsepower",
@@ -2921,7 +2925,7 @@
     {
         "uniqueId": "DOUBLE_IRON_BASH",
         "type": "steel",
-        "power": 55.0,
+        "power": 70.0,
         "energyDelta": 35,
         "turns": 0,
         "uuid": 381,
@@ -3285,8 +3289,8 @@
     {
         "uniqueId": "RAGE_FIST",
         "type": "ghost",
-        "power": 50.0,
-        "energyDelta": 35,
+        "power": 55.0,
+        "energyDelta": 40,
         "buffs": {
             "attackerAttackStatStageChange": 1,
             "buffActivationChance": 1.0
@@ -3581,6 +3585,44 @@
         "turns": 0,
         "uuid": 592,
         "displayName": "Snipe Shot",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "DIVE",
+        "type": "water",
+        "power": 50.0,
+        "energyDelta": 40,
+        "turns": 0,
+        "uuid": 593,
+        "displayName": "Dive",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "GULP_MISSILE_GULPING",
+        "type": "normal",
+        "buffs": {
+            "targetDefenseStatStageChange": -1,
+            "buffActivationChance": 1.0
+        },
+        "energyDelta": 0,
+        "power": 0,
+        "turns": 0,
+        "uuid": 594,
+        "displayName": "Gulp Missile",
+        "usageType": "charge"
+    },
+    {
+        "uniqueId": "GULP_MISSILE_GORGING",
+        "type": "normal",
+        "buffs": {
+            "targetAttackStatStageChange": -2,
+            "buffActivationChance": 1.0
+        },
+        "energyDelta": 0,
+        "power": 0,
+        "turns": 0,
+        "uuid": 595,
+        "displayName": "Gulp Missile",
         "usageType": "charge"
     },
     {

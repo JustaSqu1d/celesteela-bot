@@ -14,12 +14,13 @@ import aiohttp
 import discord
 import dotenv
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import matplotlib.patches as mpatches
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from rapidfuzz import fuzz, process
-from scipy.stats import norm
+from scipy.stats import norm, gaussian_kde
 from discord.ext import commands
-
 
 activity = discord.Activity(
     name="Trainers throw on alignment", type=discord.ActivityType.watching
@@ -144,724 +145,11 @@ levels = [
     "51.0",
 ]
 
-round_2_manual_changes = {
-    "boem20": [
-        {
-            "id": "malamar",
-            "name": "Malamar",
-            "isShadow": True,
-            "variant": "",
-            "fastMove": "PSYWAVE",
-            "chargeMoveOne": "FOUL_PLAY",
-            "chargeMoveTwo": "SUPER_POWER",
-        },
-        {
-            "id": "feraligatr",
-            "name": "Feraligatr",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "SHADOW_CLAW",
-            "chargeMoveOne": "HYDRO_CANNON",
-            "chargeMoveTwo": "ICE_BEAM",
-        },
-        {
-            "id": "clodsire",
-            "name": "Clodsire",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "POISON_STING",
-            "chargeMoveOne": "STONE_EDGE",
-            "chargeMoveTwo": "EARTHQUAKE",
-        },
-        {
-            "id": "medicham",
-            "name": "Medicham",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "PSYCHO_CUT",
-            "chargeMoveOne": "ICE_PUNCH",
-            "chargeMoveTwo": "DYNAMIC_PUNCH",
-        },
-        {
-            "id": "ninetales_alolan",
-            "name": "Ninetales (Alolan)",
-            "isShadow": False,
-            "variant": "alolan",
-            "fastMove": "POWDER_SNOW",
-            "chargeMoveOne": "WEATHER_BALL_ICE",
-            "chargeMoveTwo": "DAZZLING_GLEAM",
-        },
-        {
-            "id": "diggersby",
-            "name": "Diggersby",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "FIRE_PUNCH",
-            "chargeMoveTwo": "SCORCHING_SANDS",
-        },
-    ],
-    "Marcy454": [
-        {
-            "id": "malamar",
-            "name": "Malamar",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "PSYWAVE",
-            "chargeMoveOne": "SUPER_POWER",
-            "chargeMoveTwo": "FOUL_PLAY",
-        },
-        {
-            "id": "corviknight",
-            "name": "Corviknight",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "SAND_ATTACK",
-            "chargeMoveOne": "AIR_CUTTER",
-            "chargeMoveTwo": "PAYBACK",
-        },
-        {
-            "id": "quagsire",
-            "name": "Quagsire",
-            "isShadow": True,
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "AQUA_TAIL",
-            "chargeMoveTwo": "STONE_EDGE",
-        },
-        {
-            "id": "florges",
-            "name": "Florges",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "CHILLING_WATER",
-            "chargeMoveTwo": "TRAILBLAZE",
-        },
-        {
-            "id": "lickilicky",
-            "name": "Lickilicky",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "ROLLOUT",
-            "chargeMoveOne": "BODY_SLAM",
-            "chargeMoveTwo": "SHADOW_BALL",
-        },
-        {
-            "id": "sandslash_alolan",
-            "name": "Sandslash (Alolan)",
-            "isShadow": True,
-            "variant": "alolan",
-            "fastMove": "SHADOW_CLAW",
-            "chargeMoveOne": "ICE_PUNCH",
-            "chargeMoveTwo": "DRILL_RUN",
-        },
-    ],
-    "Withrd9": [
-        {
-            "id": "diggersby",
-            "name": "Diggersby",
-            "isShadow": False,
-            "dexEntry": 660,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Kalos",
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "SCORCHING_SANDS",
-            "chargeMoveTwo": "FIRE_PUNCH",
-        },
-        {
-            "id": "forretress",
-            "name": "Forretress",
-            "isShadow": False,
-            "isMega": False,
-            "isBestBuddy": False,
-            "variant": "",
-            "fastMove": "VOLT_SWITCH",
-            "chargeMoveOne": "SAND_TOMB",
-            "chargeMoveTwo": "ROCK_TOMB",
-        },
-        {
-            "id": "togekiss",
-            "name": "Togekiss",
-            "isShadow": False,
-            "dexEntry": 468,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Sinnoh",
-            "variant": "",
-            "fastMove": "PECK",
-            "chargeMoveOne": "PSYSHOCK",
-            "chargeMoveTwo": "AURA_SPHERE",
-        },
-        {
-            "id": "corviknight",
-            "name": "Corviknight",
-            "isShadow": False,
-            "dexEntry": 823,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Galar",
-            "variant": "",
-            "fastMove": "SAND_ATTACK",
-            "chargeMoveOne": "PAYBACK",
-            "chargeMoveTwo": "AIR_CUTTER",
-        },
-        {
-            "id": "corsola_galarian",
-            "name": "Corsola (Galarian)",
-            "isShadow": False,
-            "dexEntry": 222,
-            "isMega": False,
-            "isBestBuddy": True,
-            "region": "Galar",
-            "variant": "galarian",
-            "fastMove": "ASTONISH",
-            "chargeMoveOne": "POWER_GEM",
-            "chargeMoveTwo": "NIGHT_SHADE",
-        },
-        {
-            "id": "malamar",
-            "name": "Malamar",
-            "isShadow": True,
-            "dexEntry": 687,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Kalos",
-            "variant": "",
-            "fastMove": "PSYWAVE",
-            "chargeMoveOne": "SUPER_POWER",
-            "chargeMoveTwo": "FOUL_PLAY",
-        },
-    ],
-}
+round_2_manual_changes = {}
 
-round_3_manual_changes = {
-    "Marcy454": [
-        {
-            "id": "malamar",
-            "name": "Malamar",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "PSYWAVE",
-            "chargeMoveOne": "SUPER_POWER",
-            "chargeMoveTwo": "FOUL_PLAY",
-        },
-        {
-            "id": "corviknight",
-            "name": "Corviknight",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "SAND_ATTACK",
-            "chargeMoveOne": "AIR_CUTTER",
-            "chargeMoveTwo": "PAYBACK",
-        },
-        {
-            "id": "quagsire",
-            "name": "Quagsire",
-            "isShadow": True,
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "AQUA_TAIL",
-            "chargeMoveTwo": "STONE_EDGE",
-        },
-        {
-            "id": "florges",
-            "name": "Florges",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "CHILLING_WATER",
-            "chargeMoveTwo": "TRAILBLAZE",
-        },
-        {
-            "id": "lickilicky",
-            "name": "Lickilicky",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "ROLLOUT",
-            "chargeMoveOne": "BODY_SLAM",
-            "chargeMoveTwo": "SHADOW_BALL",
-        },
-        {
-            "id": "sandslash_alolan",
-            "name": "Sandslash (Alolan)",
-            "isShadow": True,
-            "variant": "alolan",
-            "fastMove": "SHADOW_CLAW",
-            "chargeMoveOne": "ICE_PUNCH",
-            "chargeMoveTwo": "DRILL_RUN",
-        },
-    ],
-    "Tigersoni17": [
-        {
-            "id": "diggersby",
-            "name": "Diggersby",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "FIRE_PUNCH",
-            "chargeMoveTwo": "SCORCHING_SANDS",
-        },
-        {
-            "id": "corsola_galarian",
-            "name": "Corsola (Galarian)",
-            "isShadow": False,
-            "variant": "galarian",
-            "fastMove": "ASTONISH",
-            "chargeMoveOne": "POWER_GEM",
-            "chargeMoveTwo": "NIGHT_SHADE",
-        },
-        {
-            "id": "corviknight",
-            "name": "Corviknight",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "SAND_ATTACK",
-            "chargeMoveOne": "PAYBACK",
-            "chargeMoveTwo": "AIR_CUTTER",
-        },
-        {
-            "id": "guzzlord",
-            "name": "Guzzlord",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "DRAGON_TAIL",
-            "chargeMoveOne": "BRUTAL_SWING",
-            "chargeMoveTwo": "SLUDGE_BOMB",
-        },
-        {
-            "id": "florges",
-            "name": "Florges",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "CHILLING_WATER",
-            "chargeMoveTwo": "TRAILBLAZE",
-        },
-        {
-            "id": "feraligatr",
-            "name": "Feraligatr",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "SHADOW_CLAW",
-            "chargeMoveOne": "HYDRO_CANNON",
-            "chargeMoveTwo": "ICE_BEAM",
-        },
-    ],
-}
+round_3_manual_changes = {}
 
-round_4_manual_changes = {
-    "Tigersoni17": [
-        {
-            "id": "jellicent",
-            "name": "Jellicent",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "HEX",
-            "chargeMoveOne": "SURF",
-            "chargeMoveTwo": "SHADOW_BALL",
-        },
-        {
-            "id": "guzzlord",
-            "name": "Guzzlord",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "DRAGON_TAIL",
-            "chargeMoveOne": "BRUTAL_SWING",
-            "chargeMoveTwo": "SLUDGE_BOMB",
-        },
-        {
-            "id": "feraligatr",
-            "name": "Feraligatr",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "SHADOW_CLAW",
-            "chargeMoveOne": "HYDRO_CANNON",
-            "chargeMoveTwo": "ICE_BEAM",
-        },
-        {
-            "id": "tinkaton",
-            "name": "Tinkaton",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "GIGATON_HAMMER",
-            "chargeMoveTwo": "BULLDOZE",
-        },
-        {
-            "id": "lickilicky",
-            "name": "Lickilicky",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "ROLLOUT",
-            "chargeMoveOne": "BODY_SLAM",
-            "chargeMoveTwo": "SHADOW_BALL",
-        },
-        {
-            "id": "forretress",
-            "name": "Forretress",
-            "isShadow": True,
-            "variant": "",
-            "fastMove": "BUG_BITE",
-            "chargeMoveOne": "SAND_TOMB",
-            "chargeMoveTwo": "ROCK_TOMB",
-        },
-    ],
-    "Elec06Pokemon": [
-        {
-            "id": "tinkaton",
-            "name": "Tinkaton",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "GIGATON_HAMMER",
-            "chargeMoveTwo": "BULLDOZE",
-        },
-        {
-            "id": "annihilape",
-            "name": "Annihilape",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "LOW_KICK",
-            "chargeMoveOne": "RAGE_FIST",
-            "chargeMoveTwo": "CLOSE_COMBAT",
-        },
-        {
-            "id": "charjabug",
-            "name": "Charjabug",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "VOLT_SWITCH",
-            "chargeMoveOne": "DISCHARGE",
-            "chargeMoveTwo": "X_SCISSOR",
-        },
-        {
-            "id": "moltres_galarian",
-            "name": "Moltres (Galarian)",
-            "isShadow": False,
-            "variant": "galarian",
-            "fastMove": "SUCKER_PUNCH",
-            "chargeMoveOne": "BRAVE_BIRD",
-            "chargeMoveTwo": "FLY",
-        },
-        {
-            "id": "diggersby",
-            "name": "Diggersby",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "FIRE_PUNCH",
-            "chargeMoveTwo": "SCORCHING_SANDS",
-        },
-        {
-            "id": "feraligatr",
-            "name": "Feraligatr",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "SHADOW_CLAW",
-            "chargeMoveOne": "HYDRO_CANNON",
-            "chargeMoveTwo": "ICE_BEAM",
-        },
-    ],
-    "Kilieboyy": [
-        {
-            "id": "tinkaton",
-            "name": "Tinkaton",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "GIGATON_HAMMER",
-            "chargeMoveTwo": "BULLDOZE",
-        },
-        {
-            "id": "stunfisk",
-            "name": "Stunfisk",
-            "isShadow": True,
-            "variant": "",
-            "fastMove": "THUNDER_SHOCK",
-            "chargeMoveOne": "DISCHARGE",
-            "chargeMoveTwo": "MUD_BOMB",
-        },
-        {
-            "id": "lickilicky",
-            "name": "Lickilicky",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "ROLLOUT",
-            "chargeMoveOne": "BODY_SLAM",
-            "chargeMoveTwo": "SHADOW_BALL",
-        },
-        {
-            "id": "medicham",
-            "name": "Medicham",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "PSYCHO_CUT",
-            "chargeMoveOne": "ICE_PUNCH",
-            "chargeMoveTwo": "DYNAMIC_PUNCH",
-        },
-        {
-            "id": "corviknight",
-            "name": "Corviknight",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "SAND_ATTACK",
-            "chargeMoveOne": "AIR_CUTTER",
-            "chargeMoveTwo": "PAYBACK",
-        },
-        {
-            "id": "feraligatr",
-            "name": "Feraligatr",
-            "isShadow": False,
-            "variant": "",
-            "fastMove": "SHADOW_CLAW",
-            "chargeMoveOne": "HYDRO_CANNON",
-            "chargeMoveTwo": "ICE_BEAM",
-        },
-    ],
-    "Shadowfacts1272": [
-        {
-            "id": "tinkaton",
-            "name": "Tinkaton",
-            "isShadow": False,
-            "dexEntry": 959,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Paldea",
-            "variant": "",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "GIGATON_HAMMER",
-            "chargeMoveTwo": "BULLDOZE",
-        },
-        {
-            "id": "quagsire",
-            "name": "Quagsire",
-            "isShadow": True,
-            "dexEntry": 195,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Johto",
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "AQUA_TAIL",
-            "chargeMoveTwo": "STONE_EDGE",
-        },
-        {
-            "id": "diggersby",
-            "name": "Diggersby",
-            "isShadow": False,
-            "dexEntry": 660,
-            "isMega": False,
-            "isBestBuddy": True,
-            "region": "Kalos",
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "SCORCHING_SANDS",
-            "chargeMoveTwo": "FIRE_PUNCH",
-        },
-        {
-            "id": "altaria",
-            "name": "Altaria",
-            "isShadow": False,
-            "dexEntry": 334,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Hoenn",
-            "variant": "",
-            "fastMove": "DRAGON_BREATH",
-            "chargeMoveOne": "FLAMETHROWER",
-            "chargeMoveTwo": "SKY_ATTACK",
-        },
-        {
-            "id": "corsola_galarian",
-            "name": "Corsola (Galarian)",
-            "isShadow": False,
-            "dexEntry": 222,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Galar",
-            "variant": "galarian",
-            "fastMove": "ASTONISH",
-            "chargeMoveOne": "NIGHT_SHADE",
-            "chargeMoveTwo": "POWER_GEM",
-        },
-        {
-            "id": "feraligatr",
-            "name": "Feraligatr",
-            "isShadow": False,
-            "dexEntry": 160,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Johto",
-            "variant": "",
-            "fastMove": "SHADOW_CLAW",
-            "chargeMoveOne": "HYDRO_CANNON",
-            "chargeMoveTwo": "ICE_BEAM",
-        },
-    ],
-    "Beelzeboy": [
-        {
-            "id": "tinkaton",
-            "name": "Tinkaton",
-            "isShadow": False,
-            "dexEntry": 959,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Paldea",
-            "variant": "",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "BULLDOZE",
-            "chargeMoveTwo": "GIGATON_HAMMER",
-        },
-        {
-            "id": "cresselia",
-            "name": "Cresselia",
-            "isShadow": False,
-            "dexEntry": 488,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Sinnoh",
-            "variant": "",
-            "fastMove": "PSYCHO_CUT",
-            "chargeMoveOne": "GRASS_KNOT",
-            "chargeMoveTwo": "MOONBLAST",
-        },
-        {
-            "id": "steelix",
-            "name": "Steelix",
-            "isShadow": True,
-            "dexEntry": 208,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Johto",
-            "variant": "",
-            "fastMove": "THUNDER_FANG",
-            "chargeMoveOne": "PSYCHIC_FANGS",
-            "chargeMoveTwo": "CRUNCH",
-        },
-        {
-            "id": "guzzlord",
-            "name": "Guzzlord",
-            "isShadow": False,
-            "dexEntry": 799,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Alola",
-            "variant": "",
-            "fastMove": "DRAGON_TAIL",
-            "chargeMoveOne": "BRUTAL_SWING",
-            "chargeMoveTwo": "SLUDGE_BOMB",
-        },
-        {
-            "id": "jellicent",
-            "name": "Jellicent",
-            "isShadow": False,
-            "dexEntry": 593,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Unova",
-            "variant": "",
-            "fastMove": "HEX",
-            "chargeMoveOne": "SHADOW_BALL",
-            "chargeMoveTwo": "SURF",
-        },
-        {
-            "id": "diggersby",
-            "name": "Diggersby",
-            "isShadow": False,
-            "dexEntry": 660,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Kalos",
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "SCORCHING_SANDS",
-            "chargeMoveTwo": "FIRE_PUNCH",
-        },
-    ],
-    "Fgatn": [
-        {
-            "id": "tinkaton",
-            "name": "Tinkaton",
-            "isShadow": False,
-            "dexEntry": 959,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Paldea",
-            "variant": "",
-            "fastMove": "FAIRY_WIND",
-            "chargeMoveOne": "GIGATON_HAMMER",
-            "chargeMoveTwo": "BULLDOZE",
-        },
-        {
-            "id": "lickilicky",
-            "name": "Lickilicky",
-            "isShadow": False,
-            "dexEntry": 463,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Sinnoh",
-            "variant": "",
-            "fastMove": "ROLLOUT",
-            "chargeMoveOne": "BODY_SLAM",
-            "chargeMoveTwo": "SHADOW_BALL",
-        },
-        {
-            "id": "feraligatr",
-            "name": "Feraligatr",
-            "isShadow": False,
-            "dexEntry": 160,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Johto",
-            "variant": "",
-            "fastMove": "SHADOW_CLAW",
-            "chargeMoveOne": "HYDRO_CANNON",
-            "chargeMoveTwo": "ICE_BEAM",
-        },
-        {
-            "id": "diggersby",
-            "name": "Diggersby",
-            "isShadow": False,
-            "dexEntry": 660,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Kalos",
-            "variant": "",
-            "fastMove": "MUD_SHOT",
-            "chargeMoveOne": "FIRE_PUNCH",
-            "chargeMoveTwo": "SCORCHING_SANDS",
-        },
-        {
-            "id": "primeape",
-            "name": "Primeape",
-            "isShadow": False,
-            "dexEntry": 57,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Kanto",
-            "variant": "",
-            "fastMove": "KARATE_CHOP",
-            "chargeMoveOne": "RAGE_FIST",
-            "chargeMoveTwo": "CLOSE_COMBAT",
-        },
-        {
-            "id": "altaria",
-            "name": "Altaria",
-            "isShadow": True,
-            "dexEntry": 334,
-            "isMega": False,
-            "isBestBuddy": False,
-            "region": "Hoenn",
-            "variant": "",
-            "fastMove": "DRAGON_BREATH",
-            "chargeMoveOne": "SKY_ATTACK",
-            "chargeMoveTwo": "FLAMETHROWER",
-        },
-    ],
-}
+round_4_manual_changes = {}
 
 round_5_manual_changes = {}
 
@@ -1006,8 +294,12 @@ async def calculate_pokemon_data(
     }
 
 
-async def get_all_attack_spreads(
-    base_attack: int, base_defense: int, base_hp: int, max_cp: object = 1500
+async def get_all_stat_spreads(
+    base_attack: int,
+    base_defense: int,
+    base_hp: int,
+    max_cp: int = 1500,
+    stat_type: str = "attack",
 ) -> list[float]:
     ivs = range(0, 16)
 
@@ -1034,19 +326,38 @@ async def get_all_attack_spreads(
                         if combat_power > max_cp:
                             new_level = float(level) - 0.5
 
-                            calculated_attack = await calculate_base_stat(
-                                base_attack, attack_iv, new_level
+                            if stat_type == "attack":
+                                base_stat = base_attack
+                                iv = attack_iv
+                            elif stat_type == "defense":
+                                base_stat = base_defense
+                                iv = defense_iv
+                            else:
+                                base_stat = base_hp
+                                iv = hp_iv
+
+                            calculated_stat = await calculate_base_stat(
+                                base_stat, iv, new_level
                             )
-                            spreads.append(calculated_attack)
+                            spreads.append(calculated_stat)
                             break
 
     else:
         for attack_iv in ivs:
-            for level in ["50.0", "50.5", "51.0"]:
-                calculated_attack = await calculate_base_stat(
-                    base_attack, attack_iv, level
-                )
-                spreads.append(calculated_attack)
+            for defense_iv in ivs:
+                for hp_iv in ivs:
+                    if stat_type == "attack":
+                        base_stat = base_attack
+                        iv = attack_iv
+                    elif stat_type == "defense":
+                        base_stat = base_defense
+                        iv = defense_iv
+                    else:
+                        base_stat = base_hp
+                        iv = hp_iv
+
+                    calculated_stat = await calculate_base_stat(base_stat, iv, "51.0")
+                    spreads.append(calculated_stat)
 
     return spreads
 
@@ -1953,7 +1264,7 @@ async def histogram(ctx, league, name, name2, name3):
         )
         attack_spreads_dict[data["speciesName"]] = {}
         attack_spreads_dict[data["speciesName"]]["attack_spreads"] = (
-            await get_all_attack_spreads(base_attack, base_defense, base_hp, max_cp)
+            await get_all_stat_spreads(base_attack, base_defense, base_hp, max_cp)
         )
         attack_spreads_dict[data["speciesName"]]["default_spreads"] = data[
             f"{league}_league_data"
@@ -2684,13 +1995,25 @@ async def usage(
             usage_data = {}
             for matchup in match_round["matchups"]:
                 for participant in ["participant1", "participant2"]:
-                    if participant in round_2_manual_changes and match_round["round"] == 2:
+                    if (
+                        participant in round_2_manual_changes
+                        and match_round["round"] == 2
+                    ):
                         roster = round_2_manual_changes[matchup[participant]["name"]]
-                    elif participant in round_3_manual_changes and match_round["round"] == 3:
+                    elif (
+                        participant in round_3_manual_changes
+                        and match_round["round"] == 3
+                    ):
                         roster = round_3_manual_changes[matchup[participant]["name"]]
-                    elif participant in round_4_manual_changes and match_round["round"] == 4:
+                    elif (
+                        participant in round_4_manual_changes
+                        and match_round["round"] == 4
+                    ):
                         roster = round_4_manual_changes[matchup[participant]["name"]]
-                    elif participant in round_5_manual_changes and match_round["round"] == 5:
+                    elif (
+                        participant in round_5_manual_changes
+                        and match_round["round"] == 5
+                    ):
                         roster = round_5_manual_changes[matchup[participant]["name"]]
                     else:
                         roster = matchup[participant]["roster"]
@@ -2777,7 +2100,9 @@ async def tournament_hosts(ctx):
 
         authors[message.author.id]["count"] += 1
 
-    authors = dict(sorted(authors.items(), key=lambda item: item[1]["count"], reverse=True))
+    authors = dict(
+        sorted(authors.items(), key=lambda item: item[1]["count"], reverse=True)
+    )
 
     embed = discord.Embed()
     embed.title = "Tournament Hosts"
@@ -2811,7 +2136,7 @@ def get_ichika_corrector_embed(content: str) -> discord.Embed:
 
 @bot.message_command(
     name="Ichika Corrector",
-    description="Recyle your message for Ichika's Birthday Anniversary!",
+    description="Recycle your message for Ichika's Birthday Anniversary!",
     integration_types={
         discord.IntegrationType.guild_install,
         discord.IntegrationType.user_install,
@@ -2824,7 +2149,7 @@ async def ichika_birthday(ctx, message: discord.Message):
 
 @bot.slash_command(
     name="ichika_corrector",
-    description="Recyle your message for Ichika's Birthday Anniversary!",
+    description="Recycle your message for Ichika's Birthday Anniversary!",
     integration_types={
         discord.IntegrationType.guild_install,
         discord.IntegrationType.user_install,
