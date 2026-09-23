@@ -190,7 +190,7 @@ async def get_type_emoji(type):
 
 
 async def load_data():
-    global cp_multipliers, move_data, pokemon_data, type_chart
+    global cp_multipliers, move_data, pokemon_data, type_chart, hghc_players
 
     async with aiofiles.open(filepath + "/gamedata/cp_multipliers.json", "r") as file:
         file_string = await file.read()
@@ -214,6 +214,12 @@ async def load_data():
     for move in move_data:
         move_list.add(move["displayName"])
 
+    raw_players = os.getenv("HGHC_PLAYERS", "")
+
+    if raw_players:
+        hghc_players = [player.strip() for player in raw_players.split(",")]
+    else:
+        hghc_players = []
 
 async def format_move_name(move_name):
     move_overrides = {
@@ -1576,45 +1582,8 @@ async def leaderboard_hghc(ctx):
         await ctx.respond(embed=embed, ephemeral=True)
         return
 
-    target_players = [
         "17gecko",
         "617veesok",
-        "AbsolTrainBest",
-        "Aest9772",
-        "Aiden3222",
-        "Beelzeboy",
-        "boem20",
-        "CaspianPike",
-        "dcpharmd",
-        "Elec06Pokemon",
-        "ehsvr",
-        "Exeggutor8787",
-        "fabiou7190",
-        "Fgatn",
-        "freddychow",
-        "Jacoloco2",
-        "Kazim33",
-        "keapton",
-        "Kilieboyy",
-        "KurtGOldSilver",
-        "Lsh188",
-        "Marcy454",
-        "MEweedle",
-        "Nickname29585",
-        "OutOfPoket",
-        "PvPotato333",
-        "Sceptileice25",
-        "Shadowfacts1272",
-        "SsThorn",
-        "Tangyplatypus",
-        "Tigersoni17",
-        "TheMegaJuncko",
-        "TheSparklix",
-        "TheyLuvJy",
-        "XXBlueNationXX",
-        "Withrd9",
-    ]
-
     tmj_aliases = [
         {
             "name": "TheMegaJacoloco",
@@ -1694,7 +1663,7 @@ async def leaderboard_hghc(ctx):
     filtered_players = [
         player
         for player in all_players_data
-        if player["name"].lower() in [name.lower() for name in target_players]
+        if player["name"].lower() in [name.lower() for name in hghc_players]
     ]
 
     filtered_players.sort(key=lambda x: x["place"])
