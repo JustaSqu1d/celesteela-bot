@@ -221,6 +221,7 @@ async def load_data():
     else:
         hghc_players = []
 
+
 async def format_move_name(move_name):
     move_overrides = {
         "AEGISLASH_CHARGE_PSYCHO_CUT": "PSYCHO_CUT",
@@ -1818,7 +1819,7 @@ async def leaderboard_fr(ctx):
         "Welton425",
         "WooIfpack",
         "WPJengineer",
-        "XxDamien73xX"
+        "XxDamien73xX",
     ]
 
     alias = tmj_alias()
