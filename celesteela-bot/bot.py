@@ -1563,6 +1563,32 @@ async def ping(ctx):
     await ctx.respond(embed=embed)
 
 
+def tmj_alias() -> str:
+    aliases = [
+        ("TheMegaJacoloco", 10),
+        ("TheMegaJonkus", 10),
+        ("TheMegaJunckoloco", 8),
+        ("TheMegaJack o' Lanturn", 10),
+        ("TheMegaJinkaton", 10),
+        ("TheMegaPachi", 10),
+        ("TheMega<:DedennePunched:1385335348434960455>", 20),
+        ("TheMegaJuncrow", 10),
+        ("TheDynanaxJuncko", 1),
+        ("TheGigantamaxJuncko", 1),
+        ("TheTerastallizedJuncko", 1),
+        ("TheShadowJuncko", 1),
+        ("TheShinyJuncko", 1),
+        ("TheLuckyJuncko", 1),
+        ("TheHundoJuncko", 1),
+        ("TheXXLJuncko", 1),
+    ]
+    return random.choices(
+        [alias[0] for alias in aliases],
+        weights=[alias[1] for alias in aliases],
+        k=1,
+    )[0]
+
+
 @bot.slash_command(
     integration_types={
         discord.IntegrationType.guild_install,
@@ -1582,81 +1608,7 @@ async def leaderboard_hghc(ctx):
         await ctx.respond(embed=embed, ephemeral=True)
         return
 
-        "17gecko",
-        "617veesok",
-    tmj_aliases = [
-        {
-            "name": "TheMegaJacoloco",
-            "weight": 10,
-        },
-        {
-            "name": "TheMegaJonkus",
-            "weight": 10,
-        },
-        {
-            "name": "TheMegaJunckoloco",
-            "weight": 8,
-        },
-        {
-            "name": "TheMegaJack o' Lanturn",
-            "weight": 10,
-        },
-        {
-            "name": "TheMegaJinkaton",
-            "weight": 10,
-        },
-        {
-            "name": "TheMegaPachi",
-            "weight": 10,
-        },
-        {
-            "name": "TheMega<:DedennePunched:1385335348434960455>",
-            "weight": 20,
-        },
-        {
-            "name": "TheMegaJuncrow",
-            "weight": 10,
-        },
-        {
-            "name": "TheDynanaxJuncko",
-            "weight": 1,
-        },
-        {
-            "name": "TheGigantamaxJuncko",
-            "weight": 1,
-        },
-        {
-            "name": "TheTerastallizedJuncko",
-            "weight": 1,
-        },
-        {
-            "name": "TheShadowJuncko",
-            "weight": 1,
-        },
-        {
-            "name": "TheShinyJuncko",
-            "weight": 1,
-        },
-        {
-            "name": "TheLuckyJuncko",
-            "weight": 1,
-        },
-        {
-            "name": "TheHundoJuncko",
-            "weight": 1,
-        },
-        {
-            "name": "TheXXLJuncko",
-            "weight": 1,
-        },
-    ]
-
-    # Select a random alias using weights
-    tmj_alias = random.choices(
-        [alias["name"] for alias in tmj_aliases],
-        weights=[alias["weight"] for alias in tmj_aliases],
-        k=1,
-    )[0]
+    alias = tmj_alias()
 
     number = random.randint(0, 9)
 
@@ -1680,7 +1632,7 @@ async def leaderboard_hghc(ctx):
     for player in filtered_players:
         description_lines.append(
             f"**#{player['place']}. {player['name']}** - {player['rating']}".replace(
-                "TheMegaJuncko", tmj_alias
+                "TheMegaJuncko", alias
             )
             .replace("Aest9772", "XxBastiLover_noBastiNoLifexX")
             .replace("SsThorn", "LGBThorn🏳️‍🌈")
@@ -1805,250 +1757,103 @@ async def leaderboard_tp(ctx):
 
 
 @bot.slash_command(
-    guild_ids=[DEV_GUILD_ID],
-    description="Find your opponent's team.",
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install,
+    },
+    description="The current French players on the GBL leaderboard",
 )
-@discord.option(
-    name="player",
-    description="The player to search for.",
-    choices=[
-        "Aest9772",
-        "Beelzeboy",
-        "boem20",
-        "Elec06Pokemon",
-        "Exeggutor8787",
-        "Fgatn",
-        "Jacoloco2",
-        "Kilieboyy",
-        "Lsh188",
-        "Marcy454",
-        "Nickname29585",
-        "OutOfPoket",
-        "PvPotato333",
-        "Sceptileice25",
-        "Shadowfacts1272",
-        "SsThorn",
-        "Tangyplatypus",
-        "TheyLuvJy",
-        "Tigersoni17",
-        "Withrd9",
-    ],
-)
-async def team(ctx, player: str):
+async def leaderboard_fr(ctx):
     await ctx.defer()
-
-    bracket_url = f"https://api.zygarden.gg/api/v2/community/{TOURNAMENT_ID}/brackets"
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(bracket_url) as response:
-            if response.status != 200:
-                embed = discord.Embed(
-                    title="❌ Failed to fetch bracket data.",
-                    color=discord.Color.red(),
-                )
-                await ctx.respond(embed=embed, ephemeral=True)
-
-                print(
-                    f"Failed to fetch bracket data: {response.status}, {await response.text()}"
-                )
-
-                return
-            bracket_data = await response.json()
-
-    current_round = bracket_data["round"] - 1
-    all_rounds = bracket_data["rounds"]
-
-    player_roster = None
-
-    timezone = "?"
-
-    for match_round in all_rounds:
-        if match_round["round"] == current_round:
-            for matchup in match_round["matchups"]:
-                player1 = matchup["participant1"]["name"]
-                player2 = matchup["participant2"]["name"]
-
-                if player1 == player:
-                    if player in round_2_manual_changes and current_round == 2:
-                        player_roster = round_2_manual_changes[player]
-                    elif player in round_3_manual_changes and current_round == 3:
-                        player_roster = round_3_manual_changes[player]
-                    elif player in round_4_manual_changes and current_round == 4:
-                        player_roster = round_4_manual_changes[player]
-                    elif player in round_5_manual_changes and current_round == 5:
-                        player_roster = round_5_manual_changes[player]
-                    else:
-                        player_roster = matchup["participant1"]["roster"]
-
-                    timezone = matchup.get("participant1", {}).get("timeZone", "?")
-                    break
-                elif player2 == player:
-                    if player in round_2_manual_changes and current_round == 2:
-                        player_roster = round_2_manual_changes[player]
-                    elif player in round_3_manual_changes and current_round == 3:
-                        player_roster = round_3_manual_changes[player]
-                    elif player in round_4_manual_changes and current_round == 4:
-                        player_roster = round_4_manual_changes[player]
-                    elif player in round_5_manual_changes and current_round == 5:
-                        player_roster = round_5_manual_changes[player]
-                    else:
-                        player_roster = matchup["participant2"]["roster"]
-                    timezone = matchup.get("participant2", {}).get("timeZone", "?")
-                    break
-
-    if player_roster is not None:
-        components = await roster_to_components(player_roster, player, timezone)
-
-        view = discord.ui.DesignerView(*components)
-        await ctx.respond(view=view)
-    else:
+    try:
+        all_players_data = await scrape_leaderboard()
+    except IndexError:
         embed = discord.Embed(
-            title="❌ Player not found.",
-            color=discord.Color.red(),
-        )
-        await ctx.respond(embed=embed, ephemeral=True)
-
-
-@bot.slash_command(
-    guild_ids=[DEV_GUILD_ID],
-    description="See the current meta trends.",
-)
-async def usage(
-    ctx,
-    round_num: discord.Option(
-        int,
-        description="The round to view. Defaults to the current round.",
-        min_value=1,
-        max_value=9,
-        required=False,
-        default=-1,
-    ),  # type: ignore
-):
-    await ctx.defer()
-
-    bracket_url = f"https://api.zygarden.gg/api/v2/community/{TOURNAMENT_ID}/brackets"
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(bracket_url) as response:
-            if response.status != 200:
-                embed = discord.Embed(
-                    title="❌ Failed to fetch bracket data.",
-                    color=discord.Color.red(),
-                )
-                await ctx.respond(embed=embed, ephemeral=True)
-
-                print(
-                    f"Failed to fetch bracket data: {response.status}, {await response.text()}"
-                )
-
-                return
-            bracket_data = await response.json()
-
-    current_round = bracket_data["round"] - 1
-
-    if round_num == -1:
-        round_num = current_round
-    if round_num > current_round:
-        embed = discord.Embed(
-            title="❌ Invalid round number.",
-            description=f"The current round is {current_round}.",
+            title="❌ Failed to fetch leaderboard data.",
             color=discord.Color.red(),
         )
         await ctx.respond(embed=embed, ephemeral=True)
         return
 
-    total = 20
+    target_players = [
+        "7Mears7",
+        "8Tortank8",
+        "Aalteration",
+        "AbsetteUwU",
+        "BatmanDBois1",
+        "Bzhpi",
+        "CachtonFR",
+        "CHlR4C",
+        "Croller1811",
+        "DaemonCash",
+        "DsuCo1",
+        "Egide23",
+        "Elone76620",
+        "Fabiou7190",
+        "Fatalisnex",
+        "Gokhlass",
+        "Gourcuff95",
+        "Hikhami",
+        "Kentin1er",
+        "Kilieboyy",
+        "KingVige",
+        "Lanx4",
+        "lesuedois22",
+        "Manaro835",
+        "MrJeyxjey",
+        "Naarveil",
+        "NoxiiousWS",
+        "Pandalight1",
+        "Paulocycling",
+        "Pookiemon31470",
+        "Pookiemon31470F",
+        "Rise0fTheStar",
+        "RohanD15",
+        "Sandodou",
+        "Spleenlejeune",
+        "TheMegaJuncko",
+        "TheSparklix",
+        "TontonBatteuse",
+        "VigeVige",
+        "Welton425",
+        "WooIfpack",
+        "WPJengineer",
+        "XxDamien73xX"
+    ]
 
-    for match_round in bracket_data["rounds"]:
-        if match_round["round"] == round_num:
-            usage_data = {}
-            for matchup in match_round["matchups"]:
-                for participant in ["participant1", "participant2"]:
-                    if (
-                        participant in round_2_manual_changes
-                        and match_round["round"] == 2
-                    ):
-                        roster = round_2_manual_changes[matchup[participant]["name"]]
-                    elif (
-                        participant in round_3_manual_changes
-                        and match_round["round"] == 3
-                    ):
-                        roster = round_3_manual_changes[matchup[participant]["name"]]
-                    elif (
-                        participant in round_4_manual_changes
-                        and match_round["round"] == 4
-                    ):
-                        roster = round_4_manual_changes[matchup[participant]["name"]]
-                    elif (
-                        participant in round_5_manual_changes
-                        and match_round["round"] == 5
-                    ):
-                        roster = round_5_manual_changes[matchup[participant]["name"]]
-                    else:
-                        roster = matchup[participant]["roster"]
+    alias = tmj_alias()
 
-                    for pokemon in roster:
-                        name = pokemon["name"]
+    filtered_players = [
+        player
+        for player in all_players_data
+        if player["name"].lower() in [name.lower() for name in target_players]
+    ]
 
-                        if name.startswith("Gourgeist"):
-                            name = "Gourgeist"
-
-                        is_shadow = pokemon.get("isShadow", False)
-                        if name not in usage_data:
-                            usage_data[name] = {
-                                "count": 1,
-                                "shadow_count": 1 if is_shadow else 0,
-                            }
-                        else:
-                            usage_data[name]["count"] += 1
-                            if is_shadow:
-                                usage_data[name]["shadow_count"] += 1
-
-    usage_list = []
-    for name, data in usage_data.items():
-        usage_list.append(
-            {
-                "name": name,
-                "count": data["count"],
-                "shadow_count": data["shadow_count"],
-            }
-        )
-
-    usage_list.sort(key=lambda x: x["count"], reverse=True)
-
-    description_lines = []
-    for usage in usage_list:
-        shadow_percentage = (
-            (usage["shadow_count"] / usage["count"]) * 100 if usage["count"] > 0 else 0
-        )
-
-        shadow_percentage_string = f"{shadow_percentage:.1f}%"
-        if shadow_percentage == 100:
-            shadow_percentage_string = "100%"
-
-        usage_percent_string = f"{(usage['count'] / total) * 100:.1f}%"
-
-        if shadow_percentage > 0:
-            description_lines.append(
-                f"**{usage['name']}** - {usage['count']}/{total} | {usage_percent_string} ({usage['shadow_count']}/{usage['count']} | {shadow_percentage_string}<:shadow:1485897998855569449>)"
-            )
-        else:
-            description_lines.append(
-                f"**{usage['name']}** - {usage['count']}/{total} | {usage_percent_string}"
-            )
+    filtered_players.sort(key=lambda x: x["place"])
 
     embed = discord.Embed(
-        title=f"Usage Statistics - Round {round_num}",
-        description="\n".join(description_lines),
-        color=discord.Color.blue(),
+        title="French GBL Leaderboard",
+        color=discord.Color.gold(),
+        url="https://pokemongo.com/leaderboard",
     )
+    embed.timestamp = datetime.datetime.now(datetime.timezone.utc)
+
+    description_lines = []
+    for player in filtered_players:
+        description_lines.append(
+            f"**#{player['place']}. {player['name']}** - {player['rating']}".replace(
+                "TheMegaJuncko", alias
+            )
+        )
+
+    embed.description = "\n".join(description_lines)
     await ctx.respond(embed=embed)
 
 
 @bot.slash_command(
     name="to_stats",
     description="See the tournament host and related statistics.",
-    guild_ids=[744241283341746267]
+    guild_ids=[744241283341746267],
 )
 @commands.cooldown(1, 3600, commands.BucketType.default)
 async def tournament_hosts(ctx):
