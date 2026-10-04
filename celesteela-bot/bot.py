@@ -1822,8 +1822,6 @@ async def leaderboard_fr(ctx):
         "XxDamien73xX",
     ]
 
-    alias = tmj_alias()
-
     filtered_players = [
         player
         for player in all_players_data
@@ -1842,9 +1840,7 @@ async def leaderboard_fr(ctx):
     description_lines = []
     for player in filtered_players:
         description_lines.append(
-            f"**#{player['place']}. {player['name']}** - {player['rating']}".replace(
-                "TheMegaJuncko", alias
-            )
+            f"**#{player['place']}. {player['name']}** - {player['rating']}"
         )
 
     embed.description = "\n".join(description_lines)
