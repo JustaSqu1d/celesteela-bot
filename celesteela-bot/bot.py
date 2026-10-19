@@ -1579,6 +1579,8 @@ def tmj_alias() -> str:
         ("OutOfShadowQuag", 10),
         ("Nickname26626.5", 10),
         ("Coach of PiplupKAWAII", 10),
+        ("TheMegaMegaJuncko", 10),
+        ("TheMedalJuncko", 10),
         ("TheDynanaxJuncko", 1),
         ("TheGigantamaxJuncko", 1),
         ("TheTerastallizedJuncko", 1),
