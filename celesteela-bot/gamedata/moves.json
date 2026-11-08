@@ -3626,6 +3626,16 @@
         "usageType": "charge"
     },
     {
+        "uniqueId": "KOWTOW_CLEAVE",
+        "type": "dark",
+        "power": 75.0,
+        "energyDelta": 40,
+        "turns": 0,
+        "uuid": 615,
+        "displayName": "Kowtow Cleave",
+        "usageType": "charge"
+    },
+    {
         "uniqueId": "HIDDEN_POWER_BUG",
         "type": "bug",
         "power": 9.0,

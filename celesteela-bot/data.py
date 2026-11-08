@@ -207,6 +207,10 @@ async def process_move_data(template_id: str, entry: dict) -> dict:
 
     move_name = move_data.get("uniqueId", "")
 
+    if move_name == 615:
+        move_data["uniqueId"] = "KOWTOW_CLEAVE"
+        move_name = "KOWTOW_CLEAVE"
+
     move_data["energyDelta"] = abs(move_data.get("energyDelta", 0))
     move_data["power"] = abs(move_data.get("power", 0))
 
